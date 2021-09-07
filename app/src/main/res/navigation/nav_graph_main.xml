@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/home">
+
+    <fragment
+        android:id="@+id/home"
+        android:name="dev.forcecodes.truckme.ui.home.HomeFragment"
+        android:label="Dashboard" />
+
+    <fragment
+        android:id="@+id/fleet"
+        android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
+        android:label="Manage Fleet" />
+
+    <fragment
+        android:id="@+id/statistics"
+        android:name="dev.forcecodes.truckme.ui.statistics.StatisticsFragment"
+        android:label="Statistics" />
+
+    <fragment
+        android:id="@+id/history"
+        android:name="dev.forcecodes.truckme.ui.history.HistoryFragment"
+        android:label="History" />
+
+    <fragment
+        android:id="@+id/account"
+        android:name="dev.forcecodes.truckme.ui.account.AccountSettingsFragment"
+        android:label="Account" />
+
+</navigation>
