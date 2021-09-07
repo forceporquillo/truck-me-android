@@ -10,6 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Truckmeandroid">
         <activity
+            android:name=".ui.auth.AuthActivity"
+            android:exported="true"
+            android:theme="@style/Theme.TruckmeAndroid.Auth"/>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"/>
+        <activity
             android:name=".LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.TruckmeAndroid.Launcher">
