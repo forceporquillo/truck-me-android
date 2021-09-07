@@ -14,5 +14,8 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Handler(Looper.getMainLooper()).postDelayed({
+         startActivity(Intent(this, AuthActivity::class.java))
+        }, 2500L)
     }
 }
