@@ -9,10 +9,7 @@
         android:name="dev.forcecodes.truckme.ui.home.HomeFragment"
         android:label="Dashboard" />
 
-    <fragment
-        android:id="@+id/fleet"
-        android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
-        android:label="Manage Fleet" />
+    <include app:graph="@navigation/nav_graph_fleet"/>
 
     <fragment
         android:id="@+id/statistics"

@@ -9,7 +9,6 @@ import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentHomeBinding
 import java.util.*
 
-
 class HomeFragment : Fragment() {
 
     override fun onCreateView(

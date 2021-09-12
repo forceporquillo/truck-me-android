@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fleet"
+    app:startDestination="@id/fleetFragment">
+
+    <fragment
+        android:id="@+id/fleetFragment"
+        android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
+        android:label="FleetFragment"
+        tools:layout="@layout/fragment_fleet" >
+
+        <action
+            android:id="@+id/action_fleetFragment_to_addDriverFragment"
+            app:destination="@id/addDriverFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addDriverFragment"
+        android:name="dev.forcecodes.truckme.ui.fleet.AddDriverFragment"
+        android:label="AddDriverFragment"
+        tools:layout="@layout/fragment_add_driver"/>
+
+</navigation>
