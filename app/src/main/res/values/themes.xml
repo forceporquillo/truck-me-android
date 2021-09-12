@@ -25,4 +25,10 @@
     <style name="Theme.TruckmeAndroid.Auth" parent="Theme.Truckmeandroid">
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="ClickableButtonStyle">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
 </resources>
