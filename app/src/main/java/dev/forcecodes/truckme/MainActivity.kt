@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.databinding.ActivityMainBinding
 import dev.forcecodes.truckme.extensions.fillDecor
 import dev.forcecodes.truckme.extensions.setUpGradientToolbar
