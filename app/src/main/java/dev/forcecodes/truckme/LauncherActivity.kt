@@ -9,8 +9,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.ui.auth.AuthActivity
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -21,7 +21,6 @@ class LauncherActivity : AppCompatActivity() {
     @Inject
     lateinit var signInViewModelDelegate: SignInViewModelDelegate
 
-    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
@@ -29,7 +28,7 @@ class LauncherActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signInViewModelDelegate.isUserSignedIn
-                    .debounce(1000L)
+                    .debounce(500L)
                     .collectLatest { isSignedIn ->
                         val actions = if (isSignedIn) {
                             MainActivity::class
