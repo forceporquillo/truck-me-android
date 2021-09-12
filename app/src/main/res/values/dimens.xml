@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="indicator_inset">3dp</dimen>
+    <dimen name="indicator_size">10dp</dimen>
+    <dimen name="indicator_size_2">8dp</dimen>
+    <dimen name="indicator_margin">12dp</dimen>
+
+    <dimen name="text_size_h5">28sp</dimen>
+    <dimen name="text_size_h4">24sp</dimen>
+    <dimen name="text_size_h1">22sp</dimen>
+    <dimen name="text_size_h2">20sp</dimen>
+    <dimen name="text_size_h3">18sp</dimen>
+
+    <dimen name="spacing_smallest">2dp</dimen>
+    <dimen name="spacing_extra_small">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_extra_large">32dp</dimen>
+    <dimen name="spacing_extra_largest">48dp</dimen>
+
+</resources>
