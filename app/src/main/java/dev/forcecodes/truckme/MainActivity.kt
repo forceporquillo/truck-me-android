@@ -9,18 +9,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.databinding.ActivityMainBinding
 import dev.forcecodes.truckme.extensions.fillDecor
 import dev.forcecodes.truckme.extensions.setUpGradientToolbar
-
-private val topDestinations = setOf(
-    R.id.home,
-    R.id.fleet,
-    R.id.statistics,
-    R.id.history,
-    R.id.account
-)
+import dev.forcecodes.truckme.routes.topDestinations
 
 class MainActivity : AppCompatActivity() {
 
