@@ -13,4 +13,11 @@
     <string name="password_reset">Password Reset</string>
     <string name="password_sent_message">The password reset confirmation link has bent sent to %1$s</string>
     <string name="okay_got_it">Got it</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="full_name">Full name</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="save_changes">Save changes</string>
+    <string name="vehicle_name">Vehicle Name</string>
+    <string name="plate_number">Plate Number</string>
+    <string name="description">Description</string>
 </resources>
