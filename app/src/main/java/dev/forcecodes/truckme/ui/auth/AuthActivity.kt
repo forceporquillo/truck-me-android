@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.databinding.ActivityAuthBinding
 import dev.forcecodes.truckme.extensions.doOnApplyWindowInsets
 import dev.forcecodes.truckme.extensions.fillDecor
@@ -17,6 +18,7 @@ interface AuthToolbarVisibilityListener {
     fun onShowToolbar(show: Boolean = false)
 }
 
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity(), AuthToolbarVisibilityListener {
 
     private var _binding: ActivityAuthBinding? = null
@@ -40,10 +42,4 @@ class AuthActivity : AppCompatActivity(), AuthToolbarVisibilityListener {
     override fun onSupportNavigateUp(): Boolean {
         return binding.navHostContainer.findNavController().navigateUp()
     }
-}
-
-class AuthViewModel : ViewModel() {
-
-    var isPaddingStateSave = false
-
 }
