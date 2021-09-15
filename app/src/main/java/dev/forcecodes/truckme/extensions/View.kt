@@ -1,14 +1,27 @@
 package dev.forcecodes.truckme.extensions
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.signature.ObjectKey
+import dev.forcecodes.truckme.util.GlideApp
+import java.io.ByteArrayOutputStream
 
 fun View.doOnApplyWindowInsets(f: (View, WindowInsetsCompat, ViewPaddingState) -> Unit) {
     // Create a snapshot of the view's padding state
@@ -58,7 +71,6 @@ data class ViewPaddingState(
     val end: Int
 )
 
-
 fun Toolbar.setUpGradientToolbar() {
     doOnApplyWindowInsets { view, windowInsetsCompat, viewPaddingState ->
         val statusBar = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.statusBars())
@@ -85,4 +97,81 @@ inline fun View.updateMarginParams(block: ViewGroup.MarginLayoutParams.() -> Uni
     val params = layoutParams as ViewGroup.MarginLayoutParams
     block(params)
     layoutParams = params
+}
+
+@Suppress("Deprecation")
+fun ImageView.compressAsBitmap(): ByteArray {
+    isDrawingCacheEnabled = true
+    buildDrawingCache()
+
+    val bitmap = (drawable as BitmapDrawable).bitmap
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+    return baos.toByteArray()
+}
+
+inline fun <T> ImageView.bindProfileIcon(
+    data: T,
+    crossinline block: (Boolean) -> Unit
+) {
+    bindImageWith(this, data) { result ->
+        block(result)
+    }
+}
+
+fun <T> bindImageWith(
+    view: ImageView,
+    data: T?,
+    block: ((Boolean) -> Unit)? = null
+) {
+    GlideApp.with(view.context)
+        .asBitmap()
+        .override(view.width, view.height)
+        .load(data)
+        .listener(object : RequestListener<Bitmap> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Bitmap>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                block?.invoke(false)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Bitmap?,
+                model: Any?,
+                target: Target<Bitmap>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                block?.invoke(true)
+                return false
+            }
+        })
+        .into(view)
+}
+
+fun View.disableButtonForAWhile(block: () -> Unit) {
+    isEnabled = false
+    block()
+    handler.postDelayed({
+        isEnabled = true
+    }, 500L)
+}
+
+/**
+ * Listens to scroll offset position of [RecyclerView] and add [Toolbar] elevation if
+ * first visible item is not present in the view hierarchy.
+ */
+fun RecyclerView.withToolbarElevationListener(toolbar: Toolbar, block: (() -> Unit)? = null) {
+    addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            toolbar.elevation = if(!canScrollVertically(-1)) 0f else 4f
+            block?.invoke()
+        }
+    })
 }

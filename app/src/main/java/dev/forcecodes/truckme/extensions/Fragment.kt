@@ -2,7 +2,9 @@ package dev.forcecodes.truckme.extensions
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -42,6 +44,23 @@ fun Fragment.repeatOnLifecycleParallel(
     }
 }
 
+inline fun Fragment.dispatchWhenBackPress(crossinline block: () -> Unit) {
+    val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            block()
+        }
+    }
+    requireActivity { onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback) }
+}
+
+fun Toolbar.setupToolbarPopBackStack(
+    block: (() -> Unit)? = null
+) {
+    val popBackStack: (View) -> Unit = {
+        block?.invoke()
+    }
+    setNavigationOnClickListener(popBackStack)
+}
 
 fun Fragment.navigate(@IdRes resId: Int) {
     findNavController().navigate(resId)
