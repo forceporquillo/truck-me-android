@@ -104,9 +104,9 @@ fun ImageView.compressAsBitmap(): ByteArray {
     isDrawingCacheEnabled = true
     buildDrawingCache()
 
-    val bitmap = (drawable as BitmapDrawable).bitmap
+    val bitmap = (drawable as? BitmapDrawable)?.bitmap
     val baos = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
     return baos.toByteArray()
 }
@@ -174,4 +174,8 @@ fun RecyclerView.withToolbarElevationListener(toolbar: Toolbar, block: (() -> Un
             block?.invoke()
         }
     })
+}
+
+fun View.postKt(block: () -> Unit) {
+    this.post { block() }
 }
