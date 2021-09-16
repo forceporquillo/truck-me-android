@@ -10,10 +10,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import dev.forcecodes.truckme.binding.FragmentViewBindingDelegate
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 fun Fragment.requireActivity(
@@ -44,13 +46,32 @@ fun Fragment.repeatOnLifecycleParallel(
     }
 }
 
-inline fun Fragment.dispatchWhenBackPress(crossinline block: () -> Unit) {
-    val callback = object : OnBackPressedCallback(true) {
+inline fun Fragment.dispatchWhenBackPress(
+    enable: Boolean = true,
+    crossinline block: () -> Unit
+) {
+    val callback = object : OnBackPressedCallback(enable) {
         override fun handleOnBackPressed() {
             block()
         }
     }
-    requireActivity { onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback) }
+    requireActivity {
+
+        onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+}
+
+const val ANIMATION_FAST_MILLIS = 250L
+
+fun Fragment.postRunnable(block: () -> Unit) {
+    view?.postKt(block)
+}
+
+fun Fragment.navigateUp() {
+    observeWithOnRepeatLifecycle {
+        delay(ANIMATION_FAST_MILLIS)
+        findNavController().navigateUp()
+    }
 }
 
 fun Toolbar.setupToolbarPopBackStack(
