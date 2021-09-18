@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import dev.forcecodes.truckme.MainActivity
 import dev.forcecodes.truckme.binding.FragmentViewBindingDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -22,6 +23,14 @@ fun Fragment.requireActivity(
     func: FragmentActivity.() -> Unit
 ) {
     requireActivity().func()
+}
+
+fun Fragment.mainNavActivity(func: MainActivity.() -> Unit) {
+    (requireActivity() as? MainActivity)?.func()
+}
+
+fun Fragment.attachProgressToMain(isLoading: Boolean) {
+    (requireActivity() as? MainActivity)?.showLoading(isLoading)
 }
 
 fun Fragment.observeWithOnRepeatLifecycle(

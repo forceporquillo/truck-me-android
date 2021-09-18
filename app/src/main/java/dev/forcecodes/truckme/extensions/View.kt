@@ -9,8 +9,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -20,6 +22,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
+import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.util.then
 import dev.forcecodes.truckme.util.GlideApp
 import java.io.ByteArrayOutputStream
 
@@ -178,4 +182,9 @@ fun RecyclerView.withToolbarElevationListener(toolbar: Toolbar, block: (() -> Un
 
 fun View.postKt(block: () -> Unit) {
     this.post { block() }
+}
+
+fun ImageView.setActiveStateIndicatorColor(isActive: Boolean) {
+    val colorId = isActive then R.color.active ?: R.color.inactive
+    setColorFilter(ContextCompat.getColor(context, colorId))
 }
