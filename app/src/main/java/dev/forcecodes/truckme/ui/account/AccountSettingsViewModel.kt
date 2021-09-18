@@ -28,7 +28,6 @@ class AccountSettingsViewModel @Inject constructor(
     private val uploadProfileUseCase: UploadProfileUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val updatePhoneNumberUseCase: UpdatePhoneNumberUseCase,
-    // real time updates
     getPhoneNumberUseCase: GetPhoneNumberUseCase
 ) : CommonCredentialsViewModel<UiActionEvent>(
     requireConfirmation = true,
@@ -71,7 +70,7 @@ class AccountSettingsViewModel @Inject constructor(
             super.contactNumber = value
         }
 
-    var profileIcon: ByteArray? = null
+    var profileIconInBytes: ByteArray? = null
         set(value) {
             value?.let {
                 enableSubmitButton(enable = true)
@@ -131,7 +130,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private suspend fun uploadProfile() {
-        profileIcon?.let { profileInBytes ->
+        profileIconInBytes?.let { profileInBytes ->
             submitAndSetLoading()
 
             val profileData = ProfileData(userIdValue, profileInBytes)
