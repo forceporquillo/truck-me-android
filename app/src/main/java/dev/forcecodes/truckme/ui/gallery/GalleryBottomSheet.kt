@@ -12,7 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.BottomSheetGalleryFragmentBinding
 import dev.forcecodes.truckme.extensions.setupToolbarPopBackStack
-import dev.forcecodes.truckme.extensions.withToolbarElevationListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -59,15 +58,5 @@ class GalleryBottomSheet : BottomSheetDialogFragment(), ImageClickListener<Image
 
     override fun onImageSelected(data: Image) {
         viewModel.selectedImage(data)
-    }
-}
-
-class GalleryViewModel : ViewModel() {
-
-    private val _imageUri = MutableStateFlow<Image?>(null)
-    val image = _imageUri.asStateFlow()
-
-    fun selectedImage(image: Image) {
-        _imageUri.value = image
     }
 }
