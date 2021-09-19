@@ -21,86 +21,86 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FirebaseSignInViewModel @Inject constructor(
-    signInViewModelDelegate: SignInViewModelDelegate,
-    private val signInUseCase: SignInUseCase,
+  signInViewModelDelegate: SignInViewModelDelegate,
+  private val signInUseCase: SignInUseCase,
 ) : BaseAuthViewModel<SignInNavActions>(), SignInViewModelDelegate by signInViewModelDelegate {
 
-    val signInNavActions = mUiEvents.receiveAsFlow()
+  val signInNavActions = mUiEvents.receiveAsFlow()
 
-    fun signIn() {
-        submitAndSetLoading()
-        viewModelScope.launch {
-            if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-                return@launch
-            }
+  fun signIn() {
+    submitAndSetLoading()
+    viewModelScope.launch {
+      if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+        return@launch
+      }
 
-            val useCase = signInUseCase(AuthBasicInfo(email!!, password!!))
-            fetchResult(useCase) { _, _ -> /* do nothing */ }
-        }
+      val useCase = signInUseCase(AuthBasicInfo(email!!, password!!))
+      fetchResult(useCase) { _, _ -> /* do nothing */ }
     }
+  }
 
-    fun resetPassword() {
-        sendUiEvent(SignInNavActions.ResetPasswordAction)
-    }
+  fun resetPassword() {
+    sendUiEvent(SignInNavActions.ResetPasswordAction)
+  }
 }
 
 sealed class SignInNavActions : UiActionEvent {
-    object ResetPasswordAction : SignInNavActions()
-    object MainDashboardAction : SignInNavActions()
+  object ResetPasswordAction : SignInNavActions()
+  object MainDashboardAction : SignInNavActions()
 }
 
 sealed class AdminAuthState {
-    object SignedOut : AdminAuthState()
-    object SignedIn : AdminAuthState()
+  object SignedOut : AdminAuthState()
+  object SignedIn : AdminAuthState()
 }
 
 class FirebaseSignInViewModelDelegate @Inject constructor(
-    observeAuthStateUseCase: ObserveAuthStateUseCase,
-    @ApplicationScope private val applicationScope: CoroutineScope
+  observeAuthStateUseCase: ObserveAuthStateUseCase,
+  @ApplicationScope private val applicationScope: CoroutineScope
 ) : SignInViewModelDelegate {
 
-    private val _signInNavigationActions = Channel<AdminAuthState>(Channel.CONFLATED)
-    override val signInNavigationActions = _signInNavigationActions.receiveAsFlow()
+  private val _signInNavigationActions = Channel<AdminAuthState>(Channel.CONFLATED)
+  override val signInNavigationActions = _signInNavigationActions.receiveAsFlow()
 
-    private val currentAdminUser: Flow<Result<AuthenticatedUserInfoBasic>> =
-        observeAuthStateUseCase(Any()).map { result ->
-            if (result is Result.Error) {
-                Timber.e(result.exception.message.toString())
-            }
-            result
-        }
-
-    override val userInfo: StateFlow<AuthenticatedUserInfoBasic?> = currentAdminUser.map {
-        (it as? Result.Success)?.data
-    }.stateIn(applicationScope, WhileViewSubscribed, null)
-
-    override val currentUserImageUri: StateFlow<Uri?> = userInfo.map {
-        it?.getPhotoUrl()
-    }.stateIn(applicationScope, WhileViewSubscribed, null)
-
-    override val isUserSignedIn: StateFlow<Boolean> = userInfo.map {
-        it?.isSignedIn() ?: false
-    }.stateIn(applicationScope, WhileViewSubscribed, false)
-
-    override val userId: Flow<String?>
-        get() = userInfo.mapLatest { it?.getUid() }
-            .stateIn(applicationScope, WhileViewSubscribed, null)
-
-    override val userIdValue: String?
-        get() = userInfo.value?.getUid()
-
-    override val isUserSignedInValue: Boolean
-        get() = isUserSignedIn.value
-
-    init {
-        applicationScope.launch {
-            userInfo.debounce(500L).collectLatest {
-                if (it?.isSignedIn() == true) {
-                    _signInNavigationActions.send(AdminAuthState.SignedIn)
-                }
-            }
-        }
+  private val currentAdminUser: Flow<Result<AuthenticatedUserInfoBasic>> =
+    observeAuthStateUseCase(Any()).map { result ->
+      if (result is Result.Error) {
+        Timber.e(result.exception.message.toString())
+      }
+      result
     }
+
+  override val userInfo: StateFlow<AuthenticatedUserInfoBasic?> = currentAdminUser.map {
+    (it as? Result.Success)?.data
+  }.stateIn(applicationScope, WhileViewSubscribed, null)
+
+  override val currentUserImageUri: StateFlow<Uri?> = userInfo.map {
+    it?.getPhotoUrl()
+  }.stateIn(applicationScope, WhileViewSubscribed, null)
+
+  override val isUserSignedIn: StateFlow<Boolean> = userInfo.map {
+    it?.isSignedIn() ?: false
+  }.stateIn(applicationScope, WhileViewSubscribed, false)
+
+  override val userId: Flow<String?>
+    get() = userInfo.mapLatest { it?.getUid() }
+      .stateIn(applicationScope, WhileViewSubscribed, null)
+
+  override val userIdValue: String?
+    get() = userInfo.value?.getUid()
+
+  override val isUserSignedInValue: Boolean
+    get() = isUserSignedIn.value
+
+  init {
+    applicationScope.launch {
+      userInfo.debounce(500L).collectLatest {
+        if (it?.isSignedIn() == true) {
+          _signInNavigationActions.send(AdminAuthState.SignedIn)
+        }
+      }
+    }
+  }
 }
 
 

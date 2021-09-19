@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class GalleryViewModel : ViewModel() {
 
-    private val _image = MutableStateFlow<Image?>(null)
-    val image = _image.asStateFlow()
+  private val _image = MutableStateFlow<Image?>(null)
+  val image = _image.asStateFlow()
 
-    private val _imageUri = MutableStateFlow<Uri?>(null)
-    val imageUri = _imageUri.asStateFlow()
+  private val _imageUri = MutableStateFlow<Uri?>(null)
+  val imageUri = _imageUri.asStateFlow()
 
-    fun selectedImage(image: Image) {
-        _image.value = image
-    }
+  fun selectedImage(image: Image) {
+    _image.value = image
+  }
 
-    fun setImageUri(uri: Uri) {
-        _imageUri.value = uri
-    }
+  fun setImageUri(uri: Uri) {
+    _imageUri.value = uri
+  }
 }

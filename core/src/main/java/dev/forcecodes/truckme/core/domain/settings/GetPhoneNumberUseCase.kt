@@ -19,39 +19,39 @@ import javax.inject.Singleton
 
 @Singleton
 class GetPhoneNumberUseCase @Inject constructor(
-    private val authenticatedUserDataSource: FirestoreAuthenticatedUserDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+  private val authenticatedUserDataSource: FirestoreAuthenticatedUserDataSource,
+  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : FlowUseCase<String, PhoneNumber?>(ioDispatcher) {
 
-    override fun execute(parameters: String): Flow<Result<PhoneNumber?>> {
-        return callbackFlow {
-            val phoneNumberListener =
-                { snapshot: DocumentSnapshot?, _: FirebaseFirestoreException? ->
-                    if (snapshot == null || !snapshot.exists()) {
-                        tryOffer(Result.Error(PhoneNumberNotFoundException()))
-                    } else {
-                        val phoneNumber = snapshot.toObject<PhoneNumber>()
-                        tryOffer(Result.Success(phoneNumber))
-                    }
-                    Unit
-                }
-
-            val phoneNumberListenerSubscription =
-                authenticatedUserDataSource.observePhoneNumber(parameters)
-                    .addSnapshotListener(phoneNumberListener)
-
-            awaitClose { phoneNumberListenerSubscription.remove() }
+  override fun execute(parameters: String): Flow<Result<PhoneNumber?>> {
+    return callbackFlow {
+      val phoneNumberListener =
+        { snapshot: DocumentSnapshot?, _: FirebaseFirestoreException? ->
+          if (snapshot == null || !snapshot.exists()) {
+            tryOffer(Result.Error(PhoneNumberNotFoundException()))
+          } else {
+            val phoneNumber = snapshot.toObject<PhoneNumber>()
+            tryOffer(Result.Success(phoneNumber))
+          }
+          Unit
         }
-            .distinctUntilChanged()
+
+      val phoneNumberListenerSubscription =
+        authenticatedUserDataSource.observePhoneNumber(parameters)
+          .addSnapshotListener(phoneNumberListener)
+
+      awaitClose { phoneNumberListenerSubscription.remove() }
     }
+      .distinctUntilChanged()
+  }
 }
 
 class PhoneNumberNotFoundException : Exception()
 
 class PhoneNumberData(
-    override var data: PhoneNumber? = null,
-    override var exception: Exception? = null,
-    override var isSuccess: Boolean = false
+  override var data: PhoneNumber? = null,
+  override var exception: Exception? = null,
+  override var isSuccess: Boolean = false
 ) : TaskData<PhoneNumber>
 
 class PhoneNumber @JvmOverloads constructor(val phoneNumber: String = "")

@@ -1,0 +1,5 @@
+package dev.forcecodes.truckme.core.data.settings
+
+interface ProfileSettingsDataSource
+
+class ProfileSettingsDataSourceImpl

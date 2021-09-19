@@ -8,36 +8,34 @@ import com.google.firebase.auth.UserInfo
  */
 interface AuthenticatedUserInfoBasic {
 
-    fun isSignedIn(): Boolean
+  fun isSignedIn(): Boolean
 
-    fun getEmail(): String?
+  fun getEmail(): String?
 
-    fun getProviderData(): MutableList<out UserInfo>?
+  fun getProviderData(): MutableList<out UserInfo>?
 
-    fun getLastSignInTimestamp(): Long?
+  fun getLastSignInTimestamp(): Long?
 
-    fun getCreationTimestamp(): Long?
+  fun getCreationTimestamp(): Long?
 
-    fun isAnonymous(): Boolean?
+  fun isAnonymous(): Boolean?
 
-    fun getPhoneNumber(): String?
+  fun getPhoneNumber(): String?
 
-    fun getUid(): String?
+  fun getUid(): String?
 
-    fun isEmailVerified(): Boolean?
+  fun isEmailVerified(): Boolean?
 
-    fun getDisplayName(): String?
+  fun getDisplayName(): String?
 
-    fun getPhotoUrl(): Uri?
+  fun getPhotoUrl(): Uri?
 
-    fun getProviderId(): String?
+  fun getProviderId(): String?
 }
 
 interface AuthenticatedUserInfoRegistered {
 
-    fun isRegistered(): Boolean
-
-    fun isRegistrationDataReady(): Boolean
+  fun isAdmin(): Boolean?
 }
 
 /**

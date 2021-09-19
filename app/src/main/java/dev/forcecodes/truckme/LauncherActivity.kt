@@ -18,31 +18,31 @@ import kotlin.reflect.KClass
 @AndroidEntryPoint
 class LauncherActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var signInViewModelDelegate: SignInViewModelDelegate
+  @Inject
+  lateinit var signInViewModelDelegate: SignInViewModelDelegate
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launcher)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_launcher)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                signInViewModelDelegate.isUserSignedIn
-                    .debounce(500L)
-                    .collectLatest { isSignedIn ->
-                        val actions = if (isSignedIn) {
-                            MainActivity::class
-                        } else {
-                            AuthActivity::class
-                        }
-                        navigationActions(actions)
-                    }
+    lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        signInViewModelDelegate.isUserSignedIn
+          .debounce(500L)
+          .collectLatest { isSignedIn ->
+            val actions = if (isSignedIn) {
+              MainActivity::class
+            } else {
+              AuthActivity::class
             }
-        }
+            navigationActions(actions)
+          }
+      }
     }
+  }
 
-    private fun navigationActions(kClass: KClass<out AppCompatActivity>) {
-        startActivity(Intent(this, kClass.java))
-        finish()
-    }
+  private fun navigationActions(kClass: KClass<out AppCompatActivity>) {
+    startActivity(Intent(this, kClass.java))
+    finish()
+  }
 }

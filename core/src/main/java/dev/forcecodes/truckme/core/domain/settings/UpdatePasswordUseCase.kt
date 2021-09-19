@@ -18,48 +18,54 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdatePasswordUseCase @Inject constructor(
-    private val authStateDataSource: FirebaseAuthStateDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @ApplicationScope private val externalScope: CoroutineScope
+  private val authStateDataSource: FirebaseAuthStateDataSource,
+  @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+  @ApplicationScope private val externalScope: CoroutineScope
 ) : UseCase<CurrentUserPassword, PasswordUpdate>(ioDispatcher) {
 
-    override suspend fun execute(parameters: CurrentUserPassword): PasswordUpdate {
-        val (email, newPasswords, oldPassword) = parameters
-        val passwordUpdate = PasswordUpdate(data = newPasswords)
-        reauthenticate(email, oldPassword).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Timber.e("User authenticated")
-                updatePassword(newPasswords, passwordUpdate)
-            } else {
-                Timber.e(task.exception?.message.toString())
-            }
-        }.await()
-        return passwordUpdate
-    }
+  override suspend fun execute(parameters: CurrentUserPassword): PasswordUpdate {
+    val (email, newPasswords, oldPassword) = parameters
+    val passwordUpdate = PasswordUpdate(data = newPasswords)
+    reauthenticate(email, oldPassword).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
+        Timber.e("User authenticated")
+        updatePassword(newPasswords, passwordUpdate)
+      } else {
+        Timber.e(task.exception?.message.toString())
+      }
+    }.await()
+    return passwordUpdate
+  }
 
-    private fun reauthenticate(email: String, oldPassword: String): Task<Void> {
-        val authCredential = EmailAuthProvider.getCredential(email, oldPassword)
+  private fun reauthenticate(
+    email: String,
+    oldPassword: String
+  ): Task<Void> {
+    val authCredential = EmailAuthProvider.getCredential(email, oldPassword)
 
-        return authStateDataSource.reauthenticate(authCredential)
-    }
+    return authStateDataSource.reauthenticate(authCredential)
+  }
 
-    private fun updatePassword(newPassword: String, passwordUpdate: PasswordUpdate) {
-        externalScope.launch(ioDispatcher) {
-            authStateDataSource.updatePassword(newPassword)
-                .triggerOneShotListener(passwordUpdate)
-        }
+  private fun updatePassword(
+    newPassword: String,
+    passwordUpdate: PasswordUpdate
+  ) {
+    externalScope.launch(ioDispatcher) {
+      authStateDataSource.updatePassword(newPassword)
+        .triggerOneShotListener(passwordUpdate)
     }
+  }
 }
 
 data class CurrentUserPassword(
-    val email: String,
-    val newPassword: String,
-    val oldPassword: String
+  val email: String,
+  val newPassword: String,
+  val oldPassword: String
 )
 
 data class PasswordUpdate(
-    override var data: String? = "",
-    override var exception: Exception? = null,
-    override var isSuccess: Boolean = false
+  override var data: String? = "",
+  override var exception: Exception? = null,
+  override var isSuccess: Boolean = false
 ) : TaskData<String>
 

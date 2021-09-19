@@ -13,26 +13,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PasswordResetViewModel @Inject constructor(
-    private val passwordResetUseCase: PasswordResetUseCase
+  private val passwordResetUseCase: PasswordResetUseCase
 ) : BaseAuthViewModel<UiActionEvent>() {
 
-    private val _passwordResetSuccess = MutableStateFlow(PasswordReset())
-    val passwordResetSuccess = _passwordResetSuccess.asStateFlow()
+  private val _passwordResetSuccess = MutableStateFlow(PasswordReset())
+  val passwordResetSuccess = _passwordResetSuccess.asStateFlow()
 
-    fun submitClick() {
-        submitAndSetLoading()
-        email?.let { email ->
-            reset(email)
-        }
+  fun submitClick() {
+    submitAndSetLoading()
+    email?.let { email ->
+      reset(email)
     }
+  }
 
-    private fun reset(email: String) {
-        viewModelScope.launch {
-            fetchResult(passwordResetUseCase(email)) { data, _ ->
-                data?.let {
-                    _passwordResetSuccess.value = it
-                }
-            }
+  private fun reset(email: String) {
+    viewModelScope.launch {
+      fetchResult(passwordResetUseCase(email)) { data, _ ->
+        data?.let {
+          _passwordResetSuccess.value = it
         }
+      }
     }
+  }
 }

@@ -1,3 +1,3 @@
 package dev.forcecodes.truckme.core.data.fleets
 
-class EmptyFleetsException : Exception()
+class EmptyFleetsException(e: Exception?) : Exception(e)

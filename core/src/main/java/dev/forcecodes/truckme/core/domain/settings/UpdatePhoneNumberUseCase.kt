@@ -10,14 +10,14 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdatePhoneNumberUseCase @Inject constructor(
-    private val authenticatedUserDataSource: FirestoreAuthenticatedUserDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+  private val authenticatedUserDataSource: FirestoreAuthenticatedUserDataSource,
+  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UseCase<Pair<String, PhoneNumber>, PhoneNumberData>(ioDispatcher) {
 
-    override suspend fun execute(parameters: Pair<String, PhoneNumber>): PhoneNumberData {
-        val phoneNumberData = PhoneNumberData(data = parameters.second)
-        authenticatedUserDataSource.setPhoneNumber(parameters.second, parameters.first)
-            .triggerOneShotListener(phoneNumberData)
-        return phoneNumberData
-    }
+  override suspend fun execute(parameters: Pair<String, PhoneNumber>): PhoneNumberData {
+    val phoneNumberData = PhoneNumberData(data = parameters.second)
+    authenticatedUserDataSource.setPhoneNumber(parameters.second, parameters.first)
+      .triggerOneShotListener(phoneNumberData)
+    return phoneNumberData
+  }
 }
