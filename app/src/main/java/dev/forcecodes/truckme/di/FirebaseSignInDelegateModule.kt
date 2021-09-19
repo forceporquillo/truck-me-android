@@ -15,14 +15,14 @@ import javax.inject.Singleton
 @Module
 object FirebaseSignInDelegateModule {
 
-    @Singleton
-    @Provides
-    fun providesSignInViewModelDelegate(
-        dataSource: ObserveAuthStateUseCase,
-        @ApplicationScope applicationScope: CoroutineScope
-    ): SignInViewModelDelegate {
-        return FirebaseSignInViewModelDelegate(
-            dataSource, applicationScope
-        )
-    }
+  @Singleton
+  @Provides
+  fun providesSignInViewModelDelegate(
+    dataSource: ObserveAuthStateUseCase,
+    @ApplicationScope applicationScope: CoroutineScope
+  ): SignInViewModelDelegate {
+    return FirebaseSignInViewModelDelegate(
+      dataSource, applicationScope
+    )
+  }
 }

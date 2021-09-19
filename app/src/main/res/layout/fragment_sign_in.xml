@@ -101,7 +101,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
-                android:enabled="@{viewModel.enablePasswordButton}"
+                android:enabled="@{viewModel.enableSubmitButton}"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:letterSpacing="0"

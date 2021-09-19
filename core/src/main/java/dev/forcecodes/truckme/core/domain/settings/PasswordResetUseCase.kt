@@ -9,21 +9,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 class PasswordResetUseCase @Inject constructor(
-    private val authStateDataSource: FirebaseAuthStateDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+  private val authStateDataSource: FirebaseAuthStateDataSource,
+  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UseCase<String, PasswordReset>(ioDispatcher) {
 
-    override suspend fun execute(parameters: String): PasswordReset {
-        val passwordReset = PasswordReset(data = parameters)
-        return authStateDataSource.requestPasswordReset(parameters)
-            .triggerOneShotListener(passwordReset)!!
-    }
+  override suspend fun execute(parameters: String): PasswordReset {
+    val passwordReset = PasswordReset(data = parameters)
+    return authStateDataSource.requestPasswordReset(parameters)
+      .triggerOneShotListener(passwordReset)!!
+  }
 }
 
 data class PasswordReset(
-    override var data: String? = "",
-    override var exception: Exception? = null,
-    override var isSuccess: Boolean = false
+  override var data: String? = "",
+  override var exception: Exception? = null,
+  override var isSuccess: Boolean = false
 ) : TaskData<String>
 
 

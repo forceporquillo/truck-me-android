@@ -9,11 +9,11 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 abstract class FlowUseCase<in P, R>(private val coroutineDispatcher: CoroutineDispatcher) {
-    operator fun invoke(parameters: P): Flow<Result<R>> = execute(parameters)
-        .catch { e -> emit(Result.Error(Exception(e))) }
-        .flowOn(coroutineDispatcher)
+  operator fun invoke(parameters: P): Flow<Result<R>> = execute(parameters)
+    .catch { e -> emit(Result.Error(Exception(e))) }
+    .flowOn(coroutineDispatcher)
 
-    protected abstract fun execute(parameters: P): Flow<Result<R>>
+  protected abstract fun execute(parameters: P): Flow<Result<R>>
 }
 
 /**
@@ -21,31 +21,31 @@ abstract class FlowUseCase<in P, R>(private val coroutineDispatcher: CoroutineDi
  */
 abstract class UseCase<in P, R>(private val coroutineDispatcher: CoroutineDispatcher) {
 
-    /** Executes the use case asynchronously and returns a [Result].
-     *
-     * @return a [Result].
-     *
-     * @param parameters the input parameters to run the use case with
-     */
-    suspend operator fun invoke(parameters: P): Result<R> {
-        return try {
-            // Moving all use case's executions to the injected dispatcher
-            // In production code, this is usually the Default dispatcher (background thread)
-            // In tests, this becomes a TestCoroutineDispatcher
-            withContext(coroutineDispatcher) {
-                execute(parameters).let {
-                    Result.Success(it)
-                }
-            }
-        } catch (e: Exception) {
-            Timber.e(e.message.toString())
-            Result.Error(e)
+  /** Executes the use case asynchronously and returns a [Result].
+   *
+   * @return a [Result].
+   *
+   * @param parameters the input parameters to run the use case with
+   */
+  suspend operator fun invoke(parameters: P): Result<R> {
+    return try {
+      // Moving all use case's executions to the injected dispatcher
+      // In production code, this is usually the Default dispatcher (background thread)
+      // In tests, this becomes a TestCoroutineDispatcher
+      withContext(coroutineDispatcher) {
+        execute(parameters).let {
+          Result.Success(it)
         }
+      }
+    } catch (e: Exception) {
+      Timber.e(e.message.toString())
+      Result.Error(e)
     }
+  }
 
-    /**
-     * Override this to set the code to be executed.
-     */
-    @Throws(RuntimeException::class)
-    protected abstract suspend fun execute(parameters: P): R
+  /**
+   * Override this to set the code to be executed.
+   */
+  @Throws(RuntimeException::class)
+  protected abstract suspend fun execute(parameters: P): R
 }

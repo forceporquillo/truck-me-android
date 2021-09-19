@@ -6,12 +6,12 @@ import kotlinx.coroutines.channels.Channel
 
 interface UiActionEvent
 
-abstract class BaseViewModel<E: UiActionEvent> : ViewModel() {
+abstract class BaseViewModel<E : UiActionEvent> : ViewModel() {
 
-    protected val mUiEvents = Channel<E>(capacity = Channel.CONFLATED)
+  protected val mUiEvents = Channel<E>(capacity = Channel.CONFLATED)
 
-    @Suppress("UNCHECKED_CAST")
-    fun sendUiEvent(event: UiActionEvent) {
-        mUiEvents.tryOffer(event as E)
-    }
+  @Suppress("UNCHECKED_CAST")
+  fun sendUiEvent(event: UiActionEvent) {
+    mUiEvents.tryOffer(event as E)
+  }
 }

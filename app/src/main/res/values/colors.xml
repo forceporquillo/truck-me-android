@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="surface">#FFF5F5F5</color>
-    <color name="green">#FF00FF00</color>
+    <color name="active">#45A048</color>
+    <color name="inactive">#C7372B</color>
 </resources>

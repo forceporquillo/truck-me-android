@@ -14,9 +14,19 @@
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_background"
         android:elevation="5dp"
+        app:title="Test"
+        app:titleTextAppearance="@style/Theme.Truckme.ToolbarTitleBold"
         app:navigationIconTint="@color/white"
         app:titleCentered="true"
         app:titleTextColor="@color/white" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_container"

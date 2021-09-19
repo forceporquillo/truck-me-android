@@ -21,4 +21,10 @@
     <dimen name="spacing_extra_largest">48dp</dimen>
 
     <dimen name="profile_size">112dp</dimen>
+
+    <!--Integer Value that number of column in RecyclerView-->
+    <integer name="gallery_columns">3</integer>
+
+    <!-- inter spacing between RecyclerView's Item-->
+    <dimen name="gallery_list_spacing">4dp</dimen>
 </resources>

@@ -9,6 +9,8 @@
         android:id="@+id/accountFragment"
         android:name="dev.forcecodes.truckme.ui.account.AccountSettingsFragment"
         android:label="Account Settings"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+
+    </fragment>
 
 </navigation>

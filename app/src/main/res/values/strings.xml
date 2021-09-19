@@ -20,4 +20,13 @@
     <string name="vehicle_name">Vehicle Name</string>
     <string name="plate_number">Plate Number</string>
     <string name="description">Description</string>
+    <string name="choose_photo">Choose photo</string>
+    <string name="unsave_changes">Unsaved changes</string>
+    <string name="settings_changes_dialog_message">You have made changes to your settings. Do you want to save or discard them?</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="old_password">Current Password</string>
+    <string name="confirm_password_change">Confirm Password Change</string>
+    <string name="change_password">Change Password</string>
+    <string name="security_measures">Re-authenticate with your old password to reflect your new password changes.</string>
 </resources>
