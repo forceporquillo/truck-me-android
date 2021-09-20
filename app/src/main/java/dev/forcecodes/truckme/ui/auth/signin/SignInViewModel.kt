@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.data.AuthBasicInfo
-import dev.forcecodes.truckme.core.data.ObserveAuthStateUseCase
-import dev.forcecodes.truckme.core.data.SignInUseCase
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
 import dev.forcecodes.truckme.core.di.ApplicationScope
+import dev.forcecodes.truckme.core.domain.signin.ObserveAuthStateUseCase
+import dev.forcecodes.truckme.core.domain.signin.SignInUseCase
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.WhileViewSubscribed
 import dev.forcecodes.truckme.ui.auth.BaseAuthViewModel

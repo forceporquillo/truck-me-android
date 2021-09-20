@@ -2,16 +2,14 @@ package dev.forcecodes.truckme.ui.account
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.base.BaseBottomSheetDialogFragment
 import dev.forcecodes.truckme.databinding.BottomSheetConfirmPasswordChangeBinding
 import dev.forcecodes.truckme.extensions.observeWithOnRepeatLifecycle
 import dev.forcecodes.truckme.extensions.postRunnable
@@ -19,7 +17,7 @@ import dev.forcecodes.truckme.extensions.textChangeObserver
 import dev.forcecodes.truckme.extensions.viewBinding
 import kotlinx.coroutines.flow.collect
 
-class ConfirmPasswordChangeBottomSheet : BottomSheetDialogFragment() {
+class ConfirmPasswordChangeBottomSheet : BaseBottomSheetDialogFragment(R.layout.bottom_sheet_confirm_password_change) {
 
   companion object {
     const val TAG = "ConfirmPasswordChangeBottomSheet"
@@ -34,14 +32,6 @@ class ConfirmPasswordChangeBottomSheet : BottomSheetDialogFragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
-  }
-
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.bottom_sheet_confirm_password_change, container, false)
   }
 
   override fun onViewCreated(
@@ -72,7 +62,7 @@ class ConfirmPasswordChangeBottomSheet : BottomSheetDialogFragment() {
     // observe text changes and consider it as a
     // dirty flag to clear out the error message.
     binding.oldPasswordEt.textChangeObserver { value ->
-      if (oldPassword == null && value == null) {
+      if (oldPassword == null) {
         return@textChangeObserver
       }
 
