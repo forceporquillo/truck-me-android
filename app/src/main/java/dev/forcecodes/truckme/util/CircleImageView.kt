@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package dev.forcecodes.truckme.util.widgets
+package dev.forcecodes.truckme.util
 
 import android.annotation.SuppressLint
 import android.content.Context
