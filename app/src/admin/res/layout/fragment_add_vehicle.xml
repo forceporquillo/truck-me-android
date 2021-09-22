@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="viewModel"
+            type="dev.forcecodes.truckme.ui.fleet.VehicleViewModel" />
+    </data>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingEnd="@dimen/spacing_large">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large">
+
+            <dev.forcecodes.truckme.util.CircleImageView
+                android:id="@+id/driver_profile"
+                android:layout_width="@dimen/profile_size"
+                android:layout_height="@dimen/profile_size"
+                app:civ_border_color="@color/teal_700"
+                app:civ_border_width="2dp"
+                app:civ_circle_background_color="@color/teal_700" />
+
+            <dev.forcecodes.truckme.util.CircleImageView
+                android:id="@+id/avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_user" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/add_image_button"
+                style="@style/ClickableButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="77dp"
+                android:layout_marginTop="77dp"
+                app:cardBackgroundColor="@color/teal_700"
+                app:cardCornerRadius="360dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@null"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_add" />
+
+            </androidx.cardview.widget.CardView>
+
+        </FrameLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/full_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:hint="@string/vehicle_name"
+            app:errorEnabled="true"
+            app:startIconDrawable="@drawable/nav_ic_fleet">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/vehicle_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/plate_number"
+            app:errorEnabled="true"
+            app:startIconDrawable="@drawable/ic_confirmation_number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/plate_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:hint="@string/description"
+            app:startIconDrawable="@drawable/ic_note">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/description"
+                android:maxLines="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:enabled="@{viewModel.enableSubmitButton}"
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:letterSpacing="0"
+            android:text="@string/save_changes"
+            app:cornerRadius="5dp"
+            app:layout_constraintTop_toBottomOf="@id/phone_number" />
+    </LinearLayout>
+
+</ScrollView>
+</layout>

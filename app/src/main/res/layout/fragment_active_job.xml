@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+  <androidx.fragment.app.FragmentContainerView
+      android:name="com.google.android.gms.maps.SupportMapFragment"
+      android:id="@+id/map_fragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <LinearLayout
+      android:background="@color/teal_700"
+      android:gravity="center"
+      android:layout_gravity="bottom"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/ClickableButtonStyle"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/teal_700"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginBottom="@dimen/spacing_extra_small"
+            android:paddingTop="@dimen/spacing_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_active_job_emergency"/>
+
+        <TextView
+            android:textSize="12sp"
+            android:paddingBottom="@dimen/spacing_small"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Emergency"/>
+      </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:alpha=".8"
+        android:background="@color/cardview_dark_background"
+        android:layout_width="1px"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/ClickableButtonStyle"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/teal_700"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginBottom="@dimen/spacing_extra_small"
+            android:paddingTop="@dimen/spacing_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_active_job_emergency"/>
+
+        <TextView
+            android:textSize="12sp"
+            android:paddingBottom="@dimen/spacing_small"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chat"/>
+      </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:alpha=".8"
+        android:background="@color/cardview_dark_background"
+        android:layout_width="1px"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/ClickableButtonStyle"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/teal_700"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginBottom="@dimen/spacing_extra_small"
+            android:paddingTop="@dimen/spacing_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_active_job_emergency"/>
+
+        <TextView
+            android:textSize="12sp"
+            android:paddingBottom="@dimen/spacing_small"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Emergency"/>
+      </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+  </LinearLayout>
+</FrameLayout>
