@@ -3,6 +3,7 @@ package dev.forcecodes.truckme.core.data.fleets
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.util.driverCollection
@@ -21,9 +22,10 @@ class FleetsDataSourceImpl @Inject constructor(
       .add(data)
   }
 
-  override fun addDriver(data: DriverUri): Task<DocumentReference> {
+  override fun addDriver(data: DriverUri): Task<Void> {
     return firestore.driverCollection()
-      .add(data)
+      .document(data.id)
+      .set(data)
   }
 
   override fun observeVehicleChanges() = firestore.vehicleCollection().fleetSnapshots<VehicleUri>()

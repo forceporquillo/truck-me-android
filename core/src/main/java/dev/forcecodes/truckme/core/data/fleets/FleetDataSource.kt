@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FleetDataSource {
   fun addVehicle(data: VehicleUri): Task<DocumentReference>
-  fun addDriver(data: DriverUri): Task<DocumentReference>
+  fun addDriver(data: DriverUri): Task<Void>
   fun observeVehicleChanges(): Flow<Result<List<VehicleUri>>>
   fun observeDriverChanges(): Flow<Result<List<DriverUri>>>
 }

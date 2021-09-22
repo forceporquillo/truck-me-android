@@ -45,6 +45,7 @@ class ObserveAuthStateUseCase @Inject constructor(
 
       if (userResult is Success) {
         if (userResult.data != null) {
+          Timber.e(userResult.data.getUid())
           processUserData(userResult.data)
         } else {
           Timber.e("isRegistered null")
@@ -71,14 +72,14 @@ class ObserveAuthStateUseCase @Inject constructor(
     } else if (userData.getUid() != null) {
       userSignedIn(userData)
     } else {
-      send(dev.forcecodes.truckme.core.util.Result.Success(FirebaseRegisteredUserInfo(userData, false)))
+      send(Success(FirebaseRegisteredUserInfo(userData, false)))
     }
   }
 
   private suspend fun UserAuthState.userSignedIn(
     userData: AuthenticatedUserInfoBasic
   ) {
-    send(dev.forcecodes.truckme.core.util.Result.Success(FirebaseRegisteredUserInfo(userData, false)))
+    send(Success(FirebaseRegisteredUserInfo(userData, false)))
   }
 
   private suspend fun UserAuthState.userSignedOut(
@@ -91,5 +92,5 @@ class ObserveAuthStateUseCase @Inject constructor(
   private fun FirebaseRegisteredUserInfoResult(
     userData: AuthenticatedUserInfoBasic,
     isAdmin: Boolean
-  ) = Result.Success(FirebaseRegisteredUserInfo(userData, isAdmin))
+  ) = Success(FirebaseRegisteredUserInfo(userData, isAdmin))
 }

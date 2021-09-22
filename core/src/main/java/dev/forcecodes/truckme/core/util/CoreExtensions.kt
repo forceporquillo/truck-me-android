@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.tasks.await
 
+// TODO migrate
+
 internal const val PROFILE = "profile.jpg"
 internal const val REFERENCE = dev.forcecodes.truckme.core.BuildConfig.FLAVOR
 
@@ -36,6 +38,15 @@ fun FirebaseFirestore.updatePhoneNumberDocument(
   phoneNumber: PhoneNumber
 ): Task<Void> {
   return collection(REFERENCE).document(userId).set(phoneNumber)
+}
+
+fun FirebaseFirestore.fleetRegDocument(
+  userId: String
+): DocumentReference {
+  return collection("fleets")
+    .document("registration")
+    .collection("driver")
+    .document(userId)
 }
 
 fun FirebaseFirestore.driverCollection(): CollectionReference {

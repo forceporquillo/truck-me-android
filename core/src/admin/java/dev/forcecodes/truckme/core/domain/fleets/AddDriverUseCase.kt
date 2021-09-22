@@ -1,22 +1,23 @@
 package dev.forcecodes.truckme.core.domain.fleets
 
+import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.data.fleets.*
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase
-import dev.forcecodes.truckme.core.domain.settings.ProfileData
 import dev.forcecodes.truckme.core.util.*
-import dev.forcecodes.truckme.core.util.FleetDelegate
 import kotlinx.coroutines.CoroutineDispatcher
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO register user
 @Singleton
 class AddDriverUseCase @Inject constructor(
   private val fleetDataSource: FleetDataSource,
   private val fleetCloudStorage: FleetStorageDataSource,
+  private val authStateDataSource: FirebaseAuthStateDataSource,
+  private val registeredUserDataSource: RegisteredDriverDataSource,
   private val driverDomainMapper: DriverDomainMapper,
   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UseCase<DriverByteArray, DriverResult>(ioDispatcher) {
@@ -50,8 +51,13 @@ class AddDriverUseCase @Inject constructor(
       // Step #4. Save to NoSQL DB as collection reference. Otherwise, ignore.
       vehicleMapper ?: driverDomainMapper.invoke(parameters, null)
     ).triggerOneShotListener(vehicleAddResult)
+    register(parameters.id)
 
     return vehicleAddResult
+  }
+
+  private fun register(userId: String) {
+    registeredUserDataSource.register(userId)
   }
 }
 

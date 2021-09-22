@@ -49,6 +49,7 @@ data class AuthBasicInfo(
 interface AuthStateDataSource {
   suspend fun requestPasswordReset(email: String): Task<Void>
   suspend fun updatePassword(password: String): Task<Void>
+  suspend fun createUserAccount(authBasicInfo: AuthBasicInfo): Task<AuthResult>
   fun signIn(basicInfo: AuthBasicInfo): Task<AuthResult>
   fun getAuthenticatedBasicInfo(): Flow<Result<AuthenticatedUserInfoBasic?>>
   fun updateProfile(request: UserProfileChangeRequest)
@@ -92,6 +93,11 @@ class FirebaseAuthStateDataSource @Inject constructor(
     return firebaseAuth signInWith basicInfo
   }
 
+  override suspend fun createUserAccount(authBasicInfo: AuthBasicInfo): Task<AuthResult> {
+    val (email, password) = authBasicInfo
+    return firebaseAuth.createUserWithEmailAndPassword(email, password)
+  }
+
   override fun updateProfile(request: UserProfileChangeRequest) {
     firebaseAuth.currentUser!!.updateProfile(request)
   }
@@ -109,7 +115,6 @@ class FirebaseAuthStateDataSource @Inject constructor(
     basicInfo.password
   )
 }
-
 
 class FirestoreAuthenticatedUserDataSource @Inject constructor(
   val firestore: FirebaseFirestore
