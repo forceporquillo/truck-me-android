@@ -46,8 +46,6 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
           if (isInterceptUiEvent) {
             showDiscardDialog()
           }
-
-          (requireActivity() as MainActivity).test()
         }
       }
     }
