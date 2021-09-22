@@ -1,92 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.core.widget.NestedScrollView
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="dev.forcecodes.truckme.ui.fleet.FleetViewModel" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/driver"
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingBottom="6dp"
-                android:text="Driver"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fleet_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/driver"
-                tools:listitem="@layout/fleet_item" />
-
-            <TextView
-                android:id="@+id/vehicle"
-                style="@style/TextAppearance.AppCompat.Headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingBottom="6dp"
-                android:text="Vehicles"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/vehicle_fleet_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/driver"
-                tools:listitem="@layout/fleet_item" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="28dp"
-        app:cardUseCompatPadding="false">
-
-        <RelativeLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fleet_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/gradient_background">
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="@dimen/spacing_normal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/fleet_item" />
 
-            <ImageView
-                android:layout_width="24dp"
+        <com.nambimobile.widgets.efab.ExpandableFabLayout
+            android:id="@+id/expandable_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|bottom"
+            app:cardCornerRadius="28dp"
+            app:cardUseCompatPadding="false">
+
+            <com.nambimobile.widgets.efab.Overlay
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.nambimobile.widgets.efab.ExpandableFab
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_add"
-                app:tint="@color/white" />
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                app:efab_orientation="portrait" />
 
-        </RelativeLayout>
+            <com.nambimobile.widgets.efab.FabOption
+                android:id="@+id/add_driver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{(v) -> viewModel.addDriverClick() }"
+                app:fab_icon="@drawable/ic_person_add"
+                app:label_marginPx="16"
+                app:label_position="left"
+                app:label_text="Driver" />
 
-    </androidx.cardview.widget.CardView>
+            <com.nambimobile.widgets.efab.FabOption
+                android:id="@+id/add_vehicle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{(v) -> viewModel.addVehicleClick() }"
+                app:fab_icon="@drawable/nav_ic_fleet"
+                app:label_marginPx="16"
+                app:label_position="left"
+                app:label_text="Vehicle" />
 
-</FrameLayout>
+        </com.nambimobile.widgets.efab.ExpandableFabLayout>
+
+        <FrameLayout
+            android:visibility="@{viewModel.fleetLoadStatueIsLoading == true ? View.VISIBLE : View.GONE}"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:indeterminate="true"
+                android:visibility="@{viewModel.fleetLoadStatueIsLoading == true ? View.VISIBLE : View.GONE}"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+    </FrameLayout>
+
+</layout>

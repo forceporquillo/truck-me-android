@@ -8,18 +8,37 @@
     <fragment
         android:id="@+id/fleetFragment"
         android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
-        android:label="FleetFragment"
-        tools:layout="@layout/fragment_fleet" >
+        android:label="Manage Fleet"
+        tools:layout="@layout/fragment_fleet">
 
         <action
-            android:id="@+id/action_fleetFragment_to_addDriverFragment"
-            app:destination="@id/addDriverFragment" />
+            android:id="@+id/to_addDriverFragment"
+            app:destination="@id/addDriverFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/to_addVehicleFragment"
+            app:destination="@id/addVehicleFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
 
     <fragment
         android:id="@+id/addDriverFragment"
         android:name="dev.forcecodes.truckme.ui.fleet.AddDriverFragment"
-        android:label="AddDriverFragment"
-        tools:layout="@layout/fragment_add_driver"/>
+        android:label="Add Driver"
+        tools:layout="@layout/fragment_add_driver" />
+
+    <fragment
+        android:id="@+id/addVehicleFragment"
+        android:name="dev.forcecodes.truckme.ui.fleet.AddVehicleFragment"
+        android:label="Add Vehicle"
+        tools:layout="@layout/fragment_add_vehicle" />
 
 </navigation>

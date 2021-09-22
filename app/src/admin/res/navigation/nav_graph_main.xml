@@ -4,26 +4,8 @@
     android:id="@+id/nav_graph.xml"
     app:startDestination="@id/home">
 
-    <fragment
-        android:id="@+id/home"
-        android:name="dev.forcecodes.truckme.ui.home.HomeFragment"
-        android:label="Dashboard" />
-
-    <include app:graph="@navigation/nav_graph_fleet"/>
-
-    <fragment
-        android:id="@+id/statistics"
-        android:name="dev.forcecodes.truckme.ui.statistics.StatisticsFragment"
-        android:label="Statistics" />
-
-    <fragment
-        android:id="@+id/history"
-        android:name="dev.forcecodes.truckme.ui.history.HistoryFragment"
-        android:label="History" />
-
-    <fragment
-        android:id="@+id/account"
-        android:name="dev.forcecodes.truckme.ui.account.AccountSettingsFragment"
-        android:label="Account" />
+    <include app:graph="@navigation/nav_graph_fleet" />
+    <include app:graph="@navigation/nav_graph_home" />
+    <include app:graph="@navigation/nav_graph_account" />
 
 </navigation>

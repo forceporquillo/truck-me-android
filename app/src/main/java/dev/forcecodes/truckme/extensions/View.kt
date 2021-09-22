@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -107,6 +109,16 @@ fun AppCompatEditText.textChangeObserver(block: (String) -> Unit) {
   })
 }
 
+fun AutoCompleteTextView.textChangeObserver(block: (String) -> Unit) {
+  addTextChangedListener(object : TextChangeListener() {
+    override fun afterTextChanged(s: Editable?) {
+      super.afterTextChanged(s)
+      val inputText = s.toString()
+      block(inputText)
+    }
+  })
+}
+
 inline fun View.updateMarginParams(block: ViewGroup.MarginLayoutParams.() -> Unit) {
   val params = layoutParams as ViewGroup.MarginLayoutParams
   block(params)
@@ -180,21 +192,14 @@ fun View.disableButtonForAWhile(block: () -> Unit) {
  * Listens to scroll offset position of [RecyclerView] and add [Toolbar] elevation if
  * first visible item is not present in the view hierarchy.
  */
-fun RecyclerView.withToolbarElevationListener(
-  toolbar: Toolbar,
+fun <T: View> NestedScrollView.withToolbarElevationListener(
+  view: T,
   block: (() -> Unit)? = null
 ) {
-  addOnScrollListener(object : RecyclerView.OnScrollListener() {
-    override fun onScrolled(
-      recyclerView: RecyclerView,
-      dx: Int,
-      dy: Int
-    ) {
-      super.onScrolled(recyclerView, dx, dy)
-      toolbar.elevation = if (!canScrollVertically(-1)) 0f else 4f
-      block?.invoke()
-    }
-  })
+  setOnScrollChangeListener { _, _, _, _, _ ->
+    view.elevation = if (!canScrollVertically(-1)) 0f else 4f
+    block?.invoke()
+  }
 }
 
 fun View.postKt(block: () -> Unit) {

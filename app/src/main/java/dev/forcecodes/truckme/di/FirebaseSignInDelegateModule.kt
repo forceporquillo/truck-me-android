@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.forcecodes.truckme.core.data.ObserveAuthStateUseCase
 import dev.forcecodes.truckme.core.di.ApplicationScope
+import dev.forcecodes.truckme.core.domain.signin.ObserveAuthStateUseCase
 import dev.forcecodes.truckme.ui.auth.signin.FirebaseSignInViewModelDelegate
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.CoroutineScope

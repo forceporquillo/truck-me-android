@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="8dp"
+    android:layout_height="wrap_content"
+    >
+
+  <LinearLayout
+      android:padding="@dimen/spacing_medium"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/spacing_extra_small"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_h4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Deliver to Kaha"
+        />
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Warehouse - Quezon City"
+        />
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Acrylic Protector"
+        />
+
+  </LinearLayout>
+</androidx.cardview.widget.CardView>
