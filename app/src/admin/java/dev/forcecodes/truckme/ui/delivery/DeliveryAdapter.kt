@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.ui.home
+package dev.forcecodes.truckme.ui.delivery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
