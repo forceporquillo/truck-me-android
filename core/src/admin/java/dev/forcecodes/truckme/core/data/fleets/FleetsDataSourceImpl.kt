@@ -17,9 +17,10 @@ class FleetsDataSourceImpl @Inject constructor(
   val firestore: FirebaseFirestore
 ) : FleetDataSource {
 
-  override fun addVehicle(data: VehicleUri): Task<DocumentReference> {
+  override fun addVehicle(data: VehicleUri): Task<Void> {
     return firestore.vehicleCollection()
-      .add(data)
+      .document(data.id)
+      .set(data)
   }
 
   override fun addDriver(data: DriverUri): Task<Void> {

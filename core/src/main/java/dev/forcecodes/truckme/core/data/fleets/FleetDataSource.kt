@@ -8,7 +8,7 @@ import dev.forcecodes.truckme.core.util.Result
 import kotlinx.coroutines.flow.Flow
 
 interface FleetDataSource {
-  fun addVehicle(data: VehicleUri): Task<DocumentReference>
+  fun addVehicle(data: VehicleUri): Task<Void>
   fun addDriver(data: DriverUri): Task<Void>
   fun observeVehicleChanges(): Flow<Result<List<VehicleUri>>>
   fun observeDriverChanges(): Flow<Result<List<DriverUri>>>
