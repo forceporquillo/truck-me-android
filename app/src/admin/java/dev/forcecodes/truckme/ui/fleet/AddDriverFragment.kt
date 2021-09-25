@@ -1,17 +1,86 @@
 package dev.forcecodes.truckme.ui.fleet
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentAddDriverBinding
+import dev.forcecodes.truckme.extensions.navigateUp
+import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
+import dev.forcecodes.truckme.extensions.textChangeObserver
 import dev.forcecodes.truckme.extensions.viewBinding
+import dev.forcecodes.truckme.ui.gallery.GalleryFragment
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class AddDriverFragment : Fragment(R.layout.fragment_add_driver) {
+@AndroidEntryPoint
+class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
 
-    private val binding by viewBinding(FragmentAddDriverBinding::bind)
+  private val binding by viewBinding(FragmentAddDriverBinding::bind)
+  private val viewModel by viewModels<AddDriverViewModel>()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    binding.lifecycleOwner = viewLifecycleOwner
+    binding.viewModel = viewModel
+
+    binding.apply {
+      fullNameEt.textChangeObserver(viewModel!!::fullName)
+      emailEt.textChangeObserver(viewModel!!::email)
+      passwordEt.textChangeObserver(viewModel!!::password)
+      confirmPasswordEt.textChangeObserver(viewModel!!::confirmPassword)
+      phoneNumberEt.textChangeObserver(viewModel!!::contactNumber)
     }
+
+    repeatOnLifecycleParallel {
+      launch {
+        viewModel.enableSubmitButton.collect {
+          binding.submit.isEnabled = it
+        }
+      }
+      launch {
+        viewModel.invalidContactNumber.collect {
+          binding.phoneNumber.error = it
+        }
+      }
+      launch {
+        viewModel.invalidEmail.collect {
+          binding.email.error = it
+        }
+      }
+      launch {
+        viewModel.passwordNotMatch.collect {
+          binding.confirmPassword.error = it
+        }
+      }
+      launch {
+        viewModel.uploadState.collect {
+          if (it is FleetUploadState.Success) {
+            navigateUp()
+          } else if (it is FleetUploadState.Error) {
+            Toast.makeText(requireContext(), "${it.exception}", Toast.LENGTH_SHORT).show()
+          }
+        }
+      }
+    }
+
+    binding.submit.setOnClickListener {
+      viewModel.submit()
+    }
+  }
+
+  override fun onProfileChange(profileInBytes: ByteArray) {
+    viewModel.profileIconInBytes(profileInBytes)
+  }
+
+  override fun requireGalleryViews(): GalleryViews {
+    return binding.run {
+      GalleryViews(driverProfile, avatar, addImageButton)
+    }
+  }
+
+  override fun onImageSelectedResult(imageUri: Uri) {}
 }

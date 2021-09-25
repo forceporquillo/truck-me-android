@@ -1,66 +1,77 @@
 package dev.forcecodes.truckme.ui.fleet
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ConcatAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
-import dev.forcecodes.truckme.databinding.FleetItemBinding
 import dev.forcecodes.truckme.databinding.FragmentFleetBinding
-import dev.forcecodes.truckme.extensions.updateMarginParams
+import dev.forcecodes.truckme.extensions.dispatchWhenBackPress
+import dev.forcecodes.truckme.extensions.navigateUp
+import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.viewBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class FleetFragment : Fragment(R.layout.fragment_fleet), FleetItemListener {
+@AndroidEntryPoint
+class FleetFragment : Fragment(R.layout.fragment_fleet) {
 
-    private val binding by viewBinding(FragmentFleetBinding::bind)
+  private val viewModel by viewModels<FleetViewModel>()
+  private val binding by viewBinding(FragmentFleetBinding::bind)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.fleetList.adapter = FleetAdapter(this)
-        binding.vehicleFleetList.adapter = FleetAdapter(this)
+  private lateinit var vehicleAdapter: VehicleFleetAdapter
+  private lateinit var driverAdapter: DriverFleetAdapter
+
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    binding.lifecycleOwner = viewLifecycleOwner
+    binding.viewModel = viewModel
+
+    vehicleAdapter = VehicleFleetAdapter {}
+    driverAdapter = DriverFleetAdapter {}
+
+    observeChanges()
+    dispatchBackPress()
+    initAdapter()
+  }
+
+  private fun initAdapter() {
+    val concatAdapter = ConcatAdapter(driverAdapter, vehicleAdapter)
+    binding.fleetList.adapter = concatAdapter
+  }
+
+  private fun observeChanges() = repeatOnLifecycleParallel {
+    launch {
+      viewModel.vehicleList.collect(vehicleAdapter::submitList)
     }
-
-    override fun onItemClick() {
-        findNavController().navigate(R.id.action_fleetFragment_to_addDriverFragment)
+    launch {
+      viewModel.driverList.collect(driverAdapter::submitList)
     }
-}
-
-interface FleetItemListener {
-    fun onItemClick()
-}
-
-class FleetAdapter(private val listener: FleetItemListener) :
-    RecyclerView.Adapter<FleetViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FleetViewHolder {
-        return FleetViewHolder(
-            FleetItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent, false
-            )
-        )
-    }
-
-    override fun onBindViewHolder(holder: FleetViewHolder, position: Int) {
-        if (position == 9) {
-            holder.itemView.updateMarginParams {
-                val resource = holder.itemView.context.resources
-                bottomMargin = resource.getDimensionPixelOffset(R.dimen.spacing_extra_small)
-            }
+    launch {
+      viewModel.fleetNavActionEvent.collect { uiEvent ->
+        val destinationId = if (uiEvent is FleetNavActionEvent.AddVehicle) {
+          R.id.to_addVehicleFragment
+        } else {
+          R.id.to_addDriverFragment
         }
-        holder.itemView.setOnClickListener { listener.onItemClick() }
+        findNavController().navigate(destinationId)
+      }
     }
+  }
 
-    override fun getItemCount(): Int {
-        return 10
+  private fun dispatchBackPress() {
+    dispatchWhenBackPress {
+      if (binding.expandableLayout.isOpen()) {
+        binding.expandableLayout.close()
+      } else {
+        navigateUp()
+      }
     }
-}
-
-class FleetViewHolder(
-    private val binding: FleetItemBinding
-) : RecyclerView.ViewHolder(binding.root) {
-
+  }
 }
