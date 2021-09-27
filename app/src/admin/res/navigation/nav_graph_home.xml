@@ -5,20 +5,18 @@
     android:id="@+id/home"
     app:startDestination="@id/homeFragment">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="dev.forcecodes.truckme.ui.home.HomeFragment"
-        android:label="Dashboard"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_addDeliveryFragment"
-            app:destination="@id/addDeliveryFragment" />
-    </fragment>
+  <fragment
+      android:id="@+id/homeFragment"
+      android:name="dev.forcecodes.truckme.ui.dashboard.HomeFragment"
+      android:label="Dashboard"
+      tools:layout="@layout/fragment_home">
 
-    <fragment
-        android:id="@+id/addDeliveryFragment"
-        android:name="dev.forcecodes.truckme.ui.home.AddDeliveryFragment"
-        android:label="Add Delivery"
-        tools:layout="@layout/fragment_add_delivery"/>
+    <action
+        android:id="@+id/to_map_nav_graph"
+        app:destination="@id/map_nav_graph" />
+
+  </fragment>
+
+  <include app:graph="@navigation/nav_graph_map_destination" />
 
 </navigation>

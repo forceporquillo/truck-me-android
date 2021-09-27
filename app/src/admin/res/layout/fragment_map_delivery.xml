@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+  <data>
+    <import type="android.view.View"/>
+
+    <variable
+        name="viewModel"
+        type="dev.forcecodes.truckme.ui.dashboard.MapDeliverySharedViewModel"/>
+  </data>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <androidx.fragment.app.FragmentContainerView
@@ -13,12 +24,13 @@
       />
 
   <ImageView
-      android:visibility="gone"
+      android:visibility="@{viewModel.showMarker ? View.VISIBLE : View.GONE}"
       android:id="@+id/marker_center"
       android:layout_gravity="center"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/ic_map_location_drop"/>
+      android:src="@drawable/ic_map_location_drop"
+      />
 
   <androidx.coordinatorlayout.widget.CoordinatorLayout
       android:layout_width="match_parent"
@@ -41,26 +53,60 @@
           android:orientation="horizontal"
           >
 
-        <ImageView
-            android:padding="@dimen/spacing_medium"
+        <FrameLayout
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_map_pin"
+            android:padding="@dimen/spacing_medium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/destination"
-            android:ellipsize="end"
-            style="@style/TextAppearance.AppCompat.Subhead"
+          <ImageView
+              android:visibility="@{viewModel.isReverseSearchLoading() ? View.GONE : View.VISIBLE}"
+              android:src="@drawable/ic_map_pin"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+
+          <ProgressBar
+              android:visibility="@{viewModel.isReverseSearchLoading() ? View.VISIBLE : View.GONE}"
+              android:id="@+id/search_bar_progress"
+              android:indeterminate="true"
+              android:layout_width="24dp"
+              android:layout_height="24dp"/>
+
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            />
+            >
+
+          <TextView
+              android:maxLines="1"
+              tools:text="FEU Institute of Technology"
+              android:id="@+id/destination"
+              android:ellipsize="end"
+              style="@style/TextAppearance.AppCompat.Subhead"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+
+          <TextView
+              android:id="@+id/address"
+              android:maxLines="1"
+              android:visibility="gone"
+              tools:text="P. Paredes Street, Sampaloc, Manila, Metro Manila, Philippines"
+              android:ellipsize="end"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+        </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/destination_close_btn"
+            android:onClick="@{(v) -> viewModel.clear()}"
             style="@style/ClickableButtonStyle"
             android:layout_margin="@dimen/spacing_small"
             app:cardElevation="0dp"
@@ -101,7 +147,8 @@
       android:id="@+id/progress_container"
       android:background="@color/white"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      >
 
     <ProgressBar
         android:indeterminate="true"
@@ -113,3 +160,4 @@
   </FrameLayout>
 
 </FrameLayout>
+</layout>

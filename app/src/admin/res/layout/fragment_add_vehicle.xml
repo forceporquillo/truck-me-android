@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="dev.forcecodes.truckme.ui.fleet.VehicleViewModel" />
+            type="dev.forcecodes.truckme.ui.fleet.AddVehicleViewModel" />
     </data>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

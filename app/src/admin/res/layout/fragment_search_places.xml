@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+  <data>
+    <import type="android.view.View"/>
+
+    <variable
+        name="viewModel"
+        type="dev.forcecodes.truckme.ui.search.SearchPlacesViewModel"
+        />
+  </data>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <com.google.android.material.progressindicator.LinearProgressIndicator
+      android:id="@+id/progress_indicator"
+      android:alpha="0"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:layout_below="@id/progress_indicator"
+      android:id="@+id/recyclerview"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:itemCount="20"
+      tools:listitem="@layout/place_direction_item"
+      />
+
+  <TextView
+      android:gravity="center"
+      android:textAlignment="center"
+      android:visibility="@{viewModel.isEmpty() ? View.VISIBLE : View.GONE}"
+      android:id="@+id/empty_response"
+      android:textStyle="bold"
+      android:textColor="@color/black"
+      android:layout_centerInParent="true"
+      android:text="@{viewModel.emptyResponse}"
+      style="@style/TextAppearance.AppCompat.Medium"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      tools:text="No results found."/>
+
+</RelativeLayout>
+</layout>

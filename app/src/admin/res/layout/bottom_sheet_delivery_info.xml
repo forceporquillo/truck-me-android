@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+<data>
+  <variable
+      name="viewModel"
+      type="dev.forcecodes.truckme.ui.dashboard.MapDeliverySharedViewModel"
+      />
+</data>
 <LinearLayout android:background="@drawable/rounded_top_corners"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:elevation="16dp"
+    android:visibility="gone"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
   <FrameLayout
       android:background="@drawable/rounded_top_corners"
@@ -69,25 +79,31 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:maxLines="1"
+            android:id="@+id/title_et"
             android:layout_height="wrap_content"
             />
 
       </com.google.android.material.textfield.TextInputLayout>
 
       <com.google.android.material.textfield.TextInputLayout
-          android:visibility="gone"
+          android:visibility="visible"
           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="match_parent"
           android:hint="@string/delivery_destination"
           app:errorEnabled="true"
-
+          android:clickable="false"
           app:startIconDrawable="@drawable/ic_destination_pin"
           >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:singleLine="true"
+            android:id="@+id/destination_et"
+            android:ellipsize="end"
+            destination="@{viewModel}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_height="match_parent"
             android:maxLines="1"
             />
 
@@ -104,10 +120,11 @@
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:layout_width="match_parent"
-            android:id="@+id/driver_edit_text"
+            android:id="@+id/driver_et"
             android:inputType="none"
             android:maxLines="1"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -122,7 +139,7 @@
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:layout_width="match_parent"
-            android:id="@+id/vehicle_edit_text"
+            android:id="@+id/vehicle_et"
             android:inputType="none"
             android:maxLines="1"
             android:layout_height="wrap_content"
@@ -140,9 +157,12 @@
           >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/items_et"
+            items="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:inputType="text"
+            android:maxLines="3"
             />
 
       </com.google.android.material.textfield.TextInputLayout>
@@ -153,15 +173,19 @@
           android:layout_height="wrap_content"
           android:clickable="false"
           android:hint="@string/contact_number"
-          app:startIconDrawable="@drawable/ic_phone">
+          app:startIconDrawable="@drawable/ic_phone"
+          >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phone_number_et"
             android:inputType="none"
             android:maxLines="1"
+            contact="@{viewModel}"
             android:clickable="false"
+            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,12 +199,14 @@
           >
 
         <RadioButton
+            android:onClick="@{(v) -> viewModel.deliveryMode(true)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delivery_inbound"
             />
 
         <RadioButton
+            android:onClick="@{(v) -> viewModel.deliveryMode(true)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
@@ -189,6 +215,8 @@
       </RadioGroup>
 
       <com.google.android.material.button.MaterialButton
+          android:id="@+id/submit"
+          android:enabled="@{viewModel.enableSubmitButton}"
           android:layout_marginBottom="@dimen/spacing_normal"
           android:layout_width="match_parent"
           android:insetTop="0dp"
@@ -200,3 +228,4 @@
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 </LinearLayout>
+</layout>
