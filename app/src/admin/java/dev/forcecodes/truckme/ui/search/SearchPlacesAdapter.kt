@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import dev.forcecodes.truckme.core.model.Places
 import dev.forcecodes.truckme.databinding.PlaceDirectionItemBinding
 import dev.forcecodes.truckme.ui.search.SearchPlacesAdapter.SearchViewHolder
 

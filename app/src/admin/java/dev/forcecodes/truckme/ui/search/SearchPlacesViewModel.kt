@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.places.PlaceAutoCompleteResponse
 import dev.forcecodes.truckme.core.data.places.Prediction
 import dev.forcecodes.truckme.core.domain.places.SearchPlacesUseCase
+import dev.forcecodes.truckme.core.model.Places
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.cancelIfActive
 import dev.forcecodes.truckme.core.util.data
