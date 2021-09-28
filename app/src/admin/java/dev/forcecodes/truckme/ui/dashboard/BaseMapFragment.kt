@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.base
+package dev.forcecodes.truckme.ui.dashboard
 
 import android.os.Bundle
 import android.view.View
