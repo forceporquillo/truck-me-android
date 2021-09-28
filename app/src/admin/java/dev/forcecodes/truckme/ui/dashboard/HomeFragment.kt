@@ -1,87 +1,74 @@
 package dev.forcecodes.truckme.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
+import dev.forcecodes.truckme.core.domain.dashboard.GetActiveJobsUseCase
+import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.databinding.FragmentHomeBinding
 import dev.forcecodes.truckme.extensions.navigateOnButtonClick
-import java.util.UUID
+import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
+import dev.forcecodes.truckme.extensions.startRealtimeMap
+import dev.forcecodes.truckme.extensions.viewBinding
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
-class HomeFragment : Fragment() {
+@HiltViewModel
+class HomeDashboardViewModel @Inject constructor(
+  activeJobsUseCase: GetActiveJobsUseCase
+) : ViewModel() {
 
-  override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_home, container, false)
+  private val _activeJobsList = MutableStateFlow<List<DeliveryItems>>(emptyList())
+  val activeJobsList = _activeJobsList.asStateFlow()
+
+  init {
+    viewModelScope.launch {
+      activeJobsUseCase.invoke(Any()).collect { result ->
+        _activeJobsList.value = result.successOr(emptyList())
+      }
+    }
   }
+}
+
+@AndroidEntryPoint
+class HomeFragment : Fragment(R.layout.fragment_home) {
+
+  private val viewModel by viewModels<HomeDashboardViewModel>()
+  private val binding by viewBinding(FragmentHomeBinding::bind)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val binding = FragmentHomeBinding.bind(view)
 
     val deliveryAdapter = DeliveryAdapter()
     binding.deliveryList.adapter = deliveryAdapter
 
     binding.addButton.navigateOnButtonClick(R.id.to_map_nav_graph)
 
-    deliveryAdapter.submitList(
-      listOf(
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Kaha",
-          "Warehouse - Fairview",
-          "ETA: 7:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        ),
-        DeliveryItems(
-          UUID.randomUUID().toString(),
-          System.currentTimeMillis().toString(),
-          "Inbound raw materials",
-          "Bulacan Warehouse",
-          "ETA: 5:23 PM",
-        )
-      )
-    )
+    observeOnLifecycleStarted {
+      viewModel.activeJobsList.collect(deliveryAdapter::submitList)
+    }
+
+    deliveryAdapter.onActiveJobClick = {
+      // todo add id
+      startRealtimeMap()
+    }
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    Timber.e(requestCode.toString())
   }
 }
 
