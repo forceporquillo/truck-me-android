@@ -12,7 +12,6 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import dev.forcecodes.truckme.core.data.fleets.EmptyFleetsException
 import dev.forcecodes.truckme.core.data.fleets.FleetDelegate
-import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.core.domain.settings.PhoneNumber
 import dev.forcecodes.truckme.core.domain.settings.ProfileData
 import dev.forcecodes.truckme.core.util.Result.Error
@@ -43,10 +42,13 @@ fun FirebaseFirestore.updatePhoneNumberDocument(
 fun FirebaseFirestore.fleetRegDocument(
   userId: String
 ): DocumentReference {
+  return fleetDrivers().document(userId)
+}
+
+fun FirebaseFirestore.fleetDrivers(): CollectionReference {
   return collection("fleets")
     .document("registration")
     .collection("driver")
-    .document(userId)
 }
 
 fun FirebaseFirestore.driverCollection(): CollectionReference {
@@ -105,6 +107,8 @@ interface TaskData<T> {
   var exception: Exception?
   var data: T?
 }
+
+const val isDriver = REFERENCE == "driver"
 
 suspend inline fun <T : TaskData<U>, U, V> Task<V>.triggerOneShotListener(
   data: T? = null,
