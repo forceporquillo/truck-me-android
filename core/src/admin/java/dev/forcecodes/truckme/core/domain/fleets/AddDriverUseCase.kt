@@ -1,12 +1,11 @@
 package dev.forcecodes.truckme.core.domain.fleets
 
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.data.fleets.*
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
-import dev.forcecodes.truckme.core.domain.UseCase
 import dev.forcecodes.truckme.core.util.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
