@@ -8,64 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:902271608154:android:54854106057af02878ff63",
-        "android_client_info": {
-          "package_name": "dev.forcecodes.truckme"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "902271608154-cfrm7aupgdm2ubi9l0qnh5aq6ahsluh6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDBmrHfnsw-8VNXWDrL93qnXwK6kKrqYJ4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "902271608154-cfrm7aupgdm2ubi9l0qnh5aq6ahsluh6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:902271608154:android:0b342c555710ff7878ff63",
-        "android_client_info": {
-          "package_name": "dev.forcecodes.truckme.admin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "902271608154-cfrm7aupgdm2ubi9l0qnh5aq6ahsluh6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDBmrHfnsw-8VNXWDrL93qnXwK6kKrqYJ4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "902271608154-cfrm7aupgdm2ubi9l0qnh5aq6ahsluh6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:902271608154:android:9a63b571d4bf1a7d78ff63",
         "android_client_info": {
           "package_name": "dev.forcecodes.truckme.driver"
