@@ -12,5 +12,6 @@ data class DeliveryInfo @JvmOverloads constructor(
   val inbound: Boolean? = null,
   var isActive: Boolean = true,
   val coordinates: LatLngData? = null,
+  val assignedAdminId: String = "",
   val id: String = UUID.randomUUID().toString()
 )
