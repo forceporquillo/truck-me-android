@@ -7,10 +7,12 @@
     tools:context=".ui.dashboard.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:paddingBottom="@dimen/spacing_small"
         android:id="@+id/delivery_list"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/add_button"
