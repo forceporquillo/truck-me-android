@@ -18,16 +18,19 @@ import dev.forcecodes.truckme.extensions.navigateOnButtonClick
 import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
 import dev.forcecodes.truckme.extensions.startRealtimeMap
 import dev.forcecodes.truckme.extensions.viewBinding
+import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeDashboardViewModel @Inject constructor(
-  activeJobsUseCase: GetActiveJobsUseCase
+  activeJobsUseCase: GetActiveJobsUseCase,
+  signInViewModelDelegate: SignInViewModelDelegate
 ) : ViewModel() {
 
   private val _activeJobsList = MutableStateFlow<List<DeliveryItems>>(emptyList())
@@ -35,7 +38,12 @@ class HomeDashboardViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      activeJobsUseCase.invoke(Any()).collect { result ->
+      signInViewModelDelegate.userInfo.flatMapConcat { adminInfo ->
+        activeJobsUseCase.invoke(
+          adminInfo?.getUid()
+            ?: throw RuntimeException("yes daddy")
+        )
+      }.collect { result ->
         _activeJobsList.value = result.successOr(emptyList())
       }
     }
