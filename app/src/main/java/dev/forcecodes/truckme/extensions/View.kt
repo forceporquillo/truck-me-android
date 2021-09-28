@@ -77,7 +77,7 @@ data class ViewPaddingState(
   val end: Int
 )
 
-fun Toolbar.setUpGradientToolbar() {
+fun Toolbar.applyTranslucentStatusBar() {
   doOnApplyWindowInsets { view, windowInsetsCompat, viewPaddingState ->
     val statusBar = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.statusBars())
     view.updatePadding(top = viewPaddingState.top + statusBar.top)
@@ -143,7 +143,7 @@ fun ImageView.compressAsBitmap(): ByteArray {
 
 inline fun <T> ImageView.bindProfileIcon(
   data: T,
-  crossinline block: (Boolean) -> Unit
+  crossinline block: (Boolean) -> Unit = {}
 ) {
   bindImageWith(this, data) { result ->
     block(result)

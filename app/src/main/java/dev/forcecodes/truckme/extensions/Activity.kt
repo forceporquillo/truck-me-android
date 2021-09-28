@@ -9,6 +9,7 @@ import kotlin.reflect.KClass
 fun AppCompatActivity.fillDecor(toolbar: Toolbar) {
   setSupportActionBar(toolbar)
   supportActionBar?.setDisplayHomeAsUpEnabled(true)
+  toolbar.setNavigationOnClickListener { finish() }
 }
 
 fun <T : AppCompatActivity> Activity.createIntent(
