@@ -16,9 +16,9 @@ interface FleetDelegate {
 
 sealed class FleetUiModel: FleetDelegate {
   data class VehicleUri @JvmOverloads constructor(
-    val name: String? = "",
-    val plate: String? = "",
-    val description: String? = "",
+    val name: String = "",
+    val plate: String = "",
+    val description: String = "",
     override var profile: String? = "",
     override val id: String = "",
     override var isActive: Boolean = false,
