@@ -5,17 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
 import dev.forcecodes.truckme.databinding.DeliveryItemBinding
-
-data class DeliveryItems(
-  val id: String,
-  val timeStamp: String,
-  val driverName: String,
-  val destination: String,
-  val eta: String
-)
+import dev.forcecodes.truckme.extensions.bindProfileIcon
 
 class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATOR) {
+
+  var onActiveJobClick: () -> Unit = {}
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -26,7 +22,9 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
         LayoutInflater.from(parent.context),
         parent,
         false
-      )
+      ).also { binding ->
+        binding.root.setOnClickListener { onActiveJobClick.invoke() }
+      }
     )
   }
 
@@ -62,6 +60,10 @@ class DeliveryViewHolder(
       deliverTo.text = items.driverName
       destination.text = items.destination
       eta.text = items.eta
+
+      if (!items.profileIcon.isNullOrEmpty()) {
+        profileIcon.bindProfileIcon(items.profileIcon)
+      }
     }
   }
 }
