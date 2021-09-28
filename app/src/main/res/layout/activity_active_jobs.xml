@@ -35,8 +35,10 @@
       />
 
   <androidx.cardview.widget.CardView
+      android:clickable="true"
+      android:focusable="true"
       app:cardCornerRadius="8dp"
-      android:layout_margin="@dimen/spacing_medium"
+      android:layout_margin="@dimen/spacing_small"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toTopOf="@id/buttons_parent"
@@ -58,7 +60,7 @@
           style="@style/TextAppearance.AppCompat.Subhead"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="ETA:"
+          android:text="@string/eta"
           />
 
       <TextView
@@ -72,7 +74,7 @@
           style="@style/TextAppearance.AppCompat.Subhead"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="15:00 04/07/2021"
+          android:text="@string/not_yet_implemented"
           />
 
       <TextView
@@ -84,7 +86,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
           android:layout_below="@id/eta"
-          android:text="Distance Left:"
+          android:text="@string/distance_left"
           android:textStyle="bold"
           style="@style/TextAppearance.AppCompat.Subhead"
           />
@@ -98,7 +100,7 @@
           style="@style/TextAppearance.AppCompat.Subhead"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="16 KM"
+          android:text="@string/not_yet_implemented"
           />
 
       <TextView
@@ -112,7 +114,7 @@
           android:layout_marginTop="@dimen/spacing_extra_large"
           app:layout_constraintEnd_toEndOf="parent"
           android:gravity="center"
-          android:text="Duration:"
+          android:text="@string/duration"
           android:textStyle="bold"
           style="@style/TextAppearance.AppCompat.Subhead"
           />
@@ -129,7 +131,7 @@
           style="@style/TextAppearance.AppCompat.Subhead"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="6:25 hrs"
+          android:text="@string/not_yet_implemented"
           />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -158,6 +160,7 @@
         >
 
       <androidx.appcompat.widget.AppCompatTextView
+          android:id="@+id/notify_or_confirm_button"
           android:elevation="0dp"
           android:paddingTop="@dimen/spacing_small"
           android:paddingBottom="@dimen/spacing_small"
@@ -183,6 +186,7 @@
         />
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/chat_button"
         style="@style/ClickableButtonStyle"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -219,7 +223,7 @@
 
     <com.google.android.material.card.MaterialCardView
         style="@style/ClickableButtonStyle"
-        android:id="@+id/emergency"
+        android:id="@+id/emergency_button"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
         app:cardBackgroundColor="@android:color/transparent"

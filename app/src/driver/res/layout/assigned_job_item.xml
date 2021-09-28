@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    style="@style/ClickableButtonStyle"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:background="@color/white"
+    app:cardCornerRadius="5dp"
+    >
+
+  <LinearLayout
+      android:layout_marginStart="16dp"
+      android:padding="@dimen/spacing_small"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/deliver_tv"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        tools:text="Deliver to Kaha"
+        />
+
+    <TextView
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:id="@+id/destination_tv"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Small"
+        tools:text="Warehouse - Quezon City"
+        />
+
+    <TextView
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:id="@+id/item_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="Acrylic Protector"
+        />
+
+  </LinearLayout>
+</androidx.cardview.widget.CardView>
