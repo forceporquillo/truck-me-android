@@ -3,12 +3,16 @@ package dev.forcecodes.truckme.util
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import dev.forcecodes.truckme.R
 
@@ -16,6 +20,50 @@ import dev.forcecodes.truckme.R
  * Utility class for access to runtime permissions.
  */
 object PermissionUtils {
+
+  val ALL_PERMISSIONS = arrayOf(
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+  )
+
+  const val LOCATION_PERMISSION = 2
+  const val READ_EXTERNAL_PERMISSION = 1
+
+  val REQUEST_CODE = arrayOf(
+    LOCATION_PERMISSION,
+    READ_EXTERNAL_PERMISSION
+  )
+
+  @JvmStatic
+  fun AppCompatActivity.requestMultiplePermissions() {
+    registerForActivityResult(
+      ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+
+    }.launch(
+      ALL_PERMISSIONS
+    )
+  }
+
+  @JvmStatic
+  fun checkSelfPermission(
+    context: Context,
+    permission: String,
+    requestCode: Int = READ_EXTERNAL_PERMISSION,
+    permissionGranted: () -> Unit = {}
+  ) {
+    if (ContextCompat.checkSelfPermission(context, permission)
+      == PackageManager.PERMISSION_GRANTED
+    ) {
+      permissionGranted()
+    } else {
+      requestPermission(
+        context as AppCompatActivity, requestCode,
+        permission
+      )
+    }
+  }
+
   /**
    * Requests the fine location permission. If a rationale with an additional explanation should
    * be shown to the user, displays a dialog that triggers the request.
@@ -23,11 +71,11 @@ object PermissionUtils {
   @JvmStatic
   fun requestPermission(
     activity: AppCompatActivity, requestId: Int,
-    permission: String, finishActivity: Boolean
+    permission: String
   ) {
     if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
       // Display a dialog with rationale.
-      RationaleDialog.newInstance(requestId, finishActivity)
+      RationaleDialog.newInstance(requestId)
         .show(activity.supportFragmentManager, "dialog")
     } else {
       // Location permission has not been granted yet, request it.
@@ -79,7 +127,6 @@ object PermissionUtils {
           activity, R.string.permission_required_toast,
           Toast.LENGTH_SHORT
         ).show()
-        activity?.finish()
       }
     }
 
@@ -141,7 +188,6 @@ object PermissionUtils {
           R.string.permission_required_toast,
           Toast.LENGTH_SHORT
         ).show()
-        activity?.finish()
       }
     }
 
@@ -162,10 +208,10 @@ object PermissionUtils {
        * @param finishActivity Whether the calling Activity should be finished if the dialog is
        * cancelled.
        */
-      fun newInstance(requestCode: Int, finishActivity: Boolean): RationaleDialog {
+      @JvmStatic
+      fun newInstance(requestCode: Int): RationaleDialog {
         val arguments = Bundle().apply {
           putInt(ARGUMENT_PERMISSION_REQUEST_CODE, requestCode)
-          putBoolean(ARGUMENT_FINISH_ACTIVITY, finishActivity)
         }
         return RationaleDialog().apply {
           this.arguments = arguments
