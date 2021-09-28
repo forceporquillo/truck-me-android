@@ -14,10 +14,10 @@ class GetActiveJobsUseCase @Inject constructor(
   private val deliveryDataSource: DeliveryDataSource,
   private val activeJobDomainMapper: ActiveJobDomainMapper,
   @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : FlowUseCase<Any, List<DeliveryItems>>(dispatcher) {
+) : FlowUseCase<String, List<DeliveryItems>>(dispatcher) {
 
-  override fun execute(parameters: Any): Flow<Result<List<DeliveryItems>>> {
-    return deliveryDataSource.getActiveJobs().map { result ->
+  override fun execute(parameters: String): Flow<Result<List<DeliveryItems>>> {
+    return deliveryDataSource.getActiveJobs(parameters).map { result ->
       if (result is Result.Success) {
         val deliverItems = result.data.map { activeJobDomainMapper.invoke(it) }
         Result.Success(deliverItems)
