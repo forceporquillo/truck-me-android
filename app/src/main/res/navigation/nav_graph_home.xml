@@ -18,7 +18,7 @@
 
   <fragment
       android:id="@+id/activeJobFragment"
-      android:name="dev.forcecodes.truckme.ui.ActiveJobFragment"
+      android:name="dev.forcecodes.truckme.ui.jobs.ActiveJobFragment"
       android:label="ActiveJobFragment"
       tools:layout="@layout/fragment_active_job"/>
 

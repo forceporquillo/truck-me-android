@@ -28,28 +28,18 @@
         android:layout_weight="1"
         android:layout_height="wrap_content">
 
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginBottom="@dimen/spacing_extra_small"
-            android:paddingTop="@dimen/spacing_small"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_active_job_emergency"/>
-
-        <TextView
-            android:textSize="12sp"
-            android:paddingBottom="@dimen/spacing_small"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Emergency"/>
-      </LinearLayout>
+      <androidx.appcompat.widget.AppCompatTextView
+          android:elevation="0dp"
+          android:paddingTop="@dimen/spacing_small"
+          android:paddingBottom="@dimen/spacing_small"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/active_jobs_notify"
+          style="@style/TextAppearance.AppCompat.Caption"
+          android:textColor="@color/white"
+          android:layout_gravity="center_horizontal|bottom"
+          android:drawablePadding="@dimen/spacing_extra_small"
+          android:drawableTop="@drawable/ic_notify"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -69,28 +59,18 @@
         android:layout_weight="1"
         android:layout_height="wrap_content">
 
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginBottom="@dimen/spacing_extra_small"
-            android:paddingTop="@dimen/spacing_small"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_active_job_emergency"/>
-
-        <TextView
-            android:textSize="12sp"
-            android:paddingBottom="@dimen/spacing_small"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Chat"/>
-      </LinearLayout>
+      <androidx.appcompat.widget.AppCompatTextView
+          android:elevation="0dp"
+          android:paddingTop="@dimen/spacing_small"
+          android:paddingBottom="@dimen/spacing_small"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/active_jobs_chat"
+          style="@style/TextAppearance.AppCompat.Caption"
+          android:textColor="@color/white"
+          android:layout_gravity="center_horizontal|bottom"
+          android:drawablePadding="@dimen/spacing_extra_small"
+          android:drawableTop="@drawable/ic_chat"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -110,28 +90,18 @@
         android:layout_weight="1"
         android:layout_height="wrap_content">
 
-      <LinearLayout
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginBottom="@dimen/spacing_extra_small"
-            android:paddingTop="@dimen/spacing_small"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_active_job_emergency"/>
-
-        <TextView
-            android:textSize="12sp"
-            android:paddingBottom="@dimen/spacing_small"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Emergency"/>
-      </LinearLayout>
+      <androidx.appcompat.widget.AppCompatTextView
+          android:elevation="0dp"
+          android:paddingTop="@dimen/spacing_small"
+          android:paddingBottom="@dimen/spacing_small"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/active_jobs_emergency"
+          style="@style/TextAppearance.AppCompat.Caption"
+          android:textColor="@color/white"
+          android:layout_gravity="center_horizontal|bottom"
+          android:drawablePadding="@dimen/spacing_extra_small"
+          android:drawableTop="@drawable/ic_emergency"/>
 
     </com.google.android.material.card.MaterialCardView>
   </LinearLayout>

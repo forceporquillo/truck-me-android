@@ -45,4 +45,9 @@
   <string name="no_job_assigned_yet">No job assigned yet</string>
   <string name="check_again_later">Check again later :)</string>
 
+  <string name="active_jobs_notify">Notify</string>
+  <string name="active_jobs_chat">Chat</string>
+  <string name="active_jobs_confirm">Confirm</string>
+  <string name="active_jobs_emergency">Emergency</string>
+
 </resources>
