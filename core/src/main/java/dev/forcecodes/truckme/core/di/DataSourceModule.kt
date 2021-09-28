@@ -4,12 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.forcecodes.truckme.core.data.driver.AddedDriverDataSourceImpl
-import dev.forcecodes.truckme.core.data.AuthStateDataSource
-import dev.forcecodes.truckme.core.data.driver.DriverDataSource
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.AuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.cloud.CloudStorageDataSource
 import dev.forcecodes.truckme.core.data.cloud.CloudStorageDataSourceImpl
+import dev.forcecodes.truckme.core.data.driver.AddedDriverDataSourceImpl
+import dev.forcecodes.truckme.core.data.driver.DriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSourceImpl
 
