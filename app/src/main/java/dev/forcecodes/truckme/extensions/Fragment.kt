@@ -15,8 +15,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.gms.maps.SupportMapFragment
 import dev.forcecodes.truckme.MainActivity
-import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.binding.FragmentViewBindingDelegate
+import dev.forcecodes.truckme.ui.jobs.ActiveJobsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ fun Fragment.attachProgressToMain(isLoading: Boolean) {
   (requireActivity() as? MainActivity)?.showLoading(isLoading)
 }
 
-fun Fragment.observeWithOnRepeatLifecycle(
+fun Fragment.observeOnLifecycleStarted(
   delayInMillis: Long? = null,
   activeState: Lifecycle.State = Lifecycle.State.STARTED,
   block: suspend () -> Unit
@@ -65,6 +65,12 @@ fun Fragment.repeatOnLifecycleParallel(
   }
 }
 
+fun Fragment.startRealtimeMap() {
+  requireActivity {
+    createIntent(ActiveJobsActivity::class)
+  }
+}
+
 inline fun Fragment.dispatchWhenBackPress(
   enable: Boolean = true,
   crossinline block: () -> Unit
@@ -86,7 +92,7 @@ fun Fragment.postRunnable(block: () -> Unit) {
 }
 
 fun Fragment.navigateUp(delay: Long = ANIMATION_FAST_MILLIS) {
-  observeWithOnRepeatLifecycle {
+  observeOnLifecycleStarted {
     delay(delay)
     findNavController().navigateUp()
   }
