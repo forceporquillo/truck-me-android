@@ -2,18 +2,20 @@ package dev.forcecodes.truckme.core.domain.signin
 
 import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
 import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
-import dev.forcecodes.truckme.core.data.driver.AuthDriverDataSource
+import dev.forcecodes.truckme.core.data.driver.DriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.TaskData
 import dev.forcecodes.truckme.core.util.error
+import dev.forcecodes.truckme.core.util.isDriver
 import dev.forcecodes.truckme.core.util.triggerOneShotListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,16 +30,12 @@ data class DriverAuthInfo(
 class SignInUseCase @Inject constructor(
   private val authStateDataSource: FirebaseAuthStateDataSource,
   private val registerDriverDataSource: RegisteredDriverDataSource,
-  private val authDriverDataSource: AuthDriverDataSource,
+  private val driverDataSource: DriverDataSource,
   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UseCase<AuthBasicInfo, SignInResult>(ioDispatcher) {
 
-  companion object {
-    private const val BUILD_VARIANT = dev.forcecodes.truckme.core.BuildConfig.FLAVOR
-  }
-
   override suspend fun execute(parameters: AuthBasicInfo): SignInResult {
-    return if (BUILD_VARIANT == "driver") {
+    return if (isDriver) {
       getDriverDataOneShot(parameters)
     } else {
       signInRecognizedUsers(parameters)
@@ -63,7 +61,7 @@ class SignInUseCase @Inject constructor(
   private suspend fun getDriverDataOneShot(
     authBasicInfo: AuthBasicInfo
   ): SignInResult {
-    val result = authDriverDataSource.getDriverCollectionOneShot(authBasicInfo)
+    val result = driverDataSource.getDriverCollectionOneShot(authBasicInfo)
     return if (result is Result.Success) {
       observeRegistration(result.data.id, authBasicInfo)
     } else {
@@ -87,14 +85,19 @@ class SignInUseCase @Inject constructor(
             if (result.data == false /* Kotlin nullability feature */) {
               // triggers only once even if this flow is cold.
               // this is because createUserAccount cancel out when gets invoked.
+                val signInResult = SignInResult(data = authBasicInfo)
               authStateDataSource.createUserAccount(authBasicInfo)
-                .triggerOneShotListener(SignInResult(data = authBasicInfo))!!
+                .triggerOneShotListener(signInResult) { task, e ->
+                  if (task.isSuccessful) {
+                    registerDriverDataSource.updateUid(userId, task.result?.user?.uid)
+                  }
+                }!!
             } else {
               // Proceed to sign in since auth already recognized the user.
               signInRecognizedUsers(authBasicInfo)
             }
           } else {
-            SignInResult(data = authBasicInfo, result.error, false)
+            SignInResult(data = authBasicInfo, exception = result.error, isSuccess = false)
           }
         }.first()
       }
@@ -109,6 +112,7 @@ class SignInUseCase @Inject constructor(
 }
 
 data class SignInResult(
+  val id: String? = "",
   override var data: AuthBasicInfo?,
   override var exception: Exception? = null,
   override var isSuccess: Boolean = false
