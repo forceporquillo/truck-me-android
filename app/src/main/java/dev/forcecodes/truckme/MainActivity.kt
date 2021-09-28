@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
       fillDecor(this)
       applyTranslucentStatusBar()
     }
-
     setupNavBar(binding.navigationView)
     requestMultiplePermissions()
   }
