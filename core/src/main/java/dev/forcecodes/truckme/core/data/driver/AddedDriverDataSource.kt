@@ -3,7 +3,7 @@ package dev.forcecodes.truckme.core.data.driver
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObject
-import dev.forcecodes.truckme.core.data.AuthBasicInfo
+import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
 import dev.forcecodes.truckme.core.data.fleets.EmptyFleetsException
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.domain.signin.DriverAuthInfo
@@ -16,12 +16,14 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface DriverDataSource {
   suspend fun getDriverCollection(authInfo: AuthBasicInfo): Flow<Result<DriverAuthInfo>>
   suspend fun getDriverCollectionOneShot(authInfo: AuthBasicInfo): Result<DriverAuthInfo>
 }
 
+@Singleton
 class AddedDriverDataSourceImpl @Inject constructor(
   private val firestore: FirebaseFirestore
 ) : DriverDataSource {
