@@ -49,5 +49,9 @@
   <string name="active_jobs_chat">Chat</string>
   <string name="active_jobs_confirm">Confirm</string>
   <string name="active_jobs_emergency">Emergency</string>
+  <string name="duration">Duration:</string>
+  <string name="distance_left">Distance Left:</string>
+  <string name="not_yet_implemented">Not yet implemented</string>
+  <string name="eta">ETA:</string>
 
 </resources>
