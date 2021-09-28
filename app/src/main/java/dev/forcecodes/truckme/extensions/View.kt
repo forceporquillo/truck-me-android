@@ -6,8 +6,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.TranslateAnimation
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -15,6 +17,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -73,7 +77,7 @@ data class ViewPaddingState(
   val end: Int
 )
 
-fun Toolbar.setUpGradientToolbar() {
+fun Toolbar.applyTranslucentStatusBar() {
   doOnApplyWindowInsets { view, windowInsetsCompat, viewPaddingState ->
     val statusBar = windowInsetsCompat.getInsets(WindowInsetsCompat.Type.statusBars())
     view.updatePadding(top = viewPaddingState.top + statusBar.top)
@@ -139,7 +143,7 @@ fun ImageView.compressAsBitmap(): ByteArray {
 
 inline fun <T> ImageView.bindProfileIcon(
   data: T,
-  crossinline block: (Boolean) -> Unit
+  crossinline block: (Boolean) -> Unit = {}
 ) {
   bindImageWith(this, data) { result ->
     block(result)
@@ -209,4 +213,40 @@ fun View.postKt(block: () -> Unit) {
 fun ImageView.setActiveStateIndicatorColor(isActive: Boolean) {
   val colorId = isActive then R.color.active ?: R.color.inactive
   setColorFilter(ContextCompat.getColor(context, colorId))
+}
+
+fun View.navigateOnButtonClick(@IdRes resId: Int) {
+  setOnClickListener {
+    findNavController().navigate(resId)
+  }
+}
+
+fun View.slideUp() {
+  postDelayed({
+    visibility = View.VISIBLE
+    val animate = TranslateAnimation(
+      0f,  // fromXDelta
+      0f,  // toXDelta
+      height.toFloat(),  // fromYDelta
+      0f
+    ) // toYDelta
+    animate.duration = 500
+    animate.fillAfter = true
+    startAnimation(animate)
+  }, 250L)
+}
+
+fun View.slideDown() {
+  postDelayed({
+    val animate = TranslateAnimation(
+      0f,  // fromXDelta
+      0f,  // toXDelta
+      0f,  // fromYDelta
+      height.toFloat()
+    ) // toYDelta
+
+    animate.duration = 500
+    animate.fillAfter = true
+    startAnimation(animate)
+  }, 250L)
 }

@@ -16,8 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FleetCloudStorageDataSourceImpl @Inject constructor(
-  private val firebaseStorage: FirebaseStorage,
-  @IoDispatcher dispatcher: CoroutineDispatcher
+  private val firebaseStorage: FirebaseStorage
 ) : FleetStorageDataSource {
 
   override suspend fun uploadFleetProfile(

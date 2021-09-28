@@ -21,11 +21,15 @@
             style="@style/TextAppearance.AppCompat.Headline"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:paddingStart="@dimen/spacing_normal"
-            android:paddingEnd="@dimen/spacing_normal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:id="@+id/assign_job_list"
+            android:paddingStart="@dimen/spacing_medium"
+            android:paddingEnd="@dimen/spacing_medium"
+            android:clipToPadding="false"
             tools:listitem="@layout/active_job_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:paddingBottom="@dimen/spacing_normal"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

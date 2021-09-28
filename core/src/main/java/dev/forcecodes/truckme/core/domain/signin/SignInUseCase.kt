@@ -1,7 +1,7 @@
 package dev.forcecodes.truckme.core.domain.signin
 
-import dev.forcecodes.truckme.core.data.AuthBasicInfo
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.driver.DriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
@@ -9,11 +9,13 @@ import dev.forcecodes.truckme.core.domain.UseCase
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.TaskData
 import dev.forcecodes.truckme.core.util.error
+import dev.forcecodes.truckme.core.util.isDriver
 import dev.forcecodes.truckme.core.util.triggerOneShotListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,28 +34,33 @@ class SignInUseCase @Inject constructor(
   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UseCase<AuthBasicInfo, SignInResult>(ioDispatcher) {
 
-  companion object {
-    private const val BUILD_VARIANT = dev.forcecodes.truckme.core.BuildConfig.FLAVOR
-  }
-
   override suspend fun execute(parameters: AuthBasicInfo): SignInResult {
-    return if (BUILD_VARIANT == "driver") {
+    return if (isDriver) {
       getDriverDataOneShot(parameters)
     } else {
       signInRecognizedUsers(parameters)
     }
   }
 
+  /**
+   *  Your call if you want to chain some asynchronous work or parallelism.
+   *  Just change this method with [AuthDriverDataSource.getDriverCollection].
+   *
+   *  Note: Based on this current implementation. Spawning multiple coroutines fom
+   *  different dispatchers may lead to "JobCancellationException: Job was cancelled."
+   *  Either [@see tryOffer] or [async] will throw the JobCancellationException depending
+   *  which suspend function emits the deferred result first.
+   *
+   *  To workaround this, add some try-catch block within the suspend function
+   *  and ignore the exception when collecting the exception as result.
+   *
+   *  This implementation is considered as stable.
+   *
+   *  @see [dev.forcecodes.truckme.core.util.tryOffer].
+   */
   private suspend fun getDriverDataOneShot(
     authBasicInfo: AuthBasicInfo
   ): SignInResult {
-    // your call if you want to chain some asynchronous work / parallelism
-    // just change this method with [driverDataSource.getDriverCollection].
-
-    // Note that when working with cold flows. This may lead to
-    // "JobCancellationException: Job was cancelled." This is because [tryOffer]
-    // method in [getDriverCollection] is synchronous which eventually
-    // throws the exception once this coroutine scope gets cancelled.
     val result = driverDataSource.getDriverCollectionOneShot(authBasicInfo)
     return if (result is Result.Success) {
       observeRegistration(result.data.id, authBasicInfo)
@@ -75,17 +82,22 @@ class SignInUseCase @Inject constructor(
             // Check if the driver registration flag is false. This indicates that
             // the driver has recently been added or just signed in for the first time.
             // So, we create the account.
-            if (result.data == false) {
+            if (result.data == false /* Kotlin nullability feature */) {
               // triggers only once even if this flow is cold.
               // this is because createUserAccount cancel out when gets invoked.
+                val signInResult = SignInResult(data = authBasicInfo)
               authStateDataSource.createUserAccount(authBasicInfo)
-                .triggerOneShotListener(SignInResult(data = authBasicInfo))!!
+                .triggerOneShotListener(signInResult) { task, e ->
+                  if (task.isSuccessful) {
+                    registerDriverDataSource.updateUid(userId, task.result?.user?.uid)
+                  }
+                }!!
             } else {
-              // Proceed to sign in since auth already recognized this user.
+              // Proceed to sign in since auth already recognized the user.
               signInRecognizedUsers(authBasicInfo)
             }
           } else {
-            SignInResult(data = authBasicInfo, result.error, false)
+            SignInResult(data = authBasicInfo, exception = result.error, isSuccess = false)
           }
         }.first()
       }
@@ -100,6 +112,7 @@ class SignInUseCase @Inject constructor(
 }
 
 data class SignInResult(
+  val id: String? = "",
   override var data: AuthBasicInfo?,
   override var exception: Exception? = null,
   override var isSuccess: Boolean = false

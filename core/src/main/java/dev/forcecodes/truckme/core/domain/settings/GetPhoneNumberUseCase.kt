@@ -3,7 +3,7 @@ package dev.forcecodes.truckme.core.domain.settings
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.toObject
-import dev.forcecodes.truckme.core.data.FirestoreAuthenticatedUserDataSource
+import dev.forcecodes.truckme.core.data.auth.FirestoreAuthenticatedUserDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.util.Result

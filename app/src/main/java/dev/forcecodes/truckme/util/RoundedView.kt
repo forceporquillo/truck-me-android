@@ -25,11 +25,11 @@ class RoundedView : FrameLayout {
   private var bottomRightCornerRadius = 0f
 
   constructor(@NonNull context: Context) : super(context) {
-    init(context, null, 0)
+    init(context, null)
   }
 
   constructor(@NonNull context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    init(context, attrs, 0)
+    init(context, attrs)
   }
 
   constructor(
@@ -37,10 +37,10 @@ class RoundedView : FrameLayout {
     attrs: AttributeSet?,
     defStyleAttr: Int
   ) : super(context, attrs, defStyleAttr) {
-    init(context, attrs, defStyleAttr)
+    init(context, attrs)
   }
 
-  private fun init(context: Context, attrs: AttributeSet?, defStyle: Int) {
+  private fun init(context: Context, attrs: AttributeSet?) {
     val typedArray: TypedArray = context.obtainStyledAttributes(
       attrs,
       R.styleable.RoundedView, 0, 0
@@ -59,6 +59,7 @@ class RoundedView : FrameLayout {
     setLayerType(View.LAYER_TYPE_SOFTWARE, null)
   }
 
+  @Suppress("deprecation")
   override fun dispatchDraw(canvas: Canvas) {
     val count: Int = canvas.save()
     val path = Path()

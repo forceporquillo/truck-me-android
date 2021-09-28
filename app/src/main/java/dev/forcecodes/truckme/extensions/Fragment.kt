@@ -2,6 +2,7 @@ package dev.forcecodes.truckme.extensions
 
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.Toolbar
@@ -12,8 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.google.android.gms.maps.SupportMapFragment
 import dev.forcecodes.truckme.MainActivity
 import dev.forcecodes.truckme.binding.FragmentViewBindingDelegate
+import dev.forcecodes.truckme.ui.jobs.ActiveJobsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,15 +35,23 @@ fun Fragment.attachProgressToMain(isLoading: Boolean) {
   (requireActivity() as? MainActivity)?.showLoading(isLoading)
 }
 
-fun Fragment.observeWithOnRepeatLifecycle(
+fun Fragment.observeOnLifecycleStarted(
+  delayInMillis: Long? = null,
   activeState: Lifecycle.State = Lifecycle.State.STARTED,
   block: suspend () -> Unit
 ) {
   viewLifecycleOwner.lifecycleScope.launch {
     viewLifecycleOwner.lifecycle.repeatOnLifecycle(activeState) {
+      if (delayInMillis != null) {
+        delay(delayInMillis)
+      }
       block()
     }
   }
+}
+
+fun Fragment.toast(message: String? = null) {
+  Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_SHORT).show()
 }
 
 fun Fragment.repeatOnLifecycleParallel(
@@ -54,6 +65,12 @@ fun Fragment.repeatOnLifecycleParallel(
   }
 }
 
+fun Fragment.startRealtimeMap() {
+  requireActivity {
+    createIntent(ActiveJobsActivity::class)
+  }
+}
+
 inline fun Fragment.dispatchWhenBackPress(
   enable: Boolean = true,
   crossinline block: () -> Unit
@@ -64,7 +81,6 @@ inline fun Fragment.dispatchWhenBackPress(
     }
   }
   requireActivity {
-
     onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
   }
 }
@@ -75,9 +91,9 @@ fun Fragment.postRunnable(block: () -> Unit) {
   view?.postKt(block)
 }
 
-fun Fragment.navigateUp() {
-  observeWithOnRepeatLifecycle {
-    delay(ANIMATION_FAST_MILLIS)
+fun Fragment.navigateUp(delay: Long = ANIMATION_FAST_MILLIS) {
+  observeOnLifecycleStarted {
+    delay(delay)
     findNavController().navigateUp()
   }
 }
@@ -93,6 +109,11 @@ fun Toolbar.setupToolbarPopBackStack(
 
 fun Fragment.navigate(@IdRes resId: Int) {
   findNavController().navigate(resId)
+}
+
+fun Fragment.findMapById(@IdRes resId: Int): SupportMapFragment? {
+  return childFragmentManager.findFragmentById(resId)
+    as SupportMapFragment?
 }
 
 inline fun <T : ViewBinding> Fragment.viewBinding(

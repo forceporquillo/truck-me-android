@@ -2,7 +2,7 @@ package dev.forcecodes.truckme.core.domain.settings
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.EmailAuthProvider
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.di.ApplicationScope
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase

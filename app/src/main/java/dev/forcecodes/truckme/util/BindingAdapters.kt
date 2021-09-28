@@ -33,7 +33,7 @@ fun AppCompatEditText.passwordObserver(
 fun AppCompatEditText.oldPasswordObserver(
   viewModel: AccountSettingsViewModel
 ) {
-  textChangeObserver { viewModel.oldPassword = it ?: "" }
+  textChangeObserver { viewModel.oldPassword = it }
 }
 
 @BindingAdapter("passwordResetObserver")
@@ -62,6 +62,7 @@ fun TextInputLayout.errorMessageObserver(errorMessage: StateFlow<String>) {
   error = errorMessage.value
 }
 
+@Suppress("deprecation")
 @BindingAdapter("showPasswordToggleObserver")
 fun TextInputLayout.showPasswordToggleObserver(show: StateFlow<Boolean>) {
   isPasswordVisibilityToggleEnabled = show.value

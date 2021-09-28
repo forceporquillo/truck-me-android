@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+  <data>
+    <import type="android.view.View"/>
+
+    <variable
+        name="viewModel"
+        type="dev.forcecodes.truckme.ui.dashboard.MapDeliverySharedViewModel"/>
+  </data>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+  <androidx.fragment.app.FragmentContainerView
+      android:name="com.google.android.gms.maps.SupportMapFragment"
+      android:id="@+id/admin_support_map"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <ImageView
+      android:visibility="@{viewModel.showMarker ? View.VISIBLE : View.GONE}"
+      android:id="@+id/marker_center"
+      android:layout_gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/ic_map_location_drop"
+      />
+
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/search_destination"
+        style="@style/ButtonRippleItemBackground"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="3dp"
+        android:layout_margin="@dimen/spacing_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          >
+
+        <FrameLayout
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/spacing_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+          <ImageView
+              android:visibility="@{viewModel.isReverseSearchLoading() ? View.GONE : View.VISIBLE}"
+              android:src="@drawable/ic_map_pin"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+
+          <ProgressBar
+              android:visibility="@{viewModel.isReverseSearchLoading() ? View.VISIBLE : View.GONE}"
+              android:id="@+id/search_bar_progress"
+              android:indeterminate="true"
+              android:layout_width="24dp"
+              android:layout_height="24dp"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            >
+
+          <TextView
+              android:maxLines="1"
+              tools:text="FEU Institute of Technology"
+              android:id="@+id/destination"
+              android:ellipsize="end"
+              style="@style/TextAppearance.AppCompat.Subhead"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+
+          <TextView
+              android:id="@+id/address"
+              android:maxLines="1"
+              android:visibility="gone"
+              tools:text="P. Paredes Street, Sampaloc, Manila, Metro Manila, Philippines"
+              android:ellipsize="end"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/destination_close_btn"
+            android:onClick="@{(v) -> viewModel.clear()}"
+            style="@style/ClickableButtonStyle"
+            android:layout_margin="@dimen/spacing_small"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+          <ImageView
+              android:padding="@dimen/spacing_small"
+              android:visibility="visible"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:src="@drawable/ic_x_circle"
+              app:tint="@color/teal_700"
+              />
+        </androidx.cardview.widget.CardView>
+
+      </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <include
+        android:id="@+id/bottom_sheet_parent"
+        layout="@layout/bottom_sheet_delivery_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_anchorGravity="bottom"
+        style="?attr/bottomSheetStyle"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        />
+
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+  <FrameLayout
+      android:visibility="gone"
+      android:id="@+id/progress_container"
+      android:background="@color/white"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <ProgressBar
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+
+  </FrameLayout>
+
+</FrameLayout>
+</layout>

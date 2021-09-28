@@ -6,13 +6,12 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import dev.forcecodes.truckme.MainActivity
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
 import dev.forcecodes.truckme.databinding.FragmentAccountBinding
 import dev.forcecodes.truckme.extensions.dispatchWhenBackPress
 import dev.forcecodes.truckme.extensions.navigateUp
-import dev.forcecodes.truckme.extensions.observeWithOnRepeatLifecycle
+import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.viewBinding
 import dev.forcecodes.truckme.ui.account.BackPressDispatcherUiActionEvent.Intercept
@@ -39,7 +38,7 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
 
     binding.emailEt.setText(settingsViewModel.email)
 
-    observeWithOnRepeatLifecycle {
+    observeOnLifecycleStarted {
       settingsViewModel.backPressUiEvent.collect { uiEvent ->
         val isInterceptUiEvent = uiEvent is Intercept
         dispatchWhenBackPress(isInterceptUiEvent) {

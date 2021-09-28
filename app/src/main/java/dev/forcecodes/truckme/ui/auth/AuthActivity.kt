@@ -7,7 +7,7 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.databinding.ActivityAuthBinding
 import dev.forcecodes.truckme.extensions.fillDecor
-import dev.forcecodes.truckme.extensions.setUpGradientToolbar
+import dev.forcecodes.truckme.extensions.applyTranslucentStatusBar
 import timber.log.Timber
 
 interface AuthToolbarVisibilityListener {
@@ -27,7 +27,7 @@ class AuthActivity : AppCompatActivity(), AuthToolbarVisibilityListener {
       setContentView(root)
     }
 
-    fillDecor(binding.toolbar.also { it.setUpGradientToolbar() })
+    fillDecor(binding.toolbar.also { it.applyTranslucentStatusBar() })
     WindowCompat.setDecorFitsSystemWindows(window, false)
   }
 

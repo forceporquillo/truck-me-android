@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "truck-me-android"
 include ':app'
 include ':core'
+include ':libs'

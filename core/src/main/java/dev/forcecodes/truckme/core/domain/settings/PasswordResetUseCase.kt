@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.domain.settings
 
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase
 import dev.forcecodes.truckme.core.util.TaskData

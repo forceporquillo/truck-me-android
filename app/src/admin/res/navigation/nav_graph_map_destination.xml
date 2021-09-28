@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/map_nav_graph"
+    app:startDestination="@id/addDeliveryFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <fragment
+      android:id="@+id/addDeliveryFragment"
+      android:name="dev.forcecodes.truckme.ui.dashboard.MapDeliveryFragment"
+      android:label="Add Delivery"
+      tools:layout="@layout/fragment_map_delivery">
+
+    <action
+        android:id="@+id/to_search"
+        app:destination="@id/searchPlacesFragment" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/searchPlacesFragment"
+      android:name="dev.forcecodes.truckme.ui.search.SearchPlacesFragment"
+      android:label=""
+      tools:layout="@layout/fragment_search_places" />
+
+</navigation>

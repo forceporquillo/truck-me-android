@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.base.BaseBottomSheetDialogFragment
 import dev.forcecodes.truckme.databinding.BottomSheetConfirmPasswordChangeBinding
-import dev.forcecodes.truckme.extensions.observeWithOnRepeatLifecycle
+import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
 import dev.forcecodes.truckme.extensions.postRunnable
 import dev.forcecodes.truckme.extensions.textChangeObserver
 import dev.forcecodes.truckme.extensions.viewBinding
@@ -51,7 +51,7 @@ class ConfirmPasswordChangeBottomSheet : BaseBottomSheetDialogFragment(R.layout.
       }
     }
 
-    observeWithOnRepeatLifecycle {
+    observeOnLifecycleStarted {
       viewModel.oldPasswordInvalid.collect {
         oldPassword = it.oldPassword
         binding.oldPassword.error = it.errorMessage

@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.domain.settings
 
-import dev.forcecodes.truckme.core.data.FirestoreAuthenticatedUserDataSource
+import dev.forcecodes.truckme.core.data.auth.FirestoreAuthenticatedUserDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase
 import dev.forcecodes.truckme.core.util.triggerOneShotListener

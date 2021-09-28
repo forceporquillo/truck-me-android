@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
-import dev.forcecodes.truckme.core.data.AuthBasicInfo
+import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
 import dev.forcecodes.truckme.core.di.ApplicationScope
 import dev.forcecodes.truckme.core.domain.signin.ObserveAuthStateUseCase

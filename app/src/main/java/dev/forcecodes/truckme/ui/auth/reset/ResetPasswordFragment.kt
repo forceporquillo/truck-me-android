@@ -10,7 +10,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentResetPasswordBinding
-import dev.forcecodes.truckme.extensions.observeWithOnRepeatLifecycle
+import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
 import dev.forcecodes.truckme.extensions.viewBinding
 import dev.forcecodes.truckme.ui.auth.AuthToolbarVisibilityListener
 import kotlinx.coroutines.flow.collect
@@ -37,7 +37,7 @@ class ResetPasswordFragment : Fragment(R.layout.fragment_reset_password) {
     binding.viewModel = viewModel
     binding.lifecycleOwner = viewLifecycleOwner
 
-    observeWithOnRepeatLifecycle {
+    observeOnLifecycleStarted {
       viewModel.passwordResetSuccess.collect { reset ->
         if (reset.isSuccess) {
           showSuccessDialog(reset.data.toString())

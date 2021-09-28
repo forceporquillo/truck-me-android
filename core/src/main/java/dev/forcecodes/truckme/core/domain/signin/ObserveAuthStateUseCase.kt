@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.domain.signin
 
-import dev.forcecodes.truckme.core.data.FirebaseAuthStateDataSource
+import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfo
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
 import dev.forcecodes.truckme.core.data.signin.FirebaseRegisteredUserInfo
