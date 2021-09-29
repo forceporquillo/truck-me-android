@@ -22,7 +22,7 @@ interface RegisteredDriverDataSource {
   fun isDriverRegistered(userId: String): Flow<Result<Boolean?>>
   fun register(userId: String, isRegistered: Boolean = false)
   fun updateUid(userId: String, authId: String?)
-  fun getAuthId(authId: String?): Flow<Result<String>>
+  fun getUUIDbyAuthId(authId: String?): Flow<Result<String>>
 }
 
 class RegisteredDriverDataSourceImpl @Inject constructor(
@@ -69,7 +69,7 @@ class RegisteredDriverDataSourceImpl @Inject constructor(
       .set(mapOf(REGISTERED_KEY to isRegistered, AUTH_ID to ""))
   }
 
-  override fun getAuthId(authId: String?): Flow<Result<String>> {
+  override fun getUUIDbyAuthId(authId: String?): Flow<Result<String>> {
     return callbackFlow {
       val authIdListener = firestore.fleetDrivers().addSnapshotListener { value, error ->
         if (value?.isEmpty == false) {
