@@ -33,12 +33,6 @@ Note: use only the <b>adminDebug</b> and <b>driverDebug</b> type for testing.
 
 Clean and run the project. Alternatively use the `./gradlew build` command to build the project directly.
 
-### Admin signin credentials
-Authenticate dummy test Admin
-
-```email```: truckmeadmin@gmail.com <br>
-```password```: admin123
-
 ## Modules
 
 Modules are collection of source files and build settings that allow you to divide a project into discrete units of functionality. In this case apart from dividing by functionality/responsibility, existing the following dependence between them:
