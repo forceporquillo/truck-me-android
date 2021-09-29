@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -150,8 +149,6 @@ class AccountSettingsViewModel @Inject constructor(
   private suspend fun updatePassword() {
     password?.let { newPassword ->
       submitAndSetLoading()
-      Timber.e("updatePassword $newPassword")
-      Timber.e("oldPassword $oldPassword")
 
       if (oldPassword.isEmpty()) {
         submitAndSetLoading(false)
@@ -159,7 +156,7 @@ class AccountSettingsViewModel @Inject constructor(
         return@let
       }
 
-      val currentUserPassword = CurrentUserPassword(email!!, newPassword, oldPassword)
+      val currentUserPassword = UserPasswordCredentials(email!!, newPassword, oldPassword, userIdValue)
       val result = updatePasswordUseCase(currentUserPassword)
 
       fetchResult(result) { passwordUpdate: PasswordUpdate?, e: Exception? ->
