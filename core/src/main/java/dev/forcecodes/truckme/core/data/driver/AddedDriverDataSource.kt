@@ -18,7 +18,10 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
+data class UpdatedPassword(val documentId: String, val newPassword: String)
+
 interface DriverDataSource {
+  suspend fun updateDriverPassword(updatedPassword: UpdatedPassword)
   suspend fun getDriverCollection(authInfo: AuthBasicInfo): Flow<Result<DriverAuthInfo>>
   suspend fun getDriverCollectionOneShot(authInfo: AuthBasicInfo): Result<DriverAuthInfo>
 }
@@ -27,6 +30,13 @@ interface DriverDataSource {
 class AddedDriverDataSourceImpl @Inject constructor(
   private val firestore: FirebaseFirestore
 ) : DriverDataSource {
+
+  override suspend fun updateDriverPassword(updatedPassword: UpdatedPassword) {
+    val (uid, newPassword) = updatedPassword
+    firestore.driverCollection()
+      .document(uid)
+      .update(mapOf("password" to newPassword))
+  }
 
   // async hot flows backed by snapshot listener
   override suspend fun getDriverCollection(
