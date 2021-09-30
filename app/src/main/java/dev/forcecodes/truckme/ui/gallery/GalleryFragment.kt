@@ -37,6 +37,8 @@ abstract class GalleryFragment(@LayoutRes contentLayoutId: Int) : Fragment(conte
     val button: CardView
   )
 
+  protected var imageUrl: String? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -60,7 +62,8 @@ abstract class GalleryFragment(@LayoutRes contentLayoutId: Int) : Fragment(conte
     repeatOnLifecycleParallel {
       launch {
         imageViewModel.image.collect { image: Image? ->
-          bindProfile(image?.imageUri ?: image?.imageUrl)
+          image ?: return@collect
+          bindProfile(image.imageUri ?: image.imageUrl)
         }
       }
 
@@ -75,6 +78,9 @@ abstract class GalleryFragment(@LayoutRes contentLayoutId: Int) : Fragment(conte
   override fun onStart() {
     super.onStart()
     imageButton?.setOnClickListener(::showBottomSheetGallery)
+    if (imageUrl != null) {
+      imageViewModel.selectedImage(Image(null, imageUrl))
+    }
   }
 
   private fun <T> bindProfile(urlOrUri: T) {
