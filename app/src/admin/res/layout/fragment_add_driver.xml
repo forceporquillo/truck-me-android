@@ -80,6 +80,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/full_name_et"
+                    android:text="@{viewModel.driverUri.fullName}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -96,6 +97,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email_et"
+                    android:text="@{viewModel.driverUri.email}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -112,6 +114,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_et"
+                    android:enabled="@{viewModel.enablePassword}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -129,6 +132,7 @@
                 app:startIconDrawable="@drawable/ic_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:enabled="@{viewModel.enablePassword}"
                     android:id="@+id/confirm_password_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,6 +153,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phone_number_et"
+                    android:text="@{viewModel.driverUri.contact}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
