@@ -53,5 +53,7 @@
   <string name="distance_left">Distance Left:</string>
   <string name="not_yet_implemented">Not yet implemented</string>
   <string name="eta">ETA:</string>
-
+  <string name="fleet">Fleet</string>
+  <string name="statistics">Statistics</string>
+  <string name="history">History</string>
 </resources>
