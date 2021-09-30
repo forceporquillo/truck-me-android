@@ -103,13 +103,8 @@ class MapDeliverySharedViewModel @Inject constructor(
       }
       launch {
         combine(
-          _title,
-          _address,
-          _driver,
-          _contact,
-          _vehicle,
-          _freightItem,
-          _boundDelivery
+          _title, _address, _driver, _contact,
+          _vehicle, _freightItem, _boundDelivery
         ) { info ->
           info.filterIsInstance<String?>().all { !it.isNullOrEmpty() }
             && (info[2] as? DriverData) != null && (info[4] as? VehicleData) != null

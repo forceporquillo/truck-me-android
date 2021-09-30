@@ -68,9 +68,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
       viewModel.activeJobsList.collect(deliveryAdapter::submitList)
     }
 
-    deliveryAdapter.onActiveJobClick = {
+    deliveryAdapter.onActiveJobClick = { activeJobId ->
       // todo add id
-      startRealtimeMap()
+      startRealtimeMap(activeJobId)
     }
   }
 

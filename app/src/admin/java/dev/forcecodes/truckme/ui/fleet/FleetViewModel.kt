@@ -33,15 +33,16 @@ class FleetViewModel @Inject constructor(
   val fleetLoadStatueIsLoading = _fleetLoadStatueIsLoading.asStateFlow()
 
   init {
+    val adminId = signInViewModelDelegate.userIdValue!!
     viewModelScope.launch {
       launch {
-        observeVehicleFleetsUseCase(signInViewModelDelegate.userIdValue!!).collect {
+        observeVehicleFleetsUseCase(adminId).collect {
           _vehicleList.value = it.successOr(emptyList())
           _fleetLoadStatueIsLoading.value = false
         }
       }
       launch {
-        observeDriverFleetsUseCase(signInViewModelDelegate.userIdValue!!).collect {
+        observeDriverFleetsUseCase(adminId).collect {
           _driverList.value = it.successOr(emptyList())
           _fleetLoadStatueIsLoading.value = false
         }
