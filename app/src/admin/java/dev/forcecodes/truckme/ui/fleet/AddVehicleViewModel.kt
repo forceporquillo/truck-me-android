@@ -3,6 +3,7 @@ package dev.forcecodes.truckme.ui.fleet
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.data.fleets.VehicleByteArray
 import dev.forcecodes.truckme.core.domain.fleets.AddVehicleUseCase
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -86,9 +88,15 @@ class AddVehicleViewModel @Inject constructor(
       field = value
     }
 
+  var vehicleUri: VehicleUri? = null
+
   fun submit() {
 
+    val vehicleId = if (!vehicleUri?.id.isNullOrEmpty())
+      vehicleUri?.id else UUID.randomUUID().toString()
+
     val vehicles = VehicleByteArray(
+      id = vehicleId!!,
       name = vehicleName,
       plate = plateNumber,
       description = description,

@@ -29,9 +29,7 @@ class PasswordResetViewModel @Inject constructor(
   private fun reset(email: String) {
     viewModelScope.launch {
       fetchResult(passwordResetUseCase(email)) { data, _ ->
-        data?.let {
-          _passwordResetSuccess.value = it
-        }
+        _passwordResetSuccess.value = data ?: return@fetchResult
       }
     }
   }

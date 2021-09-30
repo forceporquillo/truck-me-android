@@ -14,10 +14,11 @@ fun AppCompatActivity.fillDecor(toolbar: Toolbar) {
 
 fun <T : AppCompatActivity> Activity.createIntent(
   activity: KClass<out T>,
+  intent: Intent = Intent(this, activity.java),
   finish: Boolean = false,
   finishAffinity: Boolean = false,
 ) {
-  startActivity(Intent(this, activity.java))
+  startActivity(intent)
   if (finish) {
     finish()
     return

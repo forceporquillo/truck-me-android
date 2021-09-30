@@ -2,7 +2,6 @@ package dev.forcecodes.truckme.ui.fleet
 
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
@@ -49,7 +48,6 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
       parent, false
     ).apply {
       fleetType.text = parent.context.getString(adapterTitle)
-      fleetContainer.setOnClickListener(::onViewHolderCreated)
     }
     return FleetViewHolder(binding)
   }
@@ -64,11 +62,13 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
       emptyState.invoke(true)
       return
     }
-
+    holder.binding.fleetContainer.setOnClickListener {
+      onViewHolderCreated(getItem(position))
+    }
     holder.binding.fleetType.isVisible = position == 0 && itemCount > 0
   }
 
-  abstract fun onViewHolderCreated(root: View)
+  abstract fun onViewHolderCreated(data: T)
 
   class FleetViewHolder(
     val binding: FleetItemBinding

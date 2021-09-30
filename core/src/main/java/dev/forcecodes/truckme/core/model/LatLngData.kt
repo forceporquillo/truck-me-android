@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.model
 
 data class LatLngData @JvmOverloads constructor(
-  val lat: Double = 0.0,
-  val lng: Double = 0.0
+  val lat: Double? = null,
+  val lng: Double? = null
 )

@@ -1,5 +1,8 @@
 package dev.forcecodes.truckme.core.data.fleets
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 interface Fleets<T> {
   val id: String
   var isActive: Boolean
@@ -15,6 +18,8 @@ interface FleetDelegate {
 }
 
 sealed class FleetUiModel: FleetDelegate {
+
+  @Parcelize
   data class VehicleUri @JvmOverloads constructor(
     val name: String = "",
     val plate: String = "",
@@ -23,8 +28,9 @@ sealed class FleetUiModel: FleetDelegate {
     override val id: String = "",
     override var isActive: Boolean = false,
     override val assignedAdmin: String = ""
-  ) : FleetUiModel()
+  ) : FleetUiModel(), Parcelable
 
+  @Parcelize
   data class DriverUri @JvmOverloads constructor(
     val fullName: String = "",
     val email: String = "",
@@ -34,5 +40,5 @@ sealed class FleetUiModel: FleetDelegate {
     override val id: String = "",
     override var isActive: Boolean = false,
     override val assignedAdmin: String = ""
-  ) : FleetUiModel()
+  ) : FleetUiModel(), Parcelable
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.data.fleets.DriverByteArray
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.domain.fleets.AddDriverUseCase
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.handlePhoneNumber
@@ -58,6 +60,15 @@ class AddDriverViewModel @Inject constructor(
       }.collect(::enableSubmitButton)
     }
   }
+
+  private val _enablePassword = MutableStateFlow(true)
+  val enablePassword = _enablePassword.asStateFlow()
+
+  var driverUri: DriverUri? = null
+    set(value) {
+      _enablePassword.value = true
+      field = value
+    }
 
   fun fullName(value: String?) {
     _fullName.value = value ?: ""
@@ -126,7 +137,10 @@ class AddDriverViewModel @Inject constructor(
 
   fun submit() {
     submitAndSetLoading(true)
+    val driverId = if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else System.currentTimeMillis().toString()
+
     val driver = DriverByteArray(
+      id = driverId!!,
       fullName = _fullName.value,
       email = _emailSf.value,
       password = _passwordSf.value,

@@ -11,7 +11,7 @@ import dev.forcecodes.truckme.extensions.bindProfileIcon
 
 class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATOR) {
 
-  var onActiveJobClick: () -> Unit = {}
+  var onActiveJobClick: (String) -> Unit = {}
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -22,9 +22,8 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
         LayoutInflater.from(parent.context),
         parent,
         false
-      ).also { binding ->
-        binding.root.setOnClickListener { onActiveJobClick.invoke() }
-      }
+      ),
+      onActiveJobClick
     )
   }
 
@@ -52,10 +51,20 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
 }
 
 class DeliveryViewHolder(
-  private val binding: DeliveryItemBinding
+  private val binding: DeliveryItemBinding,
+  private val onActiveJobClick: (String) -> Unit = {}
 ) : RecyclerView.ViewHolder(binding.root) {
 
+  private lateinit var itemId: String
+
+  init {
+    binding.root.setOnClickListener {
+      onActiveJobClick(itemId)
+    }
+  }
+
   fun bind(items: DeliveryItems) {
+    itemId = items.id
     with(binding) {
       deliverTo.text = items.driverName
       destination.text = items.destination

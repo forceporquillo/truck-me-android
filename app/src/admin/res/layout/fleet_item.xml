@@ -17,6 +17,7 @@
         android:visibility="gone" />
 
     <androidx.cardview.widget.CardView
+        style="@style/ClickableButtonStyle"
         android:id="@+id/fleet_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.databinding.FragmentAddVehicleBinding
 import dev.forcecodes.truckme.extensions.attachProgressToMain
+import dev.forcecodes.truckme.extensions.bindImageWith
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.textChangeObserver
@@ -22,6 +25,7 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
 
   private val binding by viewBinding(FragmentAddVehicleBinding::bind)
   private val viewModel by viewModels<AddVehicleViewModel>()
+  private val navArgs by navArgs<AddVehicleFragmentArgs>()
 
   override fun onViewCreated(
     view: View,
@@ -33,6 +37,14 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
 
     binding.submit.setOnClickListener {
       viewModel.submit()
+    }
+
+    val vehicleUri = navArgs.vehicleUri
+
+    if (vehicleUri != null) {
+     viewModel.vehicleUri = vehicleUri
+      imageUrl = vehicleUri.profile
+      bindProfileIcon(vehicleUri.profile)
     }
 
     binding.apply {

@@ -79,6 +79,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/vehicle_name"
+                android:text="@{viewModel.vehicleUri.name}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -95,6 +96,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/plate_number"
+                android:text="@{viewModel.vehicleUri.plate}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -112,6 +114,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/description"
                 android:maxLines="5"
+                android:text="@{viewModel.vehicleUri.description}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

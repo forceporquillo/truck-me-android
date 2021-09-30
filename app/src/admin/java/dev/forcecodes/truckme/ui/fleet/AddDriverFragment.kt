@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentAddDriverBinding
@@ -21,11 +22,20 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
 
   private val binding by viewBinding(FragmentAddDriverBinding::bind)
   private val viewModel by viewModels<AddDriverViewModel>()
+  private val navArgs by navArgs<AddDriverFragmentArgs>()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     binding.lifecycleOwner = viewLifecycleOwner
     binding.viewModel = viewModel
+
+    val vehicleUri = navArgs.driverUri
+
+    if (vehicleUri != null) {
+      viewModel.driverUri = vehicleUri
+      imageUrl = vehicleUri.profile
+      bindProfileIcon(vehicleUri.profile)
+    }
 
     binding.apply {
       fullNameEt.textChangeObserver(viewModel!!::fullName)
