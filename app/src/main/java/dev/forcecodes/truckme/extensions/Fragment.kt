@@ -1,5 +1,6 @@
 package dev.forcecodes.truckme.extensions
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.gms.maps.SupportMapFragment
@@ -65,9 +67,11 @@ fun Fragment.repeatOnLifecycleParallel(
   }
 }
 
-fun Fragment.startRealtimeMap() {
+fun Fragment.startRealtimeMap(activeJobId: String) {
   requireActivity {
-    createIntent(ActiveJobsActivity::class)
+    val intent = Intent(this, ActiveJobsActivity::class.java)
+    intent.putExtra("job_item_id", activeJobId)
+    startActivity(intent)
   }
 }
 
@@ -109,6 +113,10 @@ fun Toolbar.setupToolbarPopBackStack(
 
 fun Fragment.navigate(@IdRes resId: Int) {
   findNavController().navigate(resId)
+}
+
+fun Fragment.navigate(direction: NavDirections) {
+  findNavController().navigate(direction)
 }
 
 fun Fragment.findMapById(@IdRes resId: Int): SupportMapFragment? {
