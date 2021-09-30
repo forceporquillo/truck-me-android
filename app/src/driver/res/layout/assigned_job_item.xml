@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="6dp"
     style="@style/ClickableButtonStyle"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginStart="@dimen/spacing_extra_small"
+    android:layout_marginEnd="@dimen/spacing_extra_small"
     android:background="@color/white"
     app:cardCornerRadius="5dp"
     >
