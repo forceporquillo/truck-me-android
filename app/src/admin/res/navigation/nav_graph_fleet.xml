@@ -16,8 +16,9 @@
             app:destination="@id/addDriverFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="false"
             app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
         <action
             android:id="@+id/to_addVehicleFragment"
@@ -33,12 +34,25 @@
         android:id="@+id/addDriverFragment"
         android:name="dev.forcecodes.truckme.ui.fleet.AddDriverFragment"
         android:label="Add Driver"
-        tools:layout="@layout/fragment_add_driver" />
+        tools:layout="@layout/fragment_add_driver" >
+        <argument
+            android:name="driverUri"
+            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
     <fragment
         android:id="@+id/addVehicleFragment"
         android:name="dev.forcecodes.truckme.ui.fleet.AddVehicleFragment"
         android:label="Add Vehicle"
-        tools:layout="@layout/fragment_add_vehicle" />
+        tools:layout="@layout/fragment_add_vehicle" >
+
+        <argument
+            android:name="vehicleUri"
+            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$VehicleUri"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 </navigation>

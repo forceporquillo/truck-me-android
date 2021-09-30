@@ -3,26 +3,26 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/nav_ic_home"
-        android:title="Home" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/fleet"
         android:icon="@drawable/nav_ic_fleet"
-        android:title="Fleet" />
+        android:title="@string/fleet" />
 
     <item
-        android:id="@+id/statistics"
+        android:id="@+id/statisticsFragment"
         android:icon="@drawable/nav_ic_statistics"
-        android:title="Statistics" />
+        android:title="@string/statistics" />
 
     <item
-        android:id="@+id/history"
+        android:id="@+id/historyFragment"
         android:icon="@drawable/nav_ic_history"
-        android:title="History" />
+        android:title="@string/history" />
 
     <item
         android:id="@+id/account"
         android:icon="@drawable/nav_ic_profile"
-        android:title="Account" />
+        android:title="@string/account" />
 
 </menu>
