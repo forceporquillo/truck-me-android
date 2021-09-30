@@ -137,7 +137,10 @@ class AddDriverViewModel @Inject constructor(
 
   fun submit() {
     submitAndSetLoading(true)
+    val driverId = if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else System.currentTimeMillis().toString()
+
     val driver = DriverByteArray(
+      id = driverId!!,
       fullName = _fullName.value,
       email = _emailSf.value,
       password = _passwordSf.value,
