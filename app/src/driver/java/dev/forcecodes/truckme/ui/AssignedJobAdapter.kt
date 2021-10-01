@@ -11,7 +11,7 @@ import dev.forcecodes.truckme.ui.AssignedJobAdapter.AssignedViewHolder
 
 class AssignedJobAdapter : ListAdapter<ActiveJobItems, AssignedViewHolder>(JOBS_COMPARATOR) {
 
-  var onAssignedJobClick: () -> Unit = {}
+  var onAssignedJobClick: (String) -> Unit = {}
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -22,9 +22,8 @@ class AssignedJobAdapter : ListAdapter<ActiveJobItems, AssignedViewHolder>(JOBS_
         LayoutInflater.from(parent.context),
         parent,
         false
-      ).also { binding ->
-        binding.root.setOnClickListener { onAssignedJobClick() }
-      }
+      ),
+      onAssignedJobClick
     )
   }
 
@@ -36,10 +35,20 @@ class AssignedJobAdapter : ListAdapter<ActiveJobItems, AssignedViewHolder>(JOBS_
   }
 
   class AssignedViewHolder(
-    private val binding: AssignedJobItemBinding
+    private val binding: AssignedJobItemBinding,
+    private val onAssignedJobClick: (String) -> Unit = {}
   ) : RecyclerView.ViewHolder(binding.root) {
 
+    private lateinit var jobId: String
+
+    init {
+      binding.root.setOnClickListener {
+        onAssignedJobClick(jobId)
+      }
+    }
+
     fun bind(item: ActiveJobItems) {
+      jobId = item.id
       with(binding) {
         deliverTv.text = item.title
         destinationTv.text = item.destination
