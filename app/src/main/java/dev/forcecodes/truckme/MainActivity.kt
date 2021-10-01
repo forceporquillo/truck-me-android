@@ -22,7 +22,7 @@ import dev.forcecodes.truckme.util.PermissionUtils.requestMultiplePermissions
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+  //heelo
   private val appBarConfiguration = AppBarConfiguration(topDestinations)
 
   private val navController: NavController by lazy { navHostFragment.navController }
