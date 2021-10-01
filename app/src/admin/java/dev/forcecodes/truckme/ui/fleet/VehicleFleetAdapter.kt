@@ -1,6 +1,7 @@
 package dev.forcecodes.truckme.ui.fleet
 
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.data.fleets.FleetType.VEHICLE
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 
 class VehicleFleetAdapter(
@@ -10,5 +11,9 @@ class VehicleFleetAdapter(
 
   override fun onViewHolderCreated(data: VehicleUri) {
     fleetItemListener.onVehicleSelected(data)
+  }
+
+  override fun onDeleteFleet(id: String) {
+    fleetItemListener.onDeleteFleet(id, VEHICLE)
   }
 }

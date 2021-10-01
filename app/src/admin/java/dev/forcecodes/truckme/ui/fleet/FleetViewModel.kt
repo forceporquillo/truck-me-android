@@ -3,7 +3,9 @@ package dev.forcecodes.truckme.ui.fleet
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.BaseViewModel
+import dev.forcecodes.truckme.core.data.fleets.FleetType
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
+import dev.forcecodes.truckme.core.domain.fleets.DeleteFleetUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveVehicleFleetsUseCase
 import dev.forcecodes.truckme.core.util.successOr
@@ -14,13 +16,16 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import timber.log.Timber.Forest
 import javax.inject.Inject
 
 @HiltViewModel
 class FleetViewModel @Inject constructor(
+  private val deleteFleetUseCase: DeleteFleetUseCase,
   observeVehicleFleetsUseCase: ObserveVehicleFleetsUseCase,
   observeDriverFleetsUseCase: ObserveDriverFleetsUseCase,
-  private val signInViewModelDelegate: SignInViewModelDelegate
+  signInViewModelDelegate: SignInViewModelDelegate
 ) : BaseViewModel<FleetNavActionEvent>() {
 
   private val _vehicleList = MutableStateFlow<List<FleetUiModel.VehicleUri>>(emptyList())
@@ -46,6 +51,14 @@ class FleetViewModel @Inject constructor(
           _driverList.value = it.successOr(emptyList())
           _fleetLoadStatueIsLoading.value = false
         }
+      }
+    }
+  }
+
+  fun onDeleteFleet(id: String, type: FleetType) {
+    viewModelScope.launch {
+      deleteFleetUseCase.invoke(Pair(id, type)).collect {
+        Timber.e(it.toString())
       }
     }
   }

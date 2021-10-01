@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.data.fleets.FleetType
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.databinding.FragmentFleetBinding
@@ -49,6 +50,10 @@ class FleetFragment : Fragment(R.layout.fragment_fleet), FleetItemListener {
 
   override fun onVehicleSelected(data: VehicleUri) {
     navigate(FleetFragmentDirections.toAddVehicleFragment(data))
+  }
+
+  override fun onDeleteFleet(id: String, type: FleetType) {
+    viewModel.onDeleteFleet(id, type)
   }
 
   private fun initAdapter() {

@@ -12,4 +12,5 @@ interface FleetDataSource {
   fun addDriver(data: DriverUri): Task<Void>
   fun observeVehicleChanges(): Flow<Result<List<VehicleUri>>>
   fun observeDriverChanges(): Flow<Result<List<DriverUri>>>
+  fun onDeleteFleet(id: String, type: FleetType): Task<Void>
 }
