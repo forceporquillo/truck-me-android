@@ -17,7 +17,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
@@ -196,7 +195,7 @@ fun View.disableButtonForAWhile(block: () -> Unit) {
  * Listens to scroll offset position of [RecyclerView] and add [Toolbar] elevation if
  * first visible item is not present in the view hierarchy.
  */
-fun <T: View> NestedScrollView.withToolbarElevationListener(
+fun <T : View> NestedScrollView.withToolbarElevationListener(
   view: T,
   block: (() -> Unit)? = null
 ) {
