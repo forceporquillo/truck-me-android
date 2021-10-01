@@ -12,6 +12,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import dev.forcecodes.truckme.core.data.fleets.EmptyFleetsException
 import dev.forcecodes.truckme.core.data.fleets.FleetDelegate
+import dev.forcecodes.truckme.core.data.fleets.FleetType
 import dev.forcecodes.truckme.core.domain.settings.PhoneNumber
 import dev.forcecodes.truckme.core.domain.settings.ProfileData
 import dev.forcecodes.truckme.core.util.Result.Error
@@ -55,6 +56,18 @@ fun FirebaseFirestore.driverCollection(): CollectionReference {
   return collection("fleets")
     .document("all")
     .collection("drivers")
+}
+
+fun FirebaseFirestore.deleteCollection(id: String, type: FleetType): Task<Void> {
+    return if (type == FleetType.DRIVER) {
+      driverCollection()
+        .document(id)
+        .delete()
+    } else {
+      vehicleCollection()
+        .document(id)
+        .delete()
+    }
 }
 
 fun FirebaseFirestore.vehicleCollection(): CollectionReference {

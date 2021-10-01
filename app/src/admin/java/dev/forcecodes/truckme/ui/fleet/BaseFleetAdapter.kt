@@ -1,13 +1,17 @@
 package dev.forcecodes.truckme.ui.fleet
 
 import android.net.Uri
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.databinding.FleetItemBinding
 import dev.forcecodes.truckme.extensions.bindImageWith
@@ -62,13 +66,30 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
       emptyState.invoke(true)
       return
     }
-    holder.binding.fleetContainer.setOnClickListener {
-      onViewHolderCreated(getItem(position))
+
+    with(holder.binding) {
+      fleetContainer.setOnClickListener { onViewHolderCreated(getItem(position)) }
+      moreButton.setOnClickListener { popUpDelete(it, position) }
+      fleetType.isVisible = position == 0 && itemCount > 0
     }
-    holder.binding.fleetType.isVisible = position == 0 && itemCount > 0
+
+  }
+
+  private fun popUpDelete(view: View, position: Int) {
+    PopupMenu(view.context, view).apply {
+      gravity = Gravity.END
+      menuInflater.inflate(R.menu.popup_fleet_delete_menu, menu)
+      setOnMenuItemClickListener {
+        if (it.itemId == R.id.delete) {
+          onDeleteFleet(getItem(position).id)
+        }
+        return@setOnMenuItemClickListener true
+      }
+    }.show()
   }
 
   abstract fun onViewHolderCreated(data: T)
+  abstract fun onDeleteFleet(id: String)
 
   class FleetViewHolder(
     val binding: FleetItemBinding
