@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -137,7 +138,7 @@ class AddDriverViewModel @Inject constructor(
 
   fun submit() {
     submitAndSetLoading(true)
-    val driverId = if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else System.currentTimeMillis().toString()
+    val driverId = if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else UUID.randomUUID().toString()
 
     val driver = DriverByteArray(
       id = driverId!!,
