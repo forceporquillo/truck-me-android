@@ -5,6 +5,7 @@ import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.Result.Loading
+import dev.forcecodes.truckme.core.util.mapApiRequestResults
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
