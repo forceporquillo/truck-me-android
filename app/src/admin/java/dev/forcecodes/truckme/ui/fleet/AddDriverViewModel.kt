@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.data.fleets.DriverByteArray
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
-import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.domain.fleets.AddDriverUseCase
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.handlePhoneNumber
@@ -28,6 +27,7 @@ class AddDriverViewModel @Inject constructor(
 ) : CommonCredentialsViewModel<UiActionEvent>(requireConfirmation = true),
   SignInViewModelDelegate by signInViewModelDelegate {
 
+  private val _profileIcon = MutableStateFlow("")
   private val _fullName = MutableStateFlow("")
   private val _emailSf = MutableStateFlow("")
   private val _passwordSf = MutableStateFlow("")
@@ -38,6 +38,7 @@ class AddDriverViewModel @Inject constructor(
   val uploadState = _uploadState.asStateFlow()
 
   private var phoneNumberInputStated = false
+  private var isProfileSetExplicitly = false
 
   init {
     Timber.e(signInViewModelDelegate.userIdValue)
@@ -47,18 +48,28 @@ class AddDriverViewModel @Inject constructor(
         _emailSf,
         _passwordSf,
         _confirmPassSf,
-        _contactSf
-      ) { f, e, p, cp, c ->
-        arrayOf(f, e, p, cp, c)
+        _contactSf,
+      ) { fn, es, ps, cp, cf ->
+        arrayOf(fn, es, ps, cp, cf)
       }.map { fields ->
         handlePhoneNumber(fields.last())
         handlePasswordNotMatch(fields[2], fields[3])
-
-        fields.all {
-          it.isNotEmpty()
-            && (fields[2] == fields[3])
+        isSameInstance(fields) ?: fields.all {
+          it.isNotEmpty() && (fields[2] == fields[3])
         }
       }.collect(::enableSubmitButton)
+    }
+  }
+
+  private fun isSameInstance(fields: Array<String>): Boolean? {
+    if (fields.all { it.isEmpty() }) {
+      return null
+    }
+    return driverUri?.run {
+      !(fields[0] == fullName && fields[1] == email &&
+        fields[2] == password && fields[3] == password
+        && fields[4] == contact) || isProfileSetExplicitly
+        || isProfileSetExplicitly
     }
   }
 
@@ -68,6 +79,8 @@ class AddDriverViewModel @Inject constructor(
   var driverUri: DriverUri? = null
     set(value) {
       _enablePassword.value = true
+      _passwordSf.value = value!!.password
+      _confirmPassSf.value = value.password
       field = value
     }
 
@@ -103,10 +116,13 @@ class AddDriverViewModel @Inject constructor(
     _contactSf.value = value ?: ""
   }
 
-  private var profileInBytes: ByteArray? = null
+  var profileInBytes: ByteArray? = null
 
   fun profileIconInBytes(byteArray: ByteArray?) {
+    _profileIcon.value = ""
     profileInBytes = byteArray
+    Timber.e(profileInBytes.toString())
+    isProfileSetExplicitly = true
   }
 
   private fun handlePhoneNumber(field: String?) {
@@ -138,7 +154,8 @@ class AddDriverViewModel @Inject constructor(
 
   fun submit() {
     submitAndSetLoading(true)
-    val driverId = if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else UUID.randomUUID().toString()
+    val driverId =
+      if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else UUID.randomUUID().toString()
 
     val driver = DriverByteArray(
       id = driverId!!,

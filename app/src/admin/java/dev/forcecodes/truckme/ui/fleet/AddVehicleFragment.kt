@@ -44,7 +44,9 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
     if (vehicleUri != null) {
      viewModel.vehicleUri = vehicleUri
       imageUrl = vehicleUri.profile
-      bindProfileIcon(vehicleUri.profile)
+      bindProfileIcon(vehicleUri.profile) { profileInBytes ->
+        viewModel.profileIconInBytes = profileInBytes
+      }
     }
 
     binding.apply {
@@ -87,6 +89,6 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
   }
 
   override fun onProfileChange(profileInBytes: ByteArray) {
-    viewModel.profileIconInBytes = profileInBytes
+    viewModel.setProfileInBytes(profileInBytes)
   }
 }
