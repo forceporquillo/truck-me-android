@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -85,7 +84,7 @@ class SignInUseCase @Inject constructor(
             if (result.data == false /* Kotlin nullability feature */) {
               // triggers only once even if this flow is cold.
               // this is because createUserAccount cancel out when gets invoked.
-                val signInResult = SignInResult(data = authBasicInfo)
+              val signInResult = SignInResult(data = authBasicInfo)
               authStateDataSource.createUserAccount(authBasicInfo)
                 .triggerOneShotListener(signInResult) { task, e ->
                   if (task.isSuccessful) {
