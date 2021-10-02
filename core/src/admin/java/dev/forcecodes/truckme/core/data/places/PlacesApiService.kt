@@ -1,5 +1,6 @@
 package dev.forcecodes.truckme.core.data.places
 
+import dev.forcecodes.truckme.core.BuildConfig
 import dev.forcecodes.truckme.core.domain.places.LatLng
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
 import retrofit2.Response
@@ -13,19 +14,19 @@ interface PlacesApiService {
     @Query("input") input: String?,
     @Query("components") component: String = "country:ph",
     @Query("radius") radius: String = "5000",
-    @Query("key") apiKey: String = "AIzaSyCklk_qY1u_KHrL1G5TOn2uEg2Ci5yNZWo"
+    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
   ): Response<PlaceAutoCompleteResponse>
 
   @GET("/maps/api/place/details/json")
   suspend fun getPlaceById(
     @Query("place_id") id: String?,
-    @Query("key") apiKey: String = "AIzaSyCklk_qY1u_KHrL1G5TOn2uEg2Ci5yNZWo"
+    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
   ): Response<PlaceDetailsResponse>
 
   @GET("/maps/api/geocode/json")
   suspend fun getReverseGeoCode(
     @Query("latlng") latLng: LatLng?,
-    @Query("key") apiKey: String = "AIzaSyCklk_qY1u_KHrL1G5TOn2uEg2Ci5yNZWo"
+    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
   ): Response<GeoCodeResponse>
 }
 
