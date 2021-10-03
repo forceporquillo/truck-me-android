@@ -1,9 +1,10 @@
-package dev.forcecodes.truckme.core.domain
+package dev.forcecodes.truckme.core.domain.jobs
 
 import dev.forcecodes.truckme.core.data.ActiveJobItems
 import dev.forcecodes.truckme.core.data.AssignedDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
+import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.error
 import dev.forcecodes.truckme.core.util.successOr
