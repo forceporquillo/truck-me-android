@@ -16,12 +16,10 @@ First clone this repository (See the options on the right hand side.)
 
 In Android Studio, use the "Open an existing Android Studio project", find the downloaded project folder and select the (`truck-me-android`).
 
-Alternatively use the `./gradlew build` command to build the project directly.
-
 1. [Get an API Key](https://console.cloud.google.com/google/maps-apis/credentials?project=truckme-debug-326812).
 2. Open the `local.properties` file in root project (you must switch project structure from `Android` to `Project` in the top-left corner).
 3. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step.
-4. For `Places` and `Directions` API Key. Just copy your `MAPS API KEY` and add a single line to `gradle.properties` `MAPS_API_KEY="PLACE_YOUR_API_KEY_HERE"`, where `PLACE_YOUR_API_KEY_HERE` is the same as your API key in the `local.properties`. see pull request [#23](https://github.com/forceporquillo/truck-me-android/pull/23)
+4. For `Places` and `Directions` API Key. Just copy your `API KEY` and place this key to `gradle.properties` `MAPS_API_KEY="PLACE_YOUR_API_KEY_HERE"`, where `PLACE_YOUR_API_KEY_HERE` is the same as your API key in the `local.properties`. See pull request [#23](https://github.com/forceporquillo/truck-me-android/pull/23)
 5. Build and run.
 
 ## Switching between Admin and Driver build variant
@@ -30,9 +28,12 @@ Navigate to ```Build Variants```. (Can be found on the bottom left side of proje
 <p align="start">
 <img src="/screenshots/build_variant.png"/>
 </p>
-Note: use only the <b>adminDebug</b> and <b>driverDebug</b> type for testing.
 
-Clean and run the project. Alternatively use the `./gradlew build` command to build the project directly.
+Note: use only the ```adminDebug``` and ```driverDebug``` type for testing.
+
+Clean and run the project.
+
+Alternatively use the `./gradlew build` command to build the project directly.
 
 ## Modules
 
