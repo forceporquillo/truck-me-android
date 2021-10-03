@@ -4,7 +4,7 @@ import android.net.Uri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.data.fleets.VehicleByteArray
 import dev.forcecodes.truckme.core.di.IoDispatcher
-import dev.forcecodes.truckme.core.mapper.DomainMapper
+import dev.forcecodes.truckme.core.mapper.DomainMapperDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class VehicleDomainMapper @Inject constructor(
   @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : DomainMapper<VehicleByteArray, Uri?, VehicleUri> {
+) : DomainMapperDouble<VehicleByteArray, Uri?, VehicleUri> {
 
   override suspend fun invoke(
     from: VehicleByteArray,

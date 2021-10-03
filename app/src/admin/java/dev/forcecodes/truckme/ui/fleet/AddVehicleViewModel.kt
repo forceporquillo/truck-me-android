@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,28 +40,37 @@ class AddVehicleViewModel @Inject constructor(
   private val _uploadState = MutableStateFlow<FleetUploadState>(FleetUploadState.Loading)
   val uploadState = _uploadState.asStateFlow()
 
+  private var isProfileSetExplicitly = false
+
   init {
     viewModelScope.launch {
       combine(vehicleNameSf, plateNumberSf, descriptionSf) { v, p, d ->
         arrayOf(v, p, d)
       }.map { fields ->
-        fields.all { it.isNotEmpty() }
+        isSameInstance(fields) ?: fields.all { it.isNotEmpty() }
       }.collect { enable ->
         _enableSubmitButton.value = enable
       }
     }
   }
 
-  var profileIconInBytes: ByteArray? = null
-    set(value) {
-      value?.let {
-        //  enableSubmitButton(enable = true)
-        //  sendUiEvent(BackPressDispatcherUiActionEvent.Intercept)
-        //  isProfileAdded = true
-        Timber.e(it.toString())
-      }
-      field = value
+  private fun isSameInstance(fields: Array<String>): Boolean? {
+    if (fields.all { it.isEmpty() }) {
+      return null
     }
+    return vehicleUri?.run {
+      !(fields[0] == name && fields[1] == plate && fields[2] == description)
+        || isProfileSetExplicitly
+    }
+  }
+
+  fun setProfileInBytes(profileIconInBytes: ByteArray) {
+    this.profileIconInBytes = profileIconInBytes
+    _enableSubmitButton.value = true
+    isProfileSetExplicitly = true
+  }
+
+  var profileIconInBytes: ByteArray? = null
 
   var vehicleName: String? = ""
     set(value) {

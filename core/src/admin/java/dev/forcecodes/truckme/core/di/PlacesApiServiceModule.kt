@@ -1,6 +1,5 @@
 package dev.forcecodes.truckme.core.di
 
-import android.os.Looper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Lazy
@@ -10,27 +9,19 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.forcecodes.truckme.core.BuildConfig
 import dev.forcecodes.truckme.core.data.places.PlacesApiService
-import okhttp3.Call
+import dev.forcecodes.truckme.core.util.DEFAULT_TIMEOUT
+import dev.forcecodes.truckme.core.util.PlacesBackendApi
+import dev.forcecodes.truckme.core.util.PlacesInternalApi
+import dev.forcecodes.truckme.core.util.checkMainThread
+import dev.forcecodes.truckme.core.util.delegatingCallFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import java.util.concurrent.TimeUnit
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-internal annotation class PlacesBackendApi
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-annotation class PlacesInternalApi
-
-private const val DEFAULT_TIMEOUT = 15L
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -99,26 +90,4 @@ object PlacesApiServiceModule {
   internal fun providesPlacesApiService(
     @PlacesInternalApi retrofit: Retrofit
   ): PlacesApiService = retrofit.create()
-
-}
-
-fun isOnMainThread() = Looper.myLooper() == Looper.getMainLooper()
-
-fun <T> checkMainThread(block: () -> T): T =
-  if (Looper.myLooper() == Looper.getMainLooper()) {
-    throw IllegalStateException("Object initialized on main thread.")
-  } else {
-    block()
-  }
-
-@PublishedApi
-internal inline fun Retrofit.Builder.callFactory(
-  crossinline body: (Request) -> Call
-) = callFactory { request -> body(request) }
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun Retrofit.Builder.delegatingCallFactory(
-  delegate: Lazy<OkHttpClient>
-): Retrofit.Builder = callFactory {
-  delegate.get().newCall(it)
 }

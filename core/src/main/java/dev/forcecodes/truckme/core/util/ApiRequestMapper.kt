@@ -1,11 +1,8 @@
-package dev.forcecodes.truckme.core.domain.places
+package dev.forcecodes.truckme.core.util
 
-import dev.forcecodes.truckme.core.util.ApiResponseStatus
-import dev.forcecodes.truckme.core.util.ApiResponse
 import dev.forcecodes.truckme.core.util.ApiResponse.ApiEmptyResponse
 import dev.forcecodes.truckme.core.util.ApiResponse.ApiErrorResponse
 import dev.forcecodes.truckme.core.util.ApiResponse.ApiSuccessResponse
-import dev.forcecodes.truckme.core.util.Result
 
 fun <T: ApiResponseStatus> ApiResponse<T>.mapApiRequestResults(
   emptyApiResponseMessage: () -> String

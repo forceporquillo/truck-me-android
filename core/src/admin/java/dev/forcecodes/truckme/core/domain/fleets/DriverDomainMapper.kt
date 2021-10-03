@@ -4,7 +4,7 @@ import android.net.Uri
 import dev.forcecodes.truckme.core.data.fleets.DriverByteArray
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.di.IoDispatcher
-import dev.forcecodes.truckme.core.mapper.DomainMapper
+import dev.forcecodes.truckme.core.mapper.DomainMapperDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 data class DriverDomainMapper @Inject constructor(
   // context switching of coroutine is unnecessary here.
   @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : DomainMapper<DriverByteArray, Uri?, DriverUri> {
+) : DomainMapperDouble<DriverByteArray, Uri?, DriverUri> {
 
   override suspend fun invoke(
     from: DriverByteArray,
