@@ -1,8 +1,8 @@
 package dev.forcecodes.truckme.core.data.places
 
 import dev.forcecodes.truckme.core.BuildConfig
-import dev.forcecodes.truckme.core.domain.places.LatLng
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
+import dev.forcecodes.truckme.core.model.LatLng
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

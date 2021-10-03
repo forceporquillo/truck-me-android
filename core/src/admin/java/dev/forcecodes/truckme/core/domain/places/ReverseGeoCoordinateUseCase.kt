@@ -3,6 +3,7 @@ package dev.forcecodes.truckme.core.domain.places
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
+import dev.forcecodes.truckme.core.model.LatLng
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.Result.Loading
 import dev.forcecodes.truckme.core.util.mapApiRequestResults
@@ -28,11 +29,5 @@ class ReverseGeoCoordinateUseCase @Inject constructor(
         }
       emitAll(placesApiResponse)
     }
-  }
-}
-
-data class LatLng(val lat: Double, val lng: Double) {
-  override fun toString(): String {
-    return String.format("%.6f,%.6f", lat, lng)
   }
 }

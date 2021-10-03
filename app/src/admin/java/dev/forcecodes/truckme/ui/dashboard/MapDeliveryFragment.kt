@@ -282,7 +282,7 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
     val latLatLng = map.projection.visibleRegion.latLngBounds.center
 
     val latLngModel =
-      dev.forcecodes.truckme.core.domain.places.LatLng(latLatLng.latitude, latLatLng.longitude)
+      dev.forcecodes.truckme.core.model.LatLng(latLatLng.latitude, latLatLng.longitude)
 
     sharedViewModel.getReverseGeoCoordinate(latLngModel)
   }

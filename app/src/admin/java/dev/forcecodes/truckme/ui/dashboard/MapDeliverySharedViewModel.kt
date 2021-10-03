@@ -79,7 +79,7 @@ class MapDeliverySharedViewModel @Inject constructor(
   private val _vehicle = MutableStateFlow<VehicleData?>(null)
   private val _boundDelivery = MutableStateFlow<Boolean?>(null)
 
-  private val _latLng = MutableStateFlow<dev.forcecodes.truckme.core.domain.places.LatLng?>(null)
+  private val _latLng = MutableStateFlow<dev.forcecodes.truckme.core.model.LatLng?>(null)
 
   var isLocationSet = false
 
@@ -175,7 +175,7 @@ class MapDeliverySharedViewModel @Inject constructor(
     this.interceptByUserGesture = userGesture
   }
 
-  fun getReverseGeoCoordinate(latLng: dev.forcecodes.truckme.core.domain.places.LatLng) {
+  fun getReverseGeoCoordinate(latLng: dev.forcecodes.truckme.core.model.LatLng) {
     if (!interceptByUserGesture) {
       return
     }
@@ -206,7 +206,7 @@ class MapDeliverySharedViewModel @Inject constructor(
   // [ReverseGeoCoordinate] map to [PlacesDetails] ->
   // filter coordinates within the view bounds of circle radius and lat. lng.
   // Emit the filtered coordinates and pin to the map.
-  private suspend fun retrieveReverseGeocode(latLng: dev.forcecodes.truckme.core.domain.places.LatLng) {
+  private suspend fun retrieveReverseGeocode(latLng: dev.forcecodes.truckme.core.model.LatLng) {
     reverseGeoCoordinateUseCase(latLng).collect geo@{ geoResult ->
       _isReverseSearchLoading.value = geoResult == Result.Loading
 
