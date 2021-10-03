@@ -1,11 +1,9 @@
-package dev.forcecodes.truckme.core.data.dashboard
+package dev.forcecodes.truckme.core.data.delivery
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import dev.forcecodes.truckme.core.data.delivery.DeliveryDataSource
-import dev.forcecodes.truckme.core.data.fleets.NoActiveJobsException
 import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.tryOffer
