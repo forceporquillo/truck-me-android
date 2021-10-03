@@ -4,7 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.forcecodes.truckme.core.data.dashboard.DeliveryDataSourceImpl
+import dev.forcecodes.truckme.core.data.delivery.DeliveryDataSourceImpl
 import dev.forcecodes.truckme.core.data.delivery.DeliveryDataSource
 import dev.forcecodes.truckme.core.data.fleets.FleetCloudStorageDataSourceImpl
 import dev.forcecodes.truckme.core.data.fleets.FleetDataSource
