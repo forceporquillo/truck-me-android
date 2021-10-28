@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.model
 
-data class LatLng(val lat: Double, val lng: Double) {
+data class LatLngTruckMeImpl(val lat: Double, val lng: Double) {
   override fun toString(): String {
     return String.format("%.6f,%.6f", lat, lng)
   }
