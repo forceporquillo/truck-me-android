@@ -20,6 +20,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField("String", "MAPS_API_KEY", MAPS_API_KEY)
+        buildConfigField "String", "BASE_URL", "\"https://maps.googleapis.com\""
     }
 
     buildTypes {
