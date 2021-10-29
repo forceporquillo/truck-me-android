@@ -1,82 +1,65 @@
 package dev.forcecodes.truckme.ui.dashboard
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.MainActivity
+import dev.forcecodes.truckme.OnInterceptToolbarElevation
 import dev.forcecodes.truckme.R
-import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
-import dev.forcecodes.truckme.core.domain.dashboard.GetActiveJobsUseCase
-import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.databinding.FragmentHomeBinding
+import dev.forcecodes.truckme.extensions.getDrawable
 import dev.forcecodes.truckme.extensions.navigateOnButtonClick
-import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
-import dev.forcecodes.truckme.extensions.startRealtimeMap
 import dev.forcecodes.truckme.extensions.viewBinding
-import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import javax.inject.Inject
-
-@HiltViewModel
-class HomeDashboardViewModel @Inject constructor(
-  activeJobsUseCase: GetActiveJobsUseCase,
-  signInViewModelDelegate: SignInViewModelDelegate
-) : ViewModel() {
-
-  private val _activeJobsList = MutableStateFlow<List<DeliveryItems>>(emptyList())
-  val activeJobsList = _activeJobsList.asStateFlow()
-
-  init {
-    viewModelScope.launch {
-      signInViewModelDelegate.userInfo.flatMapConcat { adminInfo ->
-        activeJobsUseCase.invoke(
-          adminInfo?.getUid()
-            ?: throw RuntimeException("yes daddy")
-        )
-      }.collect { result ->
-        _activeJobsList.value = result.successOr(emptyList())
-      }
-    }
-  }
-}
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-  private val viewModel by viewModels<HomeDashboardViewModel>()
   private val binding by viewBinding(FragmentHomeBinding::bind)
+
+  private lateinit var onInterceptToolbarElevation: OnInterceptToolbarElevation
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    if (context is MainActivity) {
+      onInterceptToolbarElevation = context
+    }
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val deliveryAdapter = DeliveryAdapter()
-    binding.deliveryList.adapter = deliveryAdapter
+    binding.apply {
 
-    binding.addButton.navigateOnButtonClick(R.id.to_map_nav_graph)
+      addButton.navigateOnButtonClick(R.id.to_map_nav_graph)
 
-    observeOnLifecycleStarted {
-      viewModel.activeJobsList.collect(deliveryAdapter::submitList)
-    }
+      viewPager.adapter = AssignedJobsStatePagerAdapter(requireActivity())
 
-    deliveryAdapter.onActiveJobClick = { activeJobId ->
-      // todo add id
-      startRealtimeMap(activeJobId)
+      TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        when (position) {
+          0 -> {
+            tab.text = getString(R.string.in_progress)
+            tab.icon = getDrawable(R.drawable.ic_ongoing)
+          }
+          1 -> {
+            tab.text = getString(R.string.pending)
+            tab.icon = getDrawable(R.drawable.ic_in_progress)
+          }
+        }
+      }.attach()
     }
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
-    Timber.e(requestCode.toString())
+  override fun onStart() {
+    super.onStart()
+    onInterceptToolbarElevation.onRemoveToolbarElevation()
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    onInterceptToolbarElevation.onAddToolbarElevation()
   }
 }
 
