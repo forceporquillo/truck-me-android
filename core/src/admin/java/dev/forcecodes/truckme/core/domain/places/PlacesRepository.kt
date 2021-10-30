@@ -5,8 +5,10 @@ import dev.forcecodes.truckme.core.data.places.PlaceDetailsResponse
 import dev.forcecodes.truckme.core.data.places.PlacesApiService
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
+import dev.forcecodes.truckme.core.model.LatLng
 import dev.forcecodes.truckme.core.util.ApiResponse
 import dev.forcecodes.truckme.core.util.PlacesBackendApi
+import dev.forcecodes.truckme.core.util.BaseRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

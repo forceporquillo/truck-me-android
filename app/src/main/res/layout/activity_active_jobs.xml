@@ -35,6 +35,7 @@
       />
 
   <androidx.cardview.widget.CardView
+      android:id="@+id/job_description"
       android:clickable="true"
       android:focusable="true"
       app:cardCornerRadius="8dp"

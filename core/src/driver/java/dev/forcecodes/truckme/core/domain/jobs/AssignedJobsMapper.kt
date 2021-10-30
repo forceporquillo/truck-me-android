@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.core.domain
+package dev.forcecodes.truckme.core.domain.jobs
 
 import dev.forcecodes.truckme.core.data.ActiveJobItems
 import dev.forcecodes.truckme.core.mapper.DomainMapperSingle

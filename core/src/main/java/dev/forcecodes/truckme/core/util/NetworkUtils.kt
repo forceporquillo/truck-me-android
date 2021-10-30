@@ -14,7 +14,11 @@ internal annotation class PlacesBackendApi
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class PlacesInternalApi
+internal annotation class DirectionsBackendApi
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class InternalApi
 
 internal const val DEFAULT_TIMEOUT = 15L
 
