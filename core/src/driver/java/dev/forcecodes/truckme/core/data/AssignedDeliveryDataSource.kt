@@ -2,7 +2,7 @@ package dev.forcecodes.truckme.core.data
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import dev.forcecodes.truckme.core.data.fleets.NoActiveJobsException
+import dev.forcecodes.truckme.core.data.delivery.NoActiveJobsException
 import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.tryOffer
@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 interface AssignedDataSource {
   fun getAssignedDeliveries(id: String): Flow<Result<List<DeliveryInfo>>>
+  fun getJobById(jobId: String) : Flow<Result<DeliveryInfo>>
 }
 
 class AssignedDeliveryDataSource @Inject constructor(
@@ -38,6 +39,31 @@ class AssignedDeliveryDataSource @Inject constructor(
           } else {
             tryOffer(Result.Error(NoActiveJobsException(error)))
           }
+        }
+      awaitClose { listenerRegistration.remove() }
+    }
+      .distinctUntilChanged()
+  }
+
+  override fun getJobById(jobId: String): Flow<Result<DeliveryInfo>> {
+    return callbackFlow {
+      val listenerRegistration = firestore.collection("deliveries")
+        .addSnapshotListener { value, error ->
+          if (value?.isEmpty == false) {
+            for (snapshot in value) {
+              if (value.isEmpty) {
+                return@addSnapshotListener
+              }
+              val data = snapshot.toObject<DeliveryInfo>()
+              if (data.id == jobId) {
+                tryOffer(Result.Success(data))
+                break
+              }
+            }
+          } else {
+            tryOffer(Result.Error(NoActiveJobsException(error)))
+          }
+          Unit
         }
       awaitClose { listenerRegistration.remove() }
     }

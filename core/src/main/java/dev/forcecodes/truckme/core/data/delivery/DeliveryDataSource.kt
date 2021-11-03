@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface DeliveryDataSource {
   suspend fun addDelivery(deliveryInfo: DeliveryInfo): Task<DocumentReference>
-  fun getActiveJobs(adminId: String): Flow<Result<List<DeliveryInfo>>>
+  fun getActiveJobById(jobId: String): Flow<Result<DeliveryInfo>>
 }
