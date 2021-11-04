@@ -2,7 +2,7 @@ package dev.forcecodes.truckme.core.data.places
 
 import dev.forcecodes.truckme.core.BuildConfig
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
-import dev.forcecodes.truckme.core.model.LatLng
+import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -25,7 +25,7 @@ interface PlacesApiService {
 
   @GET("/maps/api/geocode/json")
   suspend fun getReverseGeoCode(
-    @Query("latlng") latLng: LatLng?,
+    @Query("latlng") latLng: LatLngTruckMeImpl?,
     @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
   ): Response<GeoCodeResponse>
 }

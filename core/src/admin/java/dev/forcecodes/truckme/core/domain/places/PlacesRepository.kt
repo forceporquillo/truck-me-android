@@ -5,10 +5,10 @@ import dev.forcecodes.truckme.core.data.places.PlaceDetailsResponse
 import dev.forcecodes.truckme.core.data.places.PlacesApiService
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.model.GeoCodeResponse
-import dev.forcecodes.truckme.core.model.LatLng
+import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.util.ApiResponse
-import dev.forcecodes.truckme.core.util.PlacesBackendApi
 import dev.forcecodes.truckme.core.util.BaseRepository
+import dev.forcecodes.truckme.core.util.PlacesBackendApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 interface PlacesRepository {
   fun getAutocompletePlaces(placeAddress: String): Flow<ApiResponse<PlaceAutoCompleteResponse>>
   fun getPlaceDetails(placedId: String): Flow<ApiResponse<PlaceDetailsResponse>>
-  fun getReverseGeoCode(latLng: LatLng): Flow<ApiResponse<GeoCodeResponse>>
+  fun getReverseGeoCode(latLng: LatLngTruckMeImpl): Flow<ApiResponse<GeoCodeResponse>>
 }
 
 class PlacesRepositoryImpl @Inject constructor(
@@ -37,7 +37,7 @@ class PlacesRepositoryImpl @Inject constructor(
     // do not remove explicit type for readability.
     flow { emit(getResult { apiService.getPlaceById(placedId) }) }
 
-  override fun getReverseGeoCode(latLng: LatLng): Flow<ApiResponse<GeoCodeResponse>> {
+  override fun getReverseGeoCode(latLng: LatLngTruckMeImpl): Flow<ApiResponse<GeoCodeResponse>> {
     return flow { emit(getResult { apiService.getReverseGeoCode(latLng) }) }
   }
 }

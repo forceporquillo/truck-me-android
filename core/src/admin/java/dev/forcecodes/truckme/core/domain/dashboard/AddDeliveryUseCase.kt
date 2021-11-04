@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.domain.dashboard
 
-import dev.forcecodes.truckme.core.data.delivery.DeliveryDataSource
+import dev.forcecodes.truckme.core.data.delivery.AdminDeliveryDataSource
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.model.DeliveryInfo
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AddDeliveryUseCase @Inject constructor(
-  private val deliveryDataSource: DeliveryDataSource,
+  private val deliveryDataSource: AdminDeliveryDataSource,
   @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : FlowUseCase<DeliveryInfo, AddDeliveryTask>(dispatcher) {
 
