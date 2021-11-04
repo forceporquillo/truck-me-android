@@ -41,6 +41,15 @@
       </intent-filter>
     </activity>
 
+    <service android:name=".core.fcm.ItemDeliveredNotificationService"
+        android:permission="com.google.android.c2dm.permission.SEND"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+      </intent-filter>
+    </service>
+
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="${MAPS_API_KEY}" />

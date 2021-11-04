@@ -97,6 +97,8 @@ class FirebaseSignInViewModelDelegate @Inject constructor(
       userInfo.debounce(500L).collectLatest {
         if (it?.isSignedIn() == true) {
           _signInNavigationActions.send(AdminAuthState.SignedIn)
+        } else {
+          _signInNavigationActions.send(AdminAuthState.SignedOut)
         }
       }
     }

@@ -20,8 +20,13 @@ import dev.forcecodes.truckme.extensions.applyTranslucentStatusBar
 import dev.forcecodes.truckme.routes.topDestinations
 import dev.forcecodes.truckme.util.PermissionUtils.requestMultiplePermissions
 
+interface OnInterceptToolbarElevation {
+  fun onRemoveToolbarElevation()
+  fun onAddToolbarElevation()
+}
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnInterceptToolbarElevation {
 
   private val appBarConfiguration = AppBarConfiguration(topDestinations)
 
@@ -67,4 +72,11 @@ class MainActivity : AppCompatActivity() {
     return binding.materialToolbar
   }
 
+  override fun onAddToolbarElevation() {
+    binding.materialToolbar.elevation = 5f
+  }
+
+  override fun onRemoveToolbarElevation() {
+    binding.materialToolbar.elevation = 0f
+  }
 }

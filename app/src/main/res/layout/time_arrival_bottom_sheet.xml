@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top_corners"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingEnd="24dp"
+    android:paddingStart="24dp"
+    android:paddingTop="12dp"
+    android:visibility="gone">
+
+  <TextView
+      android:id="@+id/arrival"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_normal"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:text="@string/arrive_in"
+      android:textColor="@color/black"
+      app:layout_constraintEnd_toStartOf="@id/distance"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      style="@style/TextAppearance.AppCompat.Large"
+      />
+
+  <TextView
+      android:id="@+id/arrival_time"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_medium"
+      android:text="@string/not_available"
+      android:textColor="@color/teal_700"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/distance"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/arrival"
+      style="@style/TextAppearance.AppCompat.Large"
+      />
+
+  <TextView
+      android:id="@+id/distance"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/distance_remaining"
+      app:layout_constraintBottom_toBottomOf="@id/arrival"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintStart_toEndOf="@id/arrival"
+      app:layout_constraintTop_toTopOf="@id/arrival"
+      style="@style/TextAppearance.AppCompat.Small"
+      />
+
+  <TextView
+      android:id="@+id/distance_left"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:textColor="@color/teal_700"
+      app:layout_constraintEnd_toEndOf="@id/distance"
+      app:layout_constraintStart_toEndOf="@id/arrival"
+      app:layout_constraintTop_toBottomOf="@id/distance"
+      tools:text="500 meters"
+      />
+
+  <androidx.cardview.widget.CardView
+      android:id="@+id/scroll_indicator"
+      android:layout_width="25dp"
+      android:layout_height="4dp"
+      android:layout_gravity="center_horizontal"
+      android:alpha="0.2"
+      android:paddingBottom="@dimen/spacing_smallest"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:cardBackgroundColor="@color/cardview_dark_background"
+      app:cardCornerRadius="4dp"
+      app:cardElevation="0dp"
+      />
+</androidx.constraintlayout.widget.ConstraintLayout>

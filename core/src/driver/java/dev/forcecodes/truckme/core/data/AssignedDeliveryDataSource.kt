@@ -15,6 +15,7 @@ import javax.inject.Inject
 interface AssignedDataSource {
   fun getAssignedDeliveries(id: String): Flow<Result<List<DeliveryInfo>>>
   fun getJobById(jobId: String) : Flow<Result<DeliveryInfo>>
+  fun confirmDelivery(): Flow<Result<Boolean>>
 }
 
 class AssignedDeliveryDataSource @Inject constructor(
@@ -68,6 +69,10 @@ class AssignedDeliveryDataSource @Inject constructor(
       awaitClose { listenerRegistration.remove() }
     }
       .distinctUntilChanged()
+  }
+
+  override fun confirmDelivery(): Flow<Result<Boolean>> {
+    TODO("Not yet implemented")
   }
 }
 

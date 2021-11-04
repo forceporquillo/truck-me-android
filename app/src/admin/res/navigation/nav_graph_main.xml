@@ -19,6 +19,6 @@
       tools:layout="@layout/fragment_history"
       android:id="@+id/historyFragment"
       android:name="dev.forcecodes.truckme.ui.history.HistoryFragment"
-      android:label="History" />
+      android:label="Delivery History" />
 
 </navigation>

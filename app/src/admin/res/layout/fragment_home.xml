@@ -6,11 +6,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.dashboard.HomeFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:paddingBottom="@dimen/spacing_small"
-        android:id="@+id/delivery_list"
-        android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <com.google.android.material.tabs.TabLayout
+        android:elevation="4dp"
+        android:id="@+id/tab_layout"
+        app:tabInlineLabel="true"
+        app:tabGravity="fill"
+        style="@style/Widget.App.TabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_ongoing"
+            android:text="@string/in_progress"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:icon="@drawable/ic_in_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pending"/>
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_below="@id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
