@@ -36,7 +36,7 @@ class UpdatePasswordUseCase @Inject constructor(
   override suspend fun execute(parameters: UserPasswordCredentials): PasswordUpdate {
     val (email, newPasswords, oldPassword) = parameters
     val passwordUpdate = PasswordUpdate(data = newPasswords)
-    reauthenticate(email, oldPassword).addOnCompleteListener { task ->
+    authenticate(email, oldPassword).addOnCompleteListener { task ->
       if (task.isSuccessful) {
         updatePassword(parameters, passwordUpdate)
       } else {
@@ -46,12 +46,12 @@ class UpdatePasswordUseCase @Inject constructor(
     return passwordUpdate
   }
 
-  private fun reauthenticate(
+  private fun authenticate(
     email: String,
     oldPassword: String
   ): Task<Void> {
     val authCredential = EmailAuthProvider.getCredential(email, oldPassword)
-    return authStateDataSource.reauthenticate(authCredential)
+    return authStateDataSource.authenticate(authCredential)
   }
 
   private fun updatePassword(

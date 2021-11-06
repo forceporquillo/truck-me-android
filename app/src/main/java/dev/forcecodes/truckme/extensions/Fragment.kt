@@ -1,12 +1,15 @@
 package dev.forcecodes.truckme.extensions
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -17,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.gms.maps.SupportMapFragment
 import dev.forcecodes.truckme.MainActivity
+import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.binding.FragmentViewBindingDelegate
 import dev.forcecodes.truckme.ui.jobs.ActiveJobsActivity
 import kotlinx.coroutines.CoroutineScope
@@ -93,6 +97,10 @@ const val ANIMATION_FAST_MILLIS = 250L
 
 fun Fragment.postRunnable(block: () -> Unit) {
   view?.postKt(block)
+}
+
+fun Fragment.getDrawable(@DrawableRes drawableId: Int): Drawable? {
+  return ContextCompat.getDrawable(requireContext(), drawableId)
 }
 
 fun Fragment.navigateUp(delay: Long = ANIMATION_FAST_MILLIS) {

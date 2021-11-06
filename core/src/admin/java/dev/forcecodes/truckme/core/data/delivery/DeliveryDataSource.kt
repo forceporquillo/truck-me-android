@@ -39,15 +39,15 @@ class DeliveryDataSourceImpl @Inject constructor(
     val (adminId, order) = getOrder
 
     data.forEach { info ->
-      if (adminId == info.assignedAdminId) {
+      if (adminId == info.assignedAdminId && !info.completed) {
         fleetList.add(info)
       }
     }
     fleetList.filter { deliveryInfo ->
       if (order == IN_PROGRESS) {
-        deliveryInfo.isActive
+        deliveryInfo.active
       } else {
-        !deliveryInfo.isActive
+        !deliveryInfo.active
       }
     }
   }

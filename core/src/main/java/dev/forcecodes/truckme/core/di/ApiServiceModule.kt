@@ -9,7 +9,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.forcecodes.truckme.core.BuildConfig
 import dev.forcecodes.truckme.core.util.DEFAULT_TIMEOUT
+import dev.forcecodes.truckme.core.util.FcmBackendApi
+import dev.forcecodes.truckme.core.util.FcmMessageService
 import dev.forcecodes.truckme.core.util.InternalApi
+import dev.forcecodes.truckme.core.util.PlacesBackendApi
 import dev.forcecodes.truckme.core.util.checkMainThread
 import dev.forcecodes.truckme.core.util.delegatingCallFactory
 import okhttp3.Interceptor
@@ -36,14 +39,26 @@ object ApiServiceModule {
   }
 
   @InternalApi
-  @Singleton
   @Provides
-  internal fun providesRetrofit(
+  internal fun providesRetrofitForPlaces(
     @InternalApi gson: Gson,
     @InternalApi okHttpClient: Lazy<OkHttpClient>
+  ): Retrofit = createRetrofitInstance(gson, okHttpClient, BuildConfig.BASE_URL)
+
+  @FcmBackendApi
+  @Provides
+  internal fun providesRetrofitForFcm(
+    @InternalApi gson: Gson,
+    @InternalApi okHttpClient: Lazy<OkHttpClient>
+  ): Retrofit = createRetrofitInstance(gson, okHttpClient, BuildConfig.BASE_URL_FCM)
+
+  private fun createRetrofitInstance(
+    gson: Gson,
+    okHttpClient: Lazy<OkHttpClient>,
+    baseUrl: String
   ): Retrofit {
     return Retrofit.Builder().apply {
-      baseUrl(BuildConfig.BASE_URL)
+      baseUrl(baseUrl)
       addConverterFactory(GsonConverterFactory.create(gson))
       delegatingCallFactory(okHttpClient)
     }.build()

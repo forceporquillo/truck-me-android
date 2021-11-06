@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.ActiveJobItems
-import dev.forcecodes.truckme.core.domain.AssignedJobsUseCase
+import dev.forcecodes.truckme.core.domain.jobs.AssignedJobsUseCase
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,8 @@ class HomeViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      val driverId = signedInViewModelDelegate.userIdValue!!
+      val driverId = signedInViewModelDelegate.userIdValue ?: return@launch
+
       assignedJobsUseCase(driverId).collect { result ->
         _assignedJobsList.value = when (result) {
           is Result.Loading -> JobListUiModel()

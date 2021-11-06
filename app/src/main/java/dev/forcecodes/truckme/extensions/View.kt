@@ -1,5 +1,6 @@
 package dev.forcecodes.truckme.extensions
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.text.Editable
@@ -9,12 +10,16 @@ import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.findNavController
@@ -235,6 +240,23 @@ fun View.slideUp() {
   }, 250L)
 }
 
+fun View.slideTop() {
+  postDelayed({
+    visibility = View.VISIBLE
+    val animate = TranslateAnimation(
+      0f,  // fromXDelta
+      0f,  // toXDelta
+      0F,  // fromYDelta
+      -height.toFloat()
+    ) // toYDelta
+    animate.duration = 500
+    animate.fillAfter = true
+    startAnimation(animate)
+    isVisible = true
+    isClickable = true
+  }, 250L)
+}
+
 fun View.slideDown() {
   postDelayed({
     val animate = TranslateAnimation(
@@ -249,3 +271,40 @@ fun View.slideDown() {
     startAnimation(animate)
   }, 250L)
 }
+
+fun View.slideDownHide() {
+  postDelayed({
+    val animate = TranslateAnimation(
+      0f,  // fromXDelta
+      0f,  // toXDelta
+      0f,  // fromYDelta
+      height.toFloat()
+    ) // toYDelta
+
+    animate.duration = 500
+    animate.fillAfter = true
+    startAnimation(animate)
+    isVisible = false
+    isClickable = false
+  }, 250L)
+}
+
+fun AppCompatTextView.updateIconTextDrawable(
+  @DrawableRes drawableId: Int,
+  @StringRes stringId: Int
+) : AppCompatTextView {
+  val drawable = ContextCompat.getDrawable(context, drawableId)
+  setCompoundDrawablesWithIntrinsicBounds(
+    null,
+    drawable,
+    null,
+    null
+  )
+  text = context.resources.getString(stringId)
+  return this
+}
+
+val Int.dp: Int
+  get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+val Int.px: Int
+  get() = (this * Resources.getSystem().displayMetrics.density).toInt()

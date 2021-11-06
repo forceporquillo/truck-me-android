@@ -1,11 +1,15 @@
 package dev.forcecodes.truckme.ui.account
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import dev.forcecodes.truckme.LauncherActivity
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
 import dev.forcecodes.truckme.databinding.FragmentAccountBinding
@@ -17,6 +21,7 @@ import dev.forcecodes.truckme.extensions.viewBinding
 import dev.forcecodes.truckme.ui.account.BackPressDispatcherUiActionEvent.Intercept
 import dev.forcecodes.truckme.ui.account.BottomSheetNavActions.PasswordConfirmActions
 import dev.forcecodes.truckme.ui.account.ConfirmPasswordChangeBottomSheet.Companion.TAG
+import dev.forcecodes.truckme.ui.auth.signin.AdminAuthState
 import dev.forcecodes.truckme.ui.gallery.GalleryFragment
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -37,6 +42,7 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
     binding.settingsViewModel = settingsViewModel
 
     binding.emailEt.setText(settingsViewModel.email)
+    binding.logout.setOnClickListener { logout() }
 
     observeOnLifecycleStarted {
       settingsViewModel.backPressUiEvent.collect { uiEvent ->
@@ -72,6 +78,14 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
           }
         }
       }
+      launch {
+        settingsViewModel.signInNavigationActions.collect {
+          if (it is AdminAuthState.SignedOut) {
+            startActivity(Intent(requireActivity(), LauncherActivity::class.java))
+            requireActivity().finishAffinity()
+          }
+        }
+      }
     }
   }
 
@@ -102,6 +116,11 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
         navigateUp()
       }
       .show()
+  }
+
+  private fun logout() {
+    FirebaseAuth.getInstance()
+      .signOut()
   }
 
   override fun onProfileChange(profileInBytes: ByteArray) {

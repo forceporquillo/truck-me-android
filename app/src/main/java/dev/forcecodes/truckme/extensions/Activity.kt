@@ -2,8 +2,14 @@ package dev.forcecodes.truckme.extensions
 
 import android.app.Activity
 import android.content.Intent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 fun AppCompatActivity.fillDecor(toolbar: Toolbar, finish: Boolean = false) {
@@ -28,5 +34,15 @@ fun <T : AppCompatActivity> Activity.createIntent(
 
   if (finishAffinity) {
     finishAffinity()
+  }
+}
+
+fun AppCompatActivity.onLifecycleStarted(
+  block: suspend () -> Unit
+) {
+  lifecycleScope.launch {
+    repeatOnLifecycle(Lifecycle.State.STARTED) {
+      block()
+    }
   }
 }

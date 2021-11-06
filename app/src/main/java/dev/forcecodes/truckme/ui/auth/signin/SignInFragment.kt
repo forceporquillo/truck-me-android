@@ -2,11 +2,14 @@ package dev.forcecodes.truckme.ui.auth.signin
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
+import dev.forcecodes.truckme.BuildConfig
 import dev.forcecodes.truckme.MainActivity
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.util.isDriver
 import dev.forcecodes.truckme.databinding.FragmentSignInBinding
 import dev.forcecodes.truckme.extensions.createIntent
 import dev.forcecodes.truckme.extensions.navigate
@@ -30,6 +33,10 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
     binding.lifecycleOwner = viewLifecycleOwner
     binding.viewModel = viewModel
+
+    if (isDriver) {
+      binding.forgotPassword.isGone = true
+    }
 
     repeatOnLifecycleParallel {
       launch {

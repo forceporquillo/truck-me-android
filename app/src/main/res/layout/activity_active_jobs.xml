@@ -1,252 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.jobs.ActiveJobsActivity"
-    >
+    android:orientation="vertical"
+    tools:context=".ui.jobs.ActiveJobsActivity">
 
-  <com.google.android.material.appbar.MaterialToolbar
-      android:id="@+id/material_toolbar"
-      style="@style/ThemeOverlay.MaterialComponents.Toolbar.Surface"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/gradient_background"
-      android:elevation="5dp"
-      app:title="Active Job"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:titleTextAppearance="@style/Theme.Truckme.ToolbarTitleBold"
-      app:navigationIconTint="@color/white"
-      app:contentInsetStartWithNavigation="0dp"
-      app:titleCentered="true"
-      app:titleTextColor="@color/white"
-      />
-
-  <androidx.fragment.app.FragmentContainerView
-      android:name="com.google.android.gms.maps.SupportMapFragment"
-      android:id="@+id/map_fragment"
-      app:layout_constraintTop_toBottomOf="@id/material_toolbar"
-      app:layout_constraintBottom_toTopOf="@id/buttons_parent"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      />
-
-  <androidx.cardview.widget.CardView
-      android:id="@+id/job_description"
-      android:clickable="true"
-      android:focusable="true"
-      app:cardCornerRadius="8dp"
-      android:layout_margin="@dimen/spacing_small"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toTopOf="@id/buttons_parent"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="@dimen/spacing_medium"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/material_toolbar"
+        style="@style/ThemeOverlay.MaterialComponents.Toolbar.Surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@drawable/gradient_background"
+        android:elevation="5dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIconTint="@color/white"
+        app:title="Active Job"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/Theme.Truckme.ToolbarTitleBold"
+        app:titleTextColor="@color/white" />
 
-      <TextView
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          android:id="@+id/eta"
-          android:textStyle="bold"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/eta"
-          />
-
-      <TextView
-          android:layout_marginBottom="@dimen/spacing_medium"
-          android:id="@+id/time"
-          app:layout_constraintBottom_toTopOf="@id/duration_left"
-          app:layout_constraintTop_toBottomOf="@id/eta"
-          app:layout_constraintStart_toStartOf="parent"
-          android:layout_below="@id/eta"
-          android:layout_marginStart="@dimen/spacing_normal"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/not_yet_implemented"
-          />
-
-      <TextView
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/time"
-          app:layout_constraintBottom_toTopOf="@id/kms"
-          android:id="@+id/duration_left"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_below="@id/eta"
-          android:text="@string/distance_left"
-          android:textStyle="bold"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          />
-
-      <TextView
-          android:id="@+id/kms"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/duration_left"
-          app:layout_constraintBottom_toBottomOf="parent"
-          android:layout_marginStart="@dimen/spacing_normal"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/not_yet_implemented"
-          />
-
-      <TextView
-          app:layout_constraintHorizontal_bias="0.8"
-          app:layout_constraintStart_toEndOf="@id/duration_left"
-          app:layout_constraintBottom_toTopOf="@id/hours"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:layout_below="@id/eta"
-          android:layout_marginTop="@dimen/spacing_extra_large"
-          app:layout_constraintEnd_toEndOf="parent"
-          android:gravity="center"
-          android:text="@string/duration"
-          android:textStyle="bold"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          />
-
-      <TextView
-          app:layout_constraintHorizontal_bias="0.8"
-          app:layout_constraintStart_toEndOf="@id/duration_left"
-          android:id="@+id/hours"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
-          android:gravity="center"
-          android:layout_alignParentEnd="true"
-          android:layout_marginStart="@dimen/spacing_normal"
-          style="@style/TextAppearance.AppCompat.Subhead"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/not_yet_implemented"
-          />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-  </androidx.cardview.widget.CardView>
-
-  <LinearLayout
-      android:id="@+id/buttons_parent"
-      app:layout_constraintBottom_toBottomOf="parent"
-      android:background="@color/teal_700"
-      android:gravity="center"
-      android:layout_gravity="bottom"
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      >
-
-    <com.google.android.material.card.MaterialCardView
-        style="@style/ClickableButtonStyle"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_weight="1"
+        android:layout_height="0dp">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map_fragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@id/buttons_parent"
+            app:layout_constraintTop_toBottomOf="@id/material_toolbar" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/delivery_info_header_view"
+                android:elevation="4dp"
+                android:background="@color/white"
+                android:padding="@dimen/spacing_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+              <androidx.constraintlayout.widget.Guideline
+                  android:id="@+id/guideline_70"
+                  android:layout_width="wrap_content"
+                  android:layout_height="0dp"
+                  android:orientation="vertical"
+                  app:layout_constraintGuide_percent=".8" />
+
+              <dev.forcecodes.truckme.util.CircleImageView
+                    android:id="@+id/driver_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    tools:src="@tools:sample/avatars"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:id="@+id/inbound_delivery"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/driver_image"
+                    android:textStyle="bold"
+                    android:textColor="@color/teal_700"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_inbound_delivery"
+                    android:textAllCaps="true"/>
+
+              <TextView
+                  app:layout_constraintEnd_toStartOf="@id/guideline_70"
+                  android:layout_marginStart="@dimen/spacing_medium"
+                  android:id="@+id/deliver_title"
+                  style="@style/TextAppearance.AppCompat.Large"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:ellipsize="end"
+                  android:maxLines="1"
+                  android:text="@string/not_available"
+                  android:textColor="@color/black"
+                  android:textStyle="bold"
+                  tools:text="Starbucks Megaria"
+                  app:layout_constraintTop_toBottomOf="@id/inbound_delivery"
+                  app:layout_constraintStart_toEndOf="@id/driver_image" />
+
+              <TextView
+                  android:id="@+id/distance"
+                  app:layout_constraintTop_toTopOf="@id/deliver_title"
+                  app:layout_constraintBottom_toBottomOf="@id/deliver_title"
+                  app:layout_constraintStart_toEndOf="@id/deliver_title"
+                  style="@style/TextAppearance.AppCompat.Medium"
+                  android:layout_marginEnd="@dimen/spacing_small"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  tools:text="5 min"
+                  android:textColor="@color/teal_700"
+                  app:layout_constraintEnd_toEndOf="parent"/>
+
+              <TextView
+                  android:id="@+id/destination"
+                  style="@style/TextAppearance.AppCompat.Caption"
+                  app:layout_constraintEnd_toEndOf="@id/distance"
+                  android:layout_marginStart="@dimen/spacing_medium"
+                  app:layout_constraintStart_toEndOf="@id/driver_image"
+                  app:layout_constraintTop_toBottomOf="@id/deliver_title"
+                  android:layout_width="0dp"
+                  android:maxLines="2"
+                  android:ellipsize="end"
+                  android:layout_height="wrap_content"
+                  tools:text="National Rd. Poblacion, Sebaste Antique"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/log_list"
+              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
+          <include
+                android:id="@+id/bottom_sheet_parent"
+                style="?attr/bottomSheetStyle"
+                layout="@layout/bottom_sheet_delivery_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_anchorGravity="bottom"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+          <include
+              android:id="@+id/arrival_time_bottom_sheet"
+              style="?attr/bottomSheetStyle"
+              layout="@layout/time_arrival_bottom_sheet"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              app:layout_anchorGravity="bottom"
+              app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_gravity="bottom"
+        android:background="@color/teal_700"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-      <androidx.appcompat.widget.AppCompatTextView
-          android:id="@+id/notify_or_confirm_button"
-          android:elevation="0dp"
-          android:paddingTop="@dimen/spacing_small"
-          android:paddingBottom="@dimen/spacing_small"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/active_jobs_notify"
-          style="@style/TextAppearance.AppCompat.Caption"
-          android:textColor="@color/white"
-          android:gravity="center"
-          android:layout_gravity="center_horizontal|bottom"
-          android:drawableTop="@drawable/ic_notify"
-          />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/notify_button"
+            style="@style/ClickableButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp">
 
-    </com.google.android.material.card.MaterialCardView>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/notify_or_confirm_button"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:textColor="@color/white" />
 
-    <View
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:alpha=".8"
-        android:background="@color/cardview_dark_background"
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        />
+        </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/chat_button"
-        style="@style/ClickableButtonStyle"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        >
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:alpha=".6"
+            android:background="@color/cardview_dark_background" />
 
-      <androidx.appcompat.widget.AppCompatTextView
-          android:elevation="0dp"
-          android:paddingTop="@dimen/spacing_small"
-          android:paddingBottom="@dimen/spacing_small"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/active_jobs_chat"
-          style="@style/TextAppearance.AppCompat.Caption"
-          android:textColor="@color/white"
-          android:gravity="center"
-          android:layout_gravity="center_horizontal|bottom"
-          android:drawableTop="@drawable/ic_chat"
-          />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/chat_button"
+            style="@style/ClickableButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp">
 
-    </com.google.android.material.card.MaterialCardView>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:drawableTop="@drawable/ic_chat"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:text="@string/active_jobs_chat"
+                android:textColor="@color/white" />
 
-    <View
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:alpha=".8"
-        android:background="@color/cardview_dark_background"
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        />
+        </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
-        style="@style/ClickableButtonStyle"
-        android:id="@+id/emergency_button"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        >
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:alpha=".6"
+            android:background="@color/cardview_dark_background" />
 
-      <androidx.appcompat.widget.AppCompatTextView
-          android:elevation="0dp"
-          android:gravity="center"
-          android:paddingTop="@dimen/spacing_small"
-          android:paddingBottom="@dimen/spacing_small"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/active_jobs_emergency"
-          style="@style/TextAppearance.AppCompat.Caption"
-          android:textColor="@color/white"
-          android:layout_gravity="center_horizontal|bottom"
-          android:drawableTop="@drawable/ic_emergency"
-          />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/emergency_button"
+            style="@style/ClickableButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp">
 
-    </com.google.android.material.card.MaterialCardView>
-  </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:drawableTop="@drawable/ic_emergency"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:text="@string/active_jobs_emergency"
+                android:textColor="@color/white" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</LinearLayout>

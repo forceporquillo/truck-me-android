@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_top_corners"
+    android:orientation="vertical"
+    android:padding="12dp"
+    >
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_70"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".65" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_50"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/scroll_indicator"
+        android:layout_width="25dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:alpha="0.2"
+        android:paddingBottom="@dimen/spacing_smallest"
+        app:cardBackgroundColor="@color/cardview_dark_background"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/deliver_title"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/not_available"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/guideline_70"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_indicator" />
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/deliver_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_70"
+        app:layout_constraintTop_toTopOf="@id/deliver_title">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="@string/duration" />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/not_available"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_70"
+            app:layout_constraintTop_toBottomOf="@id/duration" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:alpha="0.3"
+        android:background="@color/cardview_dark_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deliver_title" />
+
+    <TextView
+        android:id="@+id/eta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:text="@string/estimated_time_of_arrival"
+        app:layout_constraintEnd_toEndOf="@id/guideline_50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line_separator" />
+
+    <TextView
+        android:id="@+id/eta_time"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/not_available"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/guideline_50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eta" />
+
+    <!--    <LinearLayout-->
+    <!--        android:orientation="vertical"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/line_separator"-->
+    <!--        app:layout_constraintStart_toStartOf="@id/guideline_70"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content">-->
+
+    <!--        <TextView-->
+    <!--            android:gravity="center"-->
+    <!--            android:id="@+id/distance_left"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="end"-->
+    <!--            android:text="@string/distance"-->
+    <!--            />-->
+
+    <!--        <TextView-->
+    <!--            android:gravity="center"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="end"-->
+    <!--            android:text="1.5 km"-->
+    <!--            android:textColor="@color/black"-->
+    <!--            android:textStyle="bold"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="@id/guideline_70"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/distance_left" />-->
+    <!--    </LinearLayout>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/distance_left"-->
+<!--        style="@style/TextAppearance.AppCompat.Caption"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="@dimen/spacing_medium"-->
+<!--        android:text="@string/distance_left"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@id/guideline_50"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/line_separator" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/distance_left_timer"-->
+<!--        style="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="5 m"-->
+<!--        android:textColor="@color/teal_700"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@id/guideline_50"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/distance_left" />-->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/start_delivery_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0"
+            android:text="@string/start_delivery"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            app:cornerRadius="360dp"
+            android:insetBottom="2dp"
+            android:insetTop="2dp"
+            app:layout_constraintTop_toTopOf="@id/eta_time"
+            app:layout_constraintBottom_toBottomOf="@id/eta_time"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

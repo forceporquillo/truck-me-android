@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.forcecodes.truckme.core.data.delivery.AdminDeliveryDataSource
+import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSource
+import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSourceImpl
 import dev.forcecodes.truckme.core.data.delivery.DeliveryDataSourceImpl
 import dev.forcecodes.truckme.core.data.fleets.FleetCloudStorageDataSourceImpl
 import dev.forcecodes.truckme.core.data.fleets.FleetDataSource
@@ -36,4 +38,9 @@ abstract class AdminDataSourceModule {
   internal abstract fun providesAddDeliveryDataSourceImpl(
     deliveryDataSourceImpl: DeliveryDataSourceImpl
   ): AdminDeliveryDataSource
+
+  @Binds
+  internal abstract fun deliveredItemDataSource(
+    deliveredItemDataSourceImpl: DeliveredItemDataSourceImpl
+  ): DeliveredItemDataSource
 }

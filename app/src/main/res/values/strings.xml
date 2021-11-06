@@ -49,11 +49,32 @@
   <string name="active_jobs_chat">Chat</string>
   <string name="active_jobs_confirm">Confirm</string>
   <string name="active_jobs_emergency">Emergency</string>
-  <string name="duration">Duration:</string>
+  <string name="duration">Duration</string>
   <string name="distance_left">Distance Left:</string>
   <string name="not_yet_implemented">Not yet implemented</string>
   <string name="eta">ETA:</string>
   <string name="fleet">Fleet</string>
   <string name="statistics">Statistics</string>
   <string name="history">History</string>
+  <string name="distance">Distance</string>
+  <string name="estimated_time_of_arrival">Estimated Time of Arrival</string>
+  <string name="start_delivery">Start item delivery</string>
+  <string name="not_available">NA</string>
+  <string name="new_inbound_delivery">New Inbound Delivery</string>
+  <string name="new_outbound_delivery">New Outbound Delivery</string>
+  <string name="logout">Logout</string>
+  <string name="arrive_in">Arrive in</string>
+  <string name="distance_remaining">Distance remaining</string>
+  <string name="pending">Pending</string>
+  <string name="in_progress">In progress</string>
+  <string name="empty_message_state">Ops! There are no %1$s jobs yet. Add another delivery so you can keep track of your %1$s deliverables.</string>
+  <string name="in_bound_delivery">Ongoing Inbound Delivery</string>
+  <string name="out_bound_delivery">Ongoing Outbound Delivery</string>
+  <string name="search_by">Search by</string>
+  <string name="select_date">Select date</string>
+  <string name="delivered_items">Delivered Items</string>
+  <string name="received_items">Received Items</string>
+  <string name="inbound_delivery_message">Ongoing Inbound Delivery</string>
+  <string name="outbound_delivery_message">Ongoing Outbound Delivery</string>
+
 </resources>

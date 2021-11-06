@@ -12,6 +12,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+import timber.log.Timber.Forest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +34,15 @@ class AssignedJobsUseCase @Inject constructor(
   private suspend fun getAssignedDeliveries(assignedId: String): Flow<Result<List<ActiveJobItems>>> {
     return assignedDataSource.getAssignedDeliveries(assignedId).map { result ->
       if (result is Result.Success) {
-        val deliverItems = result.data.map { assignedJobsMapper.invoke(it) }
+        val deliverItems = result.data
+          .map {
+            if (it.deliveryInfo == null) {
+              ActiveJobItems("", "", "", "")
+            } else {
+              assignedJobsMapper.invoke(it.deliveryInfo)
+            }
+          }
+
         Result.Success(deliverItems)
       } else {
         Result.Error(result.error)

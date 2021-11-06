@@ -20,6 +20,14 @@ internal annotation class DirectionsBackendApi
 @Qualifier
 annotation class InternalApi
 
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+internal annotation class FcmMessageService
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class FcmBackendApi
+
 internal const val DEFAULT_TIMEOUT = 15L
 
 fun isOnMainThread() = Looper.myLooper() == Looper.getMainLooper()

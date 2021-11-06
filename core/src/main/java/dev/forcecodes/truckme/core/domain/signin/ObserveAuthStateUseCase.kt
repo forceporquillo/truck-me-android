@@ -7,11 +7,13 @@ import dev.forcecodes.truckme.core.data.signin.FirebaseRegisteredUserInfo
 import dev.forcecodes.truckme.core.di.ApplicationScope
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
+import dev.forcecodes.truckme.core.fcm.FcmTokenUpdater
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.Result.Error
 import dev.forcecodes.truckme.core.util.Result.Success
 import dev.forcecodes.truckme.core.util.cancelIfActive
 import dev.forcecodes.truckme.core.util.error
+import dev.forcecodes.truckme.core.util.isDriver
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -49,7 +51,7 @@ class ObserveAuthStateUseCase @Inject constructor(
           processUserData(userResult.data)
         } else {
           Timber.e("isRegistered null")
-          send(Success(FirebaseRegisteredUserInfo(null, null)))
+          send(Success(FirebaseRegisteredUserInfo(null, !isDriver)))
         }
       } else {
         send(Error(userResult.error))
@@ -72,25 +74,24 @@ class ObserveAuthStateUseCase @Inject constructor(
     } else if (userData.getUid() != null) {
       userSignedIn(userData)
     } else {
-      send(Success(FirebaseRegisteredUserInfo(userData, false)))
+      send(Success(FirebaseRegisteredUserInfo(userData, !isDriver)))
     }
   }
 
   private suspend fun UserAuthState.userSignedIn(
     userData: AuthenticatedUserInfoBasic
   ) {
-    send(Success(FirebaseRegisteredUserInfo(userData, false)))
+    send(Success(FirebaseRegisteredUserInfo(userData, !isDriver)))
   }
 
   private suspend fun UserAuthState.userSignedOut(
     userData: AuthenticatedUserInfoBasic
   ) {
-    send(FirebaseRegisteredUserInfoResult(userData, false))
+    send(FirebaseRegisteredUserInfoResult(userData))
   }
 
   @Suppress("FunctionName")
   private fun FirebaseRegisteredUserInfoResult(
-    userData: AuthenticatedUserInfoBasic,
-    isAdmin: Boolean
-  ) = Success(FirebaseRegisteredUserInfo(userData, isAdmin))
+    userData: AuthenticatedUserInfoBasic
+  ) = Success(FirebaseRegisteredUserInfo(userData, !isDriver))
 }

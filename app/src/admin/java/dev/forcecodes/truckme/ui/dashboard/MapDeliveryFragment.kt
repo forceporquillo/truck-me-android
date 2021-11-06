@@ -25,6 +25,7 @@ import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.model.DriverData
+import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.model.Places
 import dev.forcecodes.truckme.core.model.VehicleData
 import dev.forcecodes.truckme.databinding.BottomSheetDeliveryInfoBinding
@@ -144,8 +145,8 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
     }
   }
 
-  private fun animateCameraToMyLocation(location: Location) {
-    val latLng = LatLng(location.latitude, location.longitude)
+  private fun animateCameraToMyLocation(location: Location?) {
+    val latLng = LatLng(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
     val cameraUpdate = CameraUpdateFactory.newLatLng(latLng)
     map.animateCamera(cameraUpdate)
   }
@@ -282,7 +283,7 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
     val latLatLng = map.projection.visibleRegion.latLngBounds.center
 
     val latLngModel =
-      dev.forcecodes.truckme.core.model.LatLng(latLatLng.latitude, latLatLng.longitude)
+      LatLngTruckMeImpl(latLatLng.latitude, latLatLng.longitude)
 
     sharedViewModel.getReverseGeoCoordinate(latLngModel)
   }

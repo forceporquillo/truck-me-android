@@ -1,9 +1,12 @@
 package dev.forcecodes.truckme.ui.dashboard
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.TruckMeApplication
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
@@ -13,13 +16,16 @@ import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveVehicleFleetsUseCase
 import dev.forcecodes.truckme.core.domain.places.PlaceDetailsUseCase
 import dev.forcecodes.truckme.core.domain.places.ReverseGeoCoordinateUseCase
+import dev.forcecodes.truckme.core.model.Coordinates
 import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.DriverData
 import dev.forcecodes.truckme.core.model.LatLngData
+import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.model.Places
 import dev.forcecodes.truckme.core.model.VehicleData
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.cancelIfActive
+import dev.forcecodes.truckme.core.util.getAdminToken
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,8 +43,11 @@ class MapDeliverySharedViewModel @Inject constructor(
   private val reverseGeoCoordinateUseCase: ReverseGeoCoordinateUseCase,
   private val addDeliveryUseCase: AddDeliveryUseCase,
   private val placeDetailsUseCase: PlaceDetailsUseCase,
-  signInViewModelDelegate: SignInViewModelDelegate
-) : ViewModel(), SignInViewModelDelegate by signInViewModelDelegate {
+  signInViewModelDelegate: SignInViewModelDelegate,
+  application: Application
+) : AndroidViewModel(application), SignInViewModelDelegate by signInViewModelDelegate {
+
+  val adminToken by lazy { getApplication<TruckMeApplication>().getAdminToken() }
 
   // region state flows
   private val _destinationAddress = MutableStateFlow<Places?>(null)
@@ -79,7 +88,7 @@ class MapDeliverySharedViewModel @Inject constructor(
   private val _vehicle = MutableStateFlow<VehicleData?>(null)
   private val _boundDelivery = MutableStateFlow<Boolean?>(null)
 
-  private val _latLng = MutableStateFlow<dev.forcecodes.truckme.core.model.LatLng?>(null)
+  private val _latLng = MutableStateFlow<LatLngTruckMeImpl?>(null)
 
   var isLocationSet = false
 
@@ -136,9 +145,10 @@ class MapDeliverySharedViewModel @Inject constructor(
       _freightItem.value,
       _contact.value,
       _boundDelivery.value,
-      isActive = true,
+      active = true,
       assignedAdminId = userIdValue!!,
-      coordinates = LatLngData(latLng.latitude, latLng.longitude)
+      assignedAdminTokenId = adminToken,
+      coordinates = Coordinates(finalDestination = LatLngData(latLng.latitude, latLng.longitude))
     )
 
     viewModelScope.launch {
@@ -175,7 +185,7 @@ class MapDeliverySharedViewModel @Inject constructor(
     this.interceptByUserGesture = userGesture
   }
 
-  fun getReverseGeoCoordinate(latLng: dev.forcecodes.truckme.core.model.LatLng) {
+  fun getReverseGeoCoordinate(latLng: LatLngTruckMeImpl) {
     if (!interceptByUserGesture) {
       return
     }
@@ -206,7 +216,7 @@ class MapDeliverySharedViewModel @Inject constructor(
   // [ReverseGeoCoordinate] map to [PlacesDetails] ->
   // filter coordinates within the view bounds of circle radius and lat. lng.
   // Emit the filtered coordinates and pin to the map.
-  private suspend fun retrieveReverseGeocode(latLng: dev.forcecodes.truckme.core.model.LatLng) {
+  private suspend fun retrieveReverseGeocode(latLng: LatLngTruckMeImpl) {
     reverseGeoCoordinateUseCase(latLng).collect geo@{ geoResult ->
       _isReverseSearchLoading.value = geoResult == Result.Loading
 
