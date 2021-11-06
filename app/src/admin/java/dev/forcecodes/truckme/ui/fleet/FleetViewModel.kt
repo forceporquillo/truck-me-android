@@ -8,6 +8,8 @@ import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.core.domain.fleets.DeleteFleetUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveVehicleFleetsUseCase
+import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
+import dev.forcecodes.truckme.core.domain.fleets.UpdateFleetStateUseCase
 import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,12 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import timber.log.Timber.Forest
 import javax.inject.Inject
 
 @HiltViewModel
 class FleetViewModel @Inject constructor(
   private val deleteFleetUseCase: DeleteFleetUseCase,
+  private val updateFleetStateUseCase: UpdateFleetStateUseCase,
   observeVehicleFleetsUseCase: ObserveVehicleFleetsUseCase,
   observeDriverFleetsUseCase: ObserveDriverFleetsUseCase,
   signInViewModelDelegate: SignInViewModelDelegate
@@ -52,6 +54,12 @@ class FleetViewModel @Inject constructor(
           _fleetLoadStatueIsLoading.value = false
         }
       }
+    }
+  }
+
+  fun updateFleetState(fleetStateUpdateMetadata: FleetStateUpdateMetadata) {
+    viewModelScope.launch {
+      updateFleetStateUseCase(fleetStateUpdateMetadata)
     }
   }
 

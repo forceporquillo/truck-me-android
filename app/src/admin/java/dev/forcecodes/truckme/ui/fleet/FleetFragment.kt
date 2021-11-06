@@ -10,6 +10,7 @@ import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.fleets.FleetType
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
+import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
 import dev.forcecodes.truckme.databinding.FragmentFleetBinding
 import dev.forcecodes.truckme.extensions.dispatchWhenBackPress
 import dev.forcecodes.truckme.extensions.navigate
@@ -54,6 +55,10 @@ class FleetFragment : Fragment(R.layout.fragment_fleet), FleetItemListener {
 
   override fun onDeleteFleet(id: String, type: FleetType) {
     viewModel.onDeleteFleet(id, type)
+  }
+
+  override fun onFleetStateChanged(metadata: FleetStateUpdateMetadata) {
+    viewModel.updateFleetState(metadata)
   }
 
   private fun initAdapter() {

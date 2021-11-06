@@ -109,7 +109,7 @@ class AddVehicleViewModel @Inject constructor(
       plate = plateNumber,
       description = description,
       profile = profileIconInBytes,
-      isActive = false,
+      isActive = true,
       assignedAdminId = signInViewModelDelegate.userIdValue ?: ""
     )
 

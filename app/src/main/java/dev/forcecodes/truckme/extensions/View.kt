@@ -219,6 +219,10 @@ fun ImageView.setActiveStateIndicatorColor(isActive: Boolean) {
   setColorFilter(ContextCompat.getColor(context, colorId))
 }
 
+fun ImageView.setNotAvailable() {
+  setColorFilter(ContextCompat.getColor(context, R.color.not_available))
+}
+
 fun View.navigateOnButtonClick(@IdRes resId: Int) {
   setOnClickListener {
     findNavController().navigate(resId)

@@ -76,5 +76,6 @@
   <string name="received_items">Received Items</string>
   <string name="inbound_delivery_message">Ongoing Inbound Delivery</string>
   <string name="outbound_delivery_message">Ongoing Outbound Delivery</string>
-
+  <string name="delete">Delete</string>
+  <string name="set_state">Set as %1$s</string>
 </resources>

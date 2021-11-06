@@ -15,6 +15,7 @@ interface FleetDelegate {
   val id: String
   var isActive: Boolean
   val assignedAdmin: String
+  val hasOngoingDeliveries: Boolean
 }
 
 sealed class FleetUiModel: FleetDelegate {
@@ -27,7 +28,8 @@ sealed class FleetUiModel: FleetDelegate {
     override var profile: String? = "",
     override val id: String = "",
     override var isActive: Boolean = false,
-    override val assignedAdmin: String = ""
+    override val assignedAdmin: String = "",
+    override val hasOngoingDeliveries: Boolean = false
   ) : FleetUiModel(), Parcelable
 
   @Parcelize
@@ -39,6 +41,7 @@ sealed class FleetUiModel: FleetDelegate {
     override var profile: String? = "",
     override val id: String = "",
     override var isActive: Boolean = false,
-    override val assignedAdmin: String = ""
+    override val assignedAdmin: String = "",
+    override val hasOngoingDeliveries: Boolean = false
   ) : FleetUiModel(), Parcelable
 }
