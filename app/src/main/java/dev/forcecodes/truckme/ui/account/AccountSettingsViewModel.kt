@@ -1,20 +1,26 @@
 package dev.forcecodes.truckme.ui.account
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.domain.settings.*
 import dev.forcecodes.truckme.core.util.Result
+import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +29,7 @@ class AccountSettingsViewModel @Inject constructor(
   private val uploadProfileUseCase: UploadProfileUseCase,
   private val updatePasswordUseCase: UpdatePasswordUseCase,
   private val updatePhoneNumberUseCase: UpdatePhoneNumberUseCase,
+  private val getDriverProfileUseCase: GetDriverProfileUseCase,
   getPhoneNumberUseCase: GetPhoneNumberUseCase
 ) : CommonCredentialsViewModel<UiActionEvent>(
   requireConfirmation = true,
@@ -33,23 +40,51 @@ class AccountSettingsViewModel @Inject constructor(
 
   private var _contactNumberCopy: String? = ""
 
+  private val _profileUri = MutableStateFlow<Uri?>(null)
+  val profileUri = _profileUri.asStateFlow()
+
   init {
     viewModelScope.launch {
-      userIdValue?.let { userId ->
-        getPhoneNumberUseCase(userId).collect {
-          fromRemoteSource = true
+      launch {
+        userIdValue?.let { userId ->
+          getPhoneNumberUseCase(userId).collect {
+            fromRemoteSource = true
 
-          if (it is Result.Success) {
-            _contactNumberStateFlow.value = it.data?.phoneNumber
-            _contactNumberCopy = it.data?.phoneNumber
+            if (it is Result.Success) {
+              _contactNumberStateFlow.value = it.data?.phoneNumber
+              _contactNumberCopy = it.data?.phoneNumber
 
-            delay(1500L)
-            // enable update and error handling once it emits values
-            if (!requireContactNumber) {
-              requireContactNumber = true
+              delay(1500L)
+              // enable update and error handling once it emits values
+              if (!requireContactNumber) {
+                requireContactNumber = true
+              }
             }
           }
         }
+      }
+      launch {
+        userInfo.flatMapConcat {
+          getDriverProfile(it?.getUid(), it?.getPhotoUrl())
+        }.collect {
+          _profileUri.value = it
+        }
+      }
+    }
+  }
+
+  private suspend fun getDriverProfile(driverId: String?, photoUri: Uri?): Flow<Uri?> {
+    return flow {
+      if (driverId.isNullOrEmpty()) {
+        return@flow
+      }
+      if (photoUri == null) {
+        getDriverProfileUseCase(driverId).collect { profileUrl ->
+          Timber.e(profileUrl.toString())
+          emit(Uri.parse(profileUrl.successOr("")))
+        }
+      } else {
+        emit(photoUri)
       }
     }
   }
@@ -156,7 +191,8 @@ class AccountSettingsViewModel @Inject constructor(
         return@let
       }
 
-      val currentUserPassword = UserPasswordCredentials(email!!, newPassword, oldPassword, userIdValue)
+      val currentUserPassword =
+        UserPasswordCredentials(email!!, newPassword, oldPassword, userIdValue)
       val result = updatePasswordUseCase(currentUserPassword)
 
       fetchResult(result) { passwordUpdate: PasswordUpdate?, e: Exception? ->
