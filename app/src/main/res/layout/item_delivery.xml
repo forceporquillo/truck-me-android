@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="@dimen/spacing_small"
     android:layout_marginEnd="@dimen/spacing_small"
     android:layout_height="wrap_content"
@@ -24,7 +25,7 @@
         android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delivery to Retailer"/>
+        tools:text="Delivery to Retailer"/>
 
     <TextView
         android:id="@+id/time"
@@ -35,7 +36,7 @@
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="9:14 AM"/>
+        tools:text="9:14 AM"/>
 
     <TextView
         android:id="@+id/address"
@@ -44,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delivery to Retailer"/>
+        tools:text="Delivery to Retailer"/>
 
     <TextView
         android:layout_marginTop="@dimen/spacing_small"
@@ -53,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Product"/>
+        tools:text="Product"/>
 
     <TextView
         style="@style/TextAppearance.AppCompat.Caption"
@@ -63,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="November 3, 2021"/>
+        tools:text="November 3, 2021"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 

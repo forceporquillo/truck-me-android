@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="select_destinations">Select drop off destination</string>
+  <string name="day">Day</string>
+  <string name="driver">Driver</string>
+  <string name="select_date_type">Select date</string>
+  <string name="select_driver_type">Select driver</string>
+
+  <string-array name="search_filter">
+    <item>@string/day</item>
+    <item>@string/driver</item>
+  </string-array>
+
 </resources>
