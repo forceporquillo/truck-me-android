@@ -7,6 +7,7 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -101,7 +102,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
-    
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
     implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03'
