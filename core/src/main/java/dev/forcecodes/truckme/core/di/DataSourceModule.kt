@@ -8,6 +8,8 @@ import dev.forcecodes.truckme.core.data.auth.AuthStateDataSource
 import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.cloud.CloudStorageDataSource
 import dev.forcecodes.truckme.core.data.cloud.CloudStorageDataSourceImpl
+import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSource
+import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSourceImpl
 import dev.forcecodes.truckme.core.data.driver.AddedDriverDataSourceImpl
 import dev.forcecodes.truckme.core.data.driver.DriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
@@ -36,4 +38,9 @@ abstract class DataSourceModule {
   internal abstract fun providesDriverDataSource(
     driverDataSourceImpl: AddedDriverDataSourceImpl
   ): DriverDataSource
+
+  @Binds
+  internal abstract fun deliveredItemDataSource(
+    deliveredItemDataSourceImpl: DeliveredItemDataSourceImpl
+  ): DeliveredItemDataSource
 }
