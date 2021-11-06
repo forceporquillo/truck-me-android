@@ -145,8 +145,8 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
     }
   }
 
-  private fun animateCameraToMyLocation(location: Location) {
-    val latLng = LatLng(location.latitude, location.longitude)
+  private fun animateCameraToMyLocation(location: Location?) {
+    val latLng = LatLng(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
     val cameraUpdate = CameraUpdateFactory.newLatLng(latLng)
     map.animateCamera(cameraUpdate)
   }
