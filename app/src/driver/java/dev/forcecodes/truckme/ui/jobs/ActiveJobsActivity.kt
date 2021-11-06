@@ -8,6 +8,7 @@ import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -33,6 +34,7 @@ import dev.forcecodes.truckme.extensions.updateIconTextDrawable
 import dev.forcecodes.truckme.util.MapUtils
 import dev.forcecodes.truckme.util.distanceLeft
 import dev.forcecodes.truckme.util.getTimeTaken
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
@@ -265,6 +267,10 @@ class ActiveJobsActivity : BaseMapActivity() {
       }
       .setPositiveButton("Confirm") { _, _ ->
         viewModel.notifyAdmin()
+        onLifecycleStarted {
+          delay(1000L)
+          finish()
+        }
       }
       .show()
   }
