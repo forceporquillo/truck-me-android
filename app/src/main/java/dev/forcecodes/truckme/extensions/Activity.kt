@@ -2,10 +2,8 @@ package dev.forcecodes.truckme.extensions
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
