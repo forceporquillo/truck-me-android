@@ -32,6 +32,17 @@ class FleetsDataSourceImpl @Inject constructor(
       .set(data)
   }
 
+  override fun onUpdateFleetState(id: String, state: Boolean, fleetType: FleetType) {
+    val fleetDocument = if (fleetType == DRIVER) {
+      firestore.driverCollection()
+    } else {
+      firestore.vehicleCollection()
+    }
+    fleetDocument
+      .document(id)
+      .update(mapOf("active" to state))
+  }
+
   override fun observeVehicleChanges() = firestore.vehicleCollection().fleetSnapshots<VehicleUri>()
   override fun observeDriverChanges() = firestore.driverCollection().fleetSnapshots<DriverUri>()
   override fun onDeleteFleet(id: String, type: FleetType) = firestore.deleteCollection(id, type)

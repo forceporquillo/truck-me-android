@@ -1,8 +1,10 @@
 package dev.forcecodes.truckme.ui.fleet
 
+import android.content.Context
 import android.net.Uri
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -13,9 +15,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
+import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
+import dev.forcecodes.truckme.core.util.then
 import dev.forcecodes.truckme.databinding.FleetItemBinding
 import dev.forcecodes.truckme.extensions.bindImageWith
 import dev.forcecodes.truckme.extensions.setActiveStateIndicatorColor
+import dev.forcecodes.truckme.extensions.setNotAvailable
+import timber.log.Timber
+import timber.log.Timber.Forest
 
 abstract class BaseFleetAdapter<T : FleetUiModel>(
   private val emptyState: (Boolean) -> Unit,
@@ -60,7 +67,8 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
     holder: FleetViewHolder,
     position: Int
   ) {
-    holder.bind(getItem(position))
+    val item = getItem(position)
+    holder.bind(item)
 
     if (itemCount == 0) {
       emptyState.invoke(true)
@@ -68,28 +76,40 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
     }
 
     with(holder.binding) {
-      fleetContainer.setOnClickListener { onViewHolderCreated(getItem(position)) }
-      moreButton.setOnClickListener { popUpDelete(it, position) }
+      fleetContainer.setOnClickListener { onViewHolderCreated(item) }
+      moreButton.setOnClickListener { popUpDelete(it, position, item) }
       fleetType.isVisible = position == 0 && itemCount > 0
     }
 
   }
 
-  private fun popUpDelete(view: View, position: Int) {
+  private fun popUpDelete(view: View, position: Int, item: T) {
     PopupMenu(view.context, view).apply {
       gravity = Gravity.END
       menuInflater.inflate(R.menu.popup_fleet_delete_menu, menu)
+      view.context.setActiveState(item.isActive, menu.findItem(R.id.delivery_state))
       setOnMenuItemClickListener {
         if (it.itemId == R.id.delete) {
           onDeleteFleet(getItem(position).id)
+        }
+        if (it.itemId == R.id.delivery_state) {
+            val invertedState = !item.isActive
+            onChangeActiveState(item.id, invertedState)
         }
         return@setOnMenuItemClickListener true
       }
     }.show()
   }
 
+  private fun Context.setActiveState(isActive: Boolean, menuItem: MenuItem) {
+    val invertState = isActive then "inactive" ?: "active"
+    val state = getString(R.string.set_state, invertState)
+    menuItem.title = state
+  }
+
   abstract fun onViewHolderCreated(data: T)
   abstract fun onDeleteFleet(id: String)
+  abstract fun onChangeActiveState(id: String, activeState: Boolean)
 
   class FleetViewHolder(
     val binding: FleetItemBinding
@@ -112,10 +132,14 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
         bindImageWith(fleetIcon, Uri.parse(data.profile))
       }
 
-      availabilityIndicator.setActiveStateIndicatorColor(
-        (data as? FleetUiModel.VehicleUri)?.isActive
-          ?: (data as FleetUiModel.DriverUri).isActive
-      )
+      if (data.hasOngoingDeliveries) {
+        availabilityIndicator.setNotAvailable()
+      } else {
+        availabilityIndicator.setActiveStateIndicatorColor(
+          (data as? FleetUiModel.VehicleUri)?.isActive
+            ?: (data as FleetUiModel.DriverUri).isActive
+        )
+      }
     }
   }
 }

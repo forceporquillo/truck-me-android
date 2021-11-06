@@ -33,6 +33,9 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    binding.datePicker.lifecycleOwner = viewLifecycleOwner
+    binding.daySpinner.lifecycleOwner = viewLifecycleOwner
+
     binding.viewPager.adapter = StatisticsStatePagerAdapter(this)
 
     val formattedDate = formattedDate(System.currentTimeMillis())
@@ -71,24 +74,19 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
       }
     }.attach()
 
-    try {
-      binding.datePicker.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
-        viewModel.searchBy(newItem)
-        viewModel.executeQuery(newItem)
-      }
+    binding.datePicker.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
+      viewModel.searchBy(newItem)
+      viewModel.executeQuery(newItem)
+    }
 
-      binding.daySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
-        val hintType = if (newItem == getString(string.driver)) {
-          getString(string.select_driver_type)
-        } else {
-          getString(string.select_date_type)
-        }
-        viewModel.type = newItem
-        binding.searchType.text = hintType
+    binding.daySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
+      val hintType = if (newItem == getString(string.driver)) {
+        getString(string.select_driver_type)
+      } else {
+        getString(string.select_date_type)
       }
-    } catch (e: IllegalStateException) {
-      binding.daySpinner.dismiss()
-      binding.datePicker.dismiss()
+      viewModel.type = newItem
+      binding.searchType.text = hintType
     }
   }
 

@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="surface">#FFF5F5F5</color>
     <color name="active">#45A048</color>
-    <color name="inactive">#C7372B</color>
+    <color name="inactive">#808080</color>
+    <color name="not_available">#C7372B</color>
     <color name="green_10">#1A0FCDC5</color>
 </resources>

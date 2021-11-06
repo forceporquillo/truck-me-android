@@ -7,11 +7,11 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.LauncherActivity
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.signin.AuthenticatedUserInfoBasic
+import dev.forcecodes.truckme.core.util.isDriver
 import dev.forcecodes.truckme.databinding.FragmentAccountBinding
 import dev.forcecodes.truckme.extensions.dispatchWhenBackPress
 import dev.forcecodes.truckme.extensions.navigateUp
@@ -61,9 +61,17 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
   private fun observeProfileChanges() {
     repeatOnLifecycleParallel {
       launch {
-        settingsViewModel.userInfo.collect { value: AuthenticatedUserInfoBasic? ->
-          bindProfileIcon(value?.getPhotoUrl(), false) {
-            settingsViewModel.profileIconInBytes = it
+        if (isDriver) {
+          settingsViewModel.profileUri.collect { uri: Uri? ->
+            bindProfileIcon(uri ?: return@collect, false) {
+              settingsViewModel.profileIconInBytes = it
+            }
+          }
+        } else {
+          settingsViewModel.userInfo.collect { value: AuthenticatedUserInfoBasic? ->
+            bindProfileIcon(value?.getPhotoUrl(), false) {
+              settingsViewModel.profileIconInBytes = it
+            }
           }
         }
       }

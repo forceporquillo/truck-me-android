@@ -14,6 +14,9 @@
         <item name="android:navigationBarColor">@color/white</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="popupMenuStyle">@style/MyPopupMenu</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     <style name="Theme.TruckmeAndroid.Launcher" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
