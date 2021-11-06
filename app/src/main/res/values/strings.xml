@@ -74,5 +74,7 @@
   <string name="select_date">Select date</string>
   <string name="delivered_items">Delivered Items</string>
   <string name="received_items">Received Items</string>
+  <string name="inbound_delivery_message">Ongoing Inbound Delivery</string>
+  <string name="outbound_delivery_message">Ongoing Outbound Delivery</string>
 
 </resources>
