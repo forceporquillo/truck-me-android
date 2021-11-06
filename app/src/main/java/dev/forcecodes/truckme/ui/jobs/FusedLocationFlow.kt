@@ -24,8 +24,8 @@ import timber.log.Timber.Forest
 
 fun createLocationRequest(): LocationRequest =
   LocationRequest.create().apply {
-    interval = 4000
-    fastestInterval = 3000
+    interval = 3000
+    fastestInterval = 1000
     expirationTime = 28800000
     priority = LocationRequest.PRIORITY_HIGH_ACCURACY
   }
@@ -51,14 +51,10 @@ fun fusedLocationFlow(
     override fun onLocationResult(result: LocationResult) {
       result.locations.forEachByIndex {
         Timber.d("locations:forEachByIndex $it")
-        if (offerCatching(it)) {
-          Timber.e("isClosedForSend: True")
-        } else {
-          Timber.e("isClosedForSend: False")
-        }
+        offerCatching(it)
       }
       Timber.d("onLocationResult $result")
-     // offerCatching(result.lastLocation)
+     //
     }
   }
   locationClient.lastLocation.await<Location?>()?.let { send(it) }

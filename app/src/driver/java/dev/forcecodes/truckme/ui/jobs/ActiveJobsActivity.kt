@@ -18,6 +18,7 @@ import com.google.maps.android.SphericalUtil
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.string
+import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
 import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.databinding.BottomSheetDeliveryStatusBinding
@@ -64,9 +65,11 @@ class ActiveJobsActivity : BaseMapActivity() {
     initBottomSheet()
 
     binding.notifyOrConfirmButton.updateIconTextDrawable(
-      R.drawable.ic_notify,
+      R.drawable.ic_confirm_check,
       string.active_jobs_confirm
-    ).setOnClickListener { confirmDelivery() }
+    )
+
+    binding.notifyButton.setOnClickListener { confirmDelivery() }
   }
 
   private fun loadDestinationPath() {
@@ -208,31 +211,33 @@ class ActiveJobsActivity : BaseMapActivity() {
   @SuppressLint("MissingPermission")
   override fun onMapIsReady(googleMap: GoogleMap) {
     onLifecycleStarted {
-      viewModel.jobData.collect { value: DeliveryInfo? ->
+      viewModel.jobData.collect { value: DeliveryInfoMetaData? ->
         if (value == null) {
           return@collect
         }
 
-        val deliveryState = if (value.inbound == true) {
+        val deliveryInfo = value.deliveryInfo
+
+        val deliveryState = if (deliveryInfo?.inbound == true) {
           getString(string.in_bound_delivery)
         } else {
           getString(string.out_bound_delivery)
         }
 
         binding.inboundDelivery.text = deliveryState
-        deliveryStatusBinding.deliverTitle.text = value.title
-        binding.deliverTitle.text = value.title
-        binding.destination.text = value.destination?.address
+        deliveryStatusBinding.deliverTitle.text = deliveryInfo?.title
+        binding.deliverTitle.text = deliveryInfo?.title
+        binding.destination.text = deliveryInfo?.destination?.address
 
-        bindImageWith(binding.driverImage, value.driverData?.profileUrl)
+        bindImageWith(binding.driverImage, deliveryInfo?.driverData?.profileUrl)
 
         fusedLocationProvider.lastLocation
           .addOnSuccessListener { location ->
             viewModel.getDirections(
               LatLngTruckMeImpl(
-                location.latitude,
-                location.longitude
-              ), value.destination!!.placeId
+                location.latitude ?: 0.0,
+                location.longitude ?: 0.0
+              ), deliveryInfo?.destination!!.placeId
             )
             val latLng = LatLng(location.latitude, location.longitude)
             startDestination(latLng)
@@ -255,10 +260,10 @@ class ActiveJobsActivity : BaseMapActivity() {
     MaterialAlertDialogBuilder(this)
       .setTitle("Confirm Item Delivered")
       .setMessage("You are about to confirm your item delivery named $title with the expected time arrival at $arrivalTime.")
-      .setNegativeButton("Minimize") { dialog, which ->
+      .setNegativeButton("Minimize") { _, _ ->
         // Respond to neutral button press
       }
-      .setPositiveButton("Confirm") { dialog, which ->
+      .setPositiveButton("Confirm") { _, _ ->
         viewModel.notifyAdmin()
       }
       .show()

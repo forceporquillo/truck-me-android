@@ -145,7 +145,7 @@ class MapDeliverySharedViewModel @Inject constructor(
       _freightItem.value,
       _contact.value,
       _boundDelivery.value,
-      isActive = true,
+      active = true,
       assignedAdminId = userIdValue!!,
       assignedAdminTokenId = adminToken,
       coordinates = Coordinates(finalDestination = LatLngData(latLng.latitude, latLng.longitude))

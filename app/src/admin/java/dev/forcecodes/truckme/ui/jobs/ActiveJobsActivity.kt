@@ -57,10 +57,13 @@ class ActiveJobsActivity : BaseMapActivity() {
           moveCamera(googleMap, latLngData)
 
           val deliveryState = if (value.inbound == true) {
-            "Ongoing Inbound Delivery"
+            getString(string.inbound_delivery_message)
           } else {
-            "Ongoing Outbound Delivery"
+            getString(string.outbound_delivery_message)
           }
+
+          onAttachIntentDialPadListener(value.contactNumber)
+          onAttachIntentMessageListener(value.contactNumber)
 
           binding.inboundDelivery.text = deliveryState
 

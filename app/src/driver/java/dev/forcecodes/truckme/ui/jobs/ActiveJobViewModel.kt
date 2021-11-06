@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.AssignedDataSource
+import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
 import dev.forcecodes.truckme.core.data.admin.AdminDataSource
 import dev.forcecodes.truckme.core.data.directions.DirectionsResponse
 import dev.forcecodes.truckme.core.data.directions.LegsItem
@@ -33,7 +34,7 @@ class ActiveJobsViewModel @Inject constructor(
   private val pushNotificationManager: PushNotificationManager
 ) : ViewModel() {
 
-  private val _jobData = MutableStateFlow<DeliveryInfo?>(null)
+  private val _jobData = MutableStateFlow<DeliveryInfoMetaData?>(null)
   val jobData = _jobData.asStateFlow()
 
   private val _directions = MutableStateFlow<DirectionUiModel?>(null)
@@ -64,11 +65,12 @@ class ActiveJobsViewModel @Inject constructor(
     viewModelScope.launch {
       Timber.e("Called $jobId")
       assignedDataSource.getJobById(jobId).collect { result ->
-        getAdminMetaData(result.data?.assignedAdminId)
+        val deliveryInfo = result.data?.deliveryInfo
+        getAdminMetaData(deliveryInfo?.assignedAdminId)
         if (result is Result.Success) {
-          deliveryTitle = result.data.title
+          deliveryTitle = deliveryInfo?.title
         }
-        _jobData.value = result.successOr(DeliveryInfo())
+        _jobData.value = result.successOr(null)
       }
     }
   }
@@ -88,7 +90,8 @@ class ActiveJobsViewModel @Inject constructor(
     latLngTruckMeImpl: LatLngTruckMeImpl,
   ) {
     this.latLngTruckMeImpl = latLngTruckMeImpl
-    this.placeId = jobData.value?.destination?.placeId
+    val deliveryInfo = jobData.value?.deliveryInfo
+    this.placeId = deliveryInfo?.destination?.placeId
     val (lat, lng) = latLngTruckMeImpl
     _currentLatLng.value = LatLng(lat, lng)
   }
@@ -137,8 +140,10 @@ class ActiveJobsViewModel @Inject constructor(
   }
 
   fun notifyAdmin() {
+    confirmDelivery()
     viewModelScope.launch {
-      jobData.value.let { deliveryInfo ->
+      jobData.value.let { metadata ->
+        val deliveryInfo = metadata?.deliveryInfo
         val adminToken = deliveryInfo?.assignedAdminTokenId ?: return@launch
         Timber.e("Notifying admin with token ID: $adminToken")
 
@@ -149,6 +154,16 @@ class ActiveJobsViewModel @Inject constructor(
           deliveryInfo.driverData?.driverName!!
         )
         pushNotificationManager.notifyAdmin(adminToken, messageData)
+      }
+    }
+  }
+
+  private fun confirmDelivery() {
+    viewModelScope.launch {
+      val deliveryMetaData = jobData.value
+      Timber.e(jobData.value.toString())
+      if (deliveryMetaData?.documentId != null && deliveryMetaData.deliveryInfo != null) {
+        jobData.value?.let { assignedDataSource.confirmDelivery(deliveryMetaData.deliveryInfo!!, deliveryMetaData.documentId!!) }
       }
     }
   }
