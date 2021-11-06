@@ -7,6 +7,7 @@
     >
 
   <androidx.recyclerview.widget.RecyclerView
+      android:paddingTop="@dimen/spacing_medium"
       android:id="@+id/history_list"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
