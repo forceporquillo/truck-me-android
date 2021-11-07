@@ -22,5 +22,6 @@ data class DeliveryInfo @JvmOverloads constructor(
   val distanceRemApprox: String? = null,
   val started: Boolean = false,
   val duration: String = "",
+  val timestamp: Long? = null,
   val id: String = UUID.randomUUID().toString()
 )
