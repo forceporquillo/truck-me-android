@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.R.string
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
@@ -181,7 +182,18 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
   }
 
   private fun setDriverDropDown(driversUri: List<DriverUri>) {
+    val availableDrivers = driversUri.filter {
+      !it.hasOngoingDeliveries
+    }.filter {
+      it.isActive
+    }.map { it.fullName }
     with(bottomSheet.driverEt) {
+      if (availableDrivers.isEmpty()) {
+        bottomSheet.driverTextLayout.hint = context.getString(string.no_available_drivers)
+      } else {
+        bottomSheet.driverTextLayout.hint = context.getString(string.driver)
+      }
+
       setSelected(driversUri) { driver, fullName ->
         if (driver.fullName == fullName) {
           // automatically populates the contacts information
@@ -191,7 +203,7 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
         } else false
       }
       this
-    }.setTextAdapter(driversUri.map { it.fullName })
+    }.setTextAdapter(availableDrivers)
   }
 
   private fun <T : FleetUiModel> MaterialAutoCompleteTextView.setSelected(

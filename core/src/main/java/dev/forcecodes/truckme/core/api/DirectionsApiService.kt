@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.core.data.directions
+package dev.forcecodes.truckme.core.api
 
 import dev.forcecodes.truckme.core.BuildConfig
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl

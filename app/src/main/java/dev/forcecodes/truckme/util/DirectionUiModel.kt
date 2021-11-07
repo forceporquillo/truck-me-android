@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.ui.jobs
+package dev.forcecodes.truckme.util
 
 import com.google.android.gms.maps.model.LatLng
 

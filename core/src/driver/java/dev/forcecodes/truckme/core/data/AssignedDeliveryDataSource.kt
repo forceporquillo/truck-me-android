@@ -87,7 +87,6 @@ class AssignedDeliveryDataSource @Inject constructor(
   }
 
   private fun update(jobId: String) {
-    Timber.e("Document ID $jobId")
     firestore.collection("deliveries")
       .document(jobId)
       .update(mapOf("completed" to true))

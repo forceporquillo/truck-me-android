@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isGone
 import androidx.core.view.updatePadding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -82,6 +83,12 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     return googleMap.addMarker(markerOptions)
   }
 
+  fun hideLoadingState() {
+    binding.root.postDelayed({
+      binding.progressBar.isGone = true
+      binding.loadingState.isGone = true
+    }, 1000L)
+  }
 
   protected fun dropOffDestinationMarker(latLng: LatLng?): Marker? {
     if (latLng == null) {
@@ -231,7 +238,7 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
   private fun supportMapFragment() =
     supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
 
-  protected fun updateCarLocation(latLng: LatLng) {
+  protected fun updateCarLocation(latLng: LatLng, moveCamera: Boolean = false) {
     Timber.d("updateCarLocation $latLng")
 
     if (movingCabMarker == null) {
@@ -266,7 +273,10 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
             movingCabMarker?.rotation = rotation.toFloat()
           }
           movingCabMarker?.setAnchor(0.5f, 0.5f)
-          // animateCamera(nextLocation)
+
+          if (moveCamera) {
+            animateCamera(nextLocation)
+          }
         }
       }
       valueAnimator.start()
