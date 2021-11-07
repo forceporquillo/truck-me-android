@@ -132,19 +132,10 @@ class ActiveJobsActivity : BaseMapActivity() {
   }
 
   private fun notifyDelivery() {
-    // val title = viewModel.deliveryTitle
-    // val arrivalTime = deliveryStatusBinding.etaTime.text.toString()
-
-    MaterialAlertDialogBuilder(this)
-      .setTitle("Enable Notification for this Item")
-      .setMessage("You are about to receive notifications when this item has arrived.")
-      .setNegativeButton("Cancel") { _, _ ->
-        // Respond to neutral button press
-      }
-      .setPositiveButton("Notify") { _, _ ->
-        viewModel.notifyWhenDelivered()
-      }
-      .show()
+    val uri = Uri.parse("smsto:")
+    val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
+    smsIntent.putExtra("sms_body", viewModel.smsData)
+    startActivity(smsIntent)
   }
 
   override fun onDestroy() {

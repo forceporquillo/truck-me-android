@@ -39,6 +39,11 @@ class ActiveJobsViewModel @Inject constructor(
 
   private var id: String? = null
 
+  val smsData: String
+    get() {
+      val deliveryInfo = deliveryInfo.value
+      return "Delivery of ${deliveryInfo?.items} is estimated to be completed as soon as ${deliveryInfo?.eta}"
+    }
 
   init {
     viewModelScope.launch {
