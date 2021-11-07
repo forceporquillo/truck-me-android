@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.navigation.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -20,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.string
 import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
-import dev.forcecodes.truckme.core.model.DeliveryInfo
+import dev.forcecodes.truckme.core.model.LatLngData
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.databinding.BottomSheetDeliveryStatusBinding
 import dev.forcecodes.truckme.databinding.TimeArrivalBottomSheetBinding
@@ -36,7 +35,6 @@ import dev.forcecodes.truckme.util.distanceLeft
 import dev.forcecodes.truckme.util.getTimeTaken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -72,6 +70,8 @@ class ActiveJobsActivity : BaseMapActivity() {
     )
 
     binding.notifyButton.setOnClickListener { confirmDelivery() }
+
+    hideLoadingState()
   }
 
   private fun loadDestinationPath() {
@@ -108,11 +108,17 @@ class ActiveJobsActivity : BaseMapActivity() {
           }
         }.collect { distance ->
           Timber.d("Distance Remaining: $distance")
-          arriveInBottomSheet.arrivalTime.text = getTimeTaken(distance)
-          arriveInBottomSheet.distanceLeft.text = distanceLeft(distance)
+
+          val timeTaken = getTimeTaken(distance)
+          arriveInBottomSheet.arrivalTime.text = timeTaken
+          viewModel.estimatedArrivalTime = timeTaken
+
+          val distanceLeft = distanceLeft(distance)
+          arriveInBottomSheet.distanceLeft.text = distanceLeft
+          viewModel.distanceRemaining = distanceLeft
         }
       } catch (e: Exception) {
-        Timber.e(e )
+        Timber.e(e)
       }
     }
 
@@ -137,6 +143,7 @@ class ActiveJobsActivity : BaseMapActivity() {
           etaTime.text = MapUtils.calculateEstimatedTime(value.durationInSeconds)
         }
         binding.distance.text = value.distance
+        viewModel.distanceRemainingApprox = value.distance
       }
     }
 
@@ -157,19 +164,47 @@ class ActiveJobsActivity : BaseMapActivity() {
         deliveryStatusBinding.root.slideDownHide()
 
         polyline?.remove()
-        viewModel.reloadDirections()
+        viewModel.startAndReload()
         shouldClickOnce = false
 
         showArrivalModalSheet()
       }
     }
+    showCurrentDeliveryState(onReloadDirections)
+  }
 
+  private fun showCurrentDeliveryState(onReloadDirections: (View) -> Unit) {
+    onLifecycleStarted {
+      viewModel.jobData.map { deliveryMetadata ->
+        deliveryMetadata?.deliveryInfo?.startDestination != null
+      }.collect { hasStarted ->
+        if (!hasStarted) {
+          showDeliveryDetailsModalSheet(onReloadDirections, false)
+          return@collect
+        }
+
+        showArrivalModalSheet()
+        showDeliveryDetailsModalSheet(onReloadDirections, true)
+      }
+    }
+  }
+
+  private fun showDeliveryDetailsModalSheet(onReloadDirections: (View) -> Unit, collapse: Boolean) {
     binding.coordinator.postKt {
       val bottomSheetParent = deliveryStatusBinding
       bottomSheetParent.run {
+        root.isGone = collapse
+
         val behavior = BottomSheetBehavior.from(root)
         behavior.peekHeight = 24.px
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        val stateCollapse = if (collapse)  {
+          BottomSheetBehavior.STATE_COLLAPSED
+        } else {
+          BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        behavior.state = stateCollapse
         behavior.isHideable = false
 
         startDeliveryButton.setOnClickListener(onReloadDirections)
@@ -235,6 +270,10 @@ class ActiveJobsActivity : BaseMapActivity() {
 
         fusedLocationProvider.lastLocation
           .addOnSuccessListener { location ->
+            viewModel.startDestination = LatLngData(
+              location.latitude,
+              location.longitude
+            )
             viewModel.getDirections(
               LatLngTruckMeImpl(
                 location.latitude ?: 0.0,
@@ -268,7 +307,7 @@ class ActiveJobsActivity : BaseMapActivity() {
       .setPositiveButton("Confirm") { _, _ ->
         viewModel.notifyAdmin()
         onLifecycleStarted {
-          delay(1000L)
+          delay(1500L)
           finish()
         }
       }

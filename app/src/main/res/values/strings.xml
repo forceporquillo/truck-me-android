@@ -78,4 +78,5 @@
   <string name="outbound_delivery_message">Ongoing Outbound Delivery</string>
   <string name="delete">Delete</string>
   <string name="set_state">Set as %1$s</string>
+  <string name="no_available_drivers">No Available Drivers</string>
 </resources>

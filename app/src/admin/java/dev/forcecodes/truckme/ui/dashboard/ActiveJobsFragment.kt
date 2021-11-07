@@ -10,9 +10,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.domain.dashboard.ActiveJobOder
 import dev.forcecodes.truckme.core.domain.dashboard.ActiveJobOder.IN_PROGRESS
+import dev.forcecodes.truckme.core.domain.dashboard.ActiveJobOder.PENDING
 import dev.forcecodes.truckme.databinding.FragmentActiveJobsBinding
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.startRealtimeMap
+import dev.forcecodes.truckme.extensions.toast
 import dev.forcecodes.truckme.extensions.viewBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -44,7 +46,11 @@ abstract class ActiveJobsFragment(
     onDeliveryAdapterCreated(deliveryAdapter)
 
     deliveryAdapter.onActiveJobClick = { jobId ->
-      startRealtimeMap(jobId)
+      if (activeJobOder == PENDING) {
+        toast("This delivery hasn't started yet.")
+      } else {
+        startRealtimeMap(jobId)
+      }
     }
 
     repeatOnLifecycleParallel {

@@ -6,15 +6,17 @@ import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.AssignedDataSource
 import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
+import dev.forcecodes.truckme.core.data.UpdateDeliveryDataSource
 import dev.forcecodes.truckme.core.data.admin.AdminDataSource
 import dev.forcecodes.truckme.core.data.directions.DirectionsResponse
 import dev.forcecodes.truckme.core.data.directions.LegsItem
 import dev.forcecodes.truckme.core.data.directions.Location
 import dev.forcecodes.truckme.core.domain.directions.DirectionPath
 import dev.forcecodes.truckme.core.domain.directions.GetDirectionsUseCase
+import dev.forcecodes.truckme.core.domain.directions.UpdateMyFleetStateUseCase
 import dev.forcecodes.truckme.core.domain.push.PushNotificationManager
 import dev.forcecodes.truckme.core.fcm.MessageData
-import dev.forcecodes.truckme.core.model.DeliveryInfo
+import dev.forcecodes.truckme.core.model.LatLngData
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.data
@@ -22,6 +24,7 @@ import dev.forcecodes.truckme.core.util.successOr
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,7 +34,9 @@ class ActiveJobsViewModel @Inject constructor(
   private val assignedDataSource: AssignedDataSource,
   private val adminDataSource: AdminDataSource,
   private val getDirectionsUseCase: GetDirectionsUseCase,
-  private val pushNotificationManager: PushNotificationManager
+  private val updateMyFleetStateUseCase: UpdateMyFleetStateUseCase,
+  private val pushNotificationManager: PushNotificationManager,
+  private val updateDeliveryDataSource: UpdateDeliveryDataSource
 ) : ViewModel() {
 
   private val _jobData = MutableStateFlow<DeliveryInfoMetaData?>(null)
@@ -57,7 +62,38 @@ class ActiveJobsViewModel @Inject constructor(
 
   private var shouldShow: Boolean = false
 
+  var estimatedArrivalTime: String? = null
+
+  var distanceRemainingApprox: String? = null
+    set(value) {
+      value?.let { approx ->
+        val documentId = jobData.value?.documentId
+        updateDeliveryDataSource.distanceRemainingApprox(approx, documentId ?: return)
+      }
+      field = value
+    }
+
   private var jobId: String? = null
+
+  var startDestination: LatLngData? = null
+
+  init {
+    viewModelScope.launch {
+      jobData.map { it?.deliveryInfo?.startDestination }.collect {
+        if (it != null) {
+          Timber.e("Item Delivery has started...")
+        } else {
+          Timber.e("Item Delivery has not started...")
+        }
+      }
+    }
+  }
+
+  var distanceRemaining: String? = null
+    set(value) {
+      Timber.e("Distance Remaining $value")
+      field = value
+    }
 
   fun getJob(jobId: String) {
     this.jobId = jobId
@@ -96,7 +132,7 @@ class ActiveJobsViewModel @Inject constructor(
     _currentLatLng.value = LatLng(lat, lng)
   }
 
-  fun reloadDirections() {
+  fun startAndReload() {
     if (latLngTruckMeImpl == null && placeId == null) {
       return
     }
@@ -104,6 +140,7 @@ class ActiveJobsViewModel @Inject constructor(
       shouldShow = true
     }
     getDirections(latLngTruckMeImpl!!, placeId!!)
+    startDelivery()
   }
 
   fun getDirections(
@@ -113,7 +150,7 @@ class ActiveJobsViewModel @Inject constructor(
     viewModelScope.launch {
       getDirectionsUseCase(DirectionPath(latLngTruckMeImpl, placeId)).collect { directionResponse ->
         if (directionResponse is Result.Success) {
-          _directions.emit(filterData(directionResponse.data))
+          _directions.value = filterData(directionResponse.data)
         }
         Timber.e(directionResponse.toString())
       }
@@ -123,6 +160,7 @@ class ActiveJobsViewModel @Inject constructor(
   private fun filterData(data: DirectionsResponse): DirectionUiModel {
     val legs: LegsItem? = data.routes?.get(0)?.legs?.get(0)
     _endDirection.value = toLatLng(legs?.endLocation)
+
     return DirectionUiModel(
       distance = legs?.distance?.text ?: "Unavailable",
       duration = legs?.duration?.text ?: "Unavailable",
@@ -133,6 +171,54 @@ class ActiveJobsViewModel @Inject constructor(
       polyline = data.routes?.get(0)?.overviewPolyline?.points,
       shouldShowPath = shouldShow
     )
+  }
+
+  private fun startDelivery() {
+    val documentId = jobData.value?.documentId
+
+    if (documentId.isNullOrEmpty()) {
+      return
+    }
+    updateDeliveryDataSource.onStartDelivery(documentId)
+
+    viewModelScope.launch {
+      launch { setDriverOnGoingDelivery(true) }
+      launch { updateCoordinates(documentId) }
+      launch { updateRemainingDistance(documentId) }
+      launch { updateStartDestination(documentId) }
+      launch { updateArrival(documentId) }
+    }
+  }
+
+  private fun updateStartDestination(documentId: String) {
+    startDestination?.let {
+      Timber.e("Start Destination $it")
+      updateDeliveryDataSource.startDestination(it, documentId)
+    }
+  }
+
+  private suspend fun updateCoordinates(documentId: String) {
+    currentLatLng.collect {
+      Timber.e("updating....")
+      updateDeliveryDataSource.updateCurrentLocation(
+        LatLngData(it?.latitude, it?.longitude),
+        documentId
+      )
+    }
+  }
+
+  private fun updateRemainingDistance(documentId: String) {
+    if (!distanceRemaining.isNullOrEmpty() || !documentId.isNullOrEmpty()) {
+      updateDeliveryDataSource.distanceRemaining(distanceRemaining!!, documentId)
+    }
+  }
+
+  private suspend fun setDriverOnGoingDelivery(available: Boolean) {
+    jobData.collect {
+      it?.deliveryInfo?.driverData?.id?.let { driverId ->
+        updateMyFleetStateUseCase(Pair(driverId, available))
+      }
+    }
   }
 
   private fun toLatLng(startLocation: Location?): LatLng {
@@ -159,12 +245,16 @@ class ActiveJobsViewModel @Inject constructor(
   }
 
   private fun confirmDelivery() {
+    updateDeliveryDataSource.onFinishDelivery(jobData.value?.documentId ?: return)
     viewModelScope.launch {
-      val deliveryMetaData = jobData.value
-      Timber.e(jobData.value.toString())
-      if (deliveryMetaData?.documentId != null && deliveryMetaData.deliveryInfo != null) {
-        jobData.value?.let { assignedDataSource.confirmDelivery(deliveryMetaData.deliveryInfo!!, deliveryMetaData.documentId!!) }
-      }
+      setDriverOnGoingDelivery(false)
+    }
+  }
+
+  private fun updateArrival(documentId: String) {
+    if (!estimatedArrivalTime.isNullOrEmpty()) {
+      val etaApprox = estimatedArrivalTime?.replace("<", "")
+      etaApprox?.let { updateDeliveryDataSource.arrivalTime(it, documentId) }
     }
   }
 }

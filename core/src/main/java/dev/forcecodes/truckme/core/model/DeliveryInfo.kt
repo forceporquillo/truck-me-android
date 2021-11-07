@@ -11,16 +11,14 @@ data class DeliveryInfo @JvmOverloads constructor(
   val contactNumber: String = "",
   val inbound: Boolean? = null,
   var active: Boolean = true,
-  val coordinates: Coordinates? = null,
+  val startDestination: LatLngData? = null,
   val currentCoordinates: LatLngData? = null,
+  val finalDestination: LatLngData? = null,
   val assignedAdminId: String = "",
   val assignedAdminTokenId: String? = null,
   val completed: Boolean = false,
+  val eta: String? = "",
+  val distanceRemaining: String? = "",
+  val distanceRemApprox: String? = null,
   val id: String = UUID.randomUUID().toString()
-)
-
-data class Coordinates @JvmOverloads constructor(
-  val startDestination: LatLngData? = null,
-  val currentDestination: LatLngData? = null,
-  val finalDestination: LatLngData? = null
 )

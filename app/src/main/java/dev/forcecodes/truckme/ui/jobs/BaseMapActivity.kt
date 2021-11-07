@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isGone
 import androidx.core.view.updatePadding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -82,6 +83,12 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     return googleMap.addMarker(markerOptions)
   }
 
+  fun hideLoadingState() {
+    binding.root.postDelayed({
+      binding.progressBar.isGone = true
+      binding.loadingState.isGone = true
+    }, 1000L)
+  }
 
   protected fun dropOffDestinationMarker(latLng: LatLng?): Marker? {
     if (latLng == null) {
