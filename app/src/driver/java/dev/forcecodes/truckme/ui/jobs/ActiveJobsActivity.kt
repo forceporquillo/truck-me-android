@@ -307,7 +307,7 @@ class ActiveJobsActivity : BaseMapActivity() {
       .setPositiveButton("Confirm") { _, _ ->
         viewModel.notifyAdmin()
         onLifecycleStarted {
-          delay(1500L)
+          delay(500L)
           finish()
         }
       }
