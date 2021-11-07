@@ -20,5 +20,7 @@ data class DeliveryInfo @JvmOverloads constructor(
   val eta: String? = "",
   val distanceRemaining: String? = "",
   val distanceRemApprox: String? = null,
+  val started: Boolean = false,
+  val duration: String = "",
   val id: String = UUID.randomUUID().toString()
 )

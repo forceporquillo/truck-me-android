@@ -12,6 +12,8 @@ import dev.forcecodes.truckme.core.data.driver.AddedDriverDataSourceImpl
 import dev.forcecodes.truckme.core.data.driver.DriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSourceImpl
+import dev.forcecodes.truckme.core.domain.directions.DirectionsRepository
+import dev.forcecodes.truckme.core.domain.directions.DirectionsRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,4 +38,9 @@ abstract class DataSourceModule {
   internal abstract fun providesDriverDataSource(
     driverDataSourceImpl: AddedDriverDataSourceImpl
   ): DriverDataSource
+
+  @Binds
+  internal abstract fun providesDirectionsRepository(
+    directionsRepositoryImpl: DirectionsRepositoryImpl
+  ): DirectionsRepository
 }

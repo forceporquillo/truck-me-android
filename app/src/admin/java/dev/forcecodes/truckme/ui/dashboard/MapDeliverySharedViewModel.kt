@@ -16,7 +16,6 @@ import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveVehicleFleetsUseCase
 import dev.forcecodes.truckme.core.domain.places.PlaceDetailsUseCase
 import dev.forcecodes.truckme.core.domain.places.ReverseGeoCoordinateUseCase
-import dev.forcecodes.truckme.core.model.Coordinates
 import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.DriverData
 import dev.forcecodes.truckme.core.model.LatLngData
@@ -148,7 +147,7 @@ class MapDeliverySharedViewModel @Inject constructor(
       active = false,
       assignedAdminId = userIdValue!!,
       assignedAdminTokenId = adminToken,
-      coordinates = Coordinates(finalDestination = LatLngData(latLng.latitude, latLng.longitude))
+      finalDestination = LatLngData(latLng.latitude, latLng.longitude)
     )
 
     viewModelScope.launch {

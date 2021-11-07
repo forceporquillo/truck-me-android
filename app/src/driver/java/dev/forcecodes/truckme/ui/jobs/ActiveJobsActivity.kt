@@ -30,6 +30,7 @@ import dev.forcecodes.truckme.extensions.px
 import dev.forcecodes.truckme.extensions.slideDownHide
 import dev.forcecodes.truckme.extensions.slideTop
 import dev.forcecodes.truckme.extensions.updateIconTextDrawable
+import dev.forcecodes.truckme.util.DirectionUiModel
 import dev.forcecodes.truckme.util.MapUtils
 import dev.forcecodes.truckme.util.distanceLeft
 import dev.forcecodes.truckme.util.getTimeTaken
@@ -137,13 +138,17 @@ class ActiveJobsActivity : BaseMapActivity() {
           dropOffDestinationMarker(latLng)
         }
 
+        val durationLess = "< ${value.duration}"
+
+        val estimatedArrival = MapUtils.calculateEstimatedTime(value.durationInSeconds)
         with(deliveryStatusBinding) {
-          val durationLess = "< ${value.duration}"
           duration.text = durationLess
-          etaTime.text = MapUtils.calculateEstimatedTime(value.durationInSeconds)
+          etaTime.text = estimatedArrival
         }
+
         binding.distance.text = value.distance
-        viewModel.distanceRemainingApprox = value.distance
+        viewModel.durationLess = durationLess
+        viewModel.estimatedArrivalTime = estimatedArrival
       }
     }
 
@@ -176,15 +181,15 @@ class ActiveJobsActivity : BaseMapActivity() {
   private fun showCurrentDeliveryState(onReloadDirections: (View) -> Unit) {
     onLifecycleStarted {
       viewModel.jobData.map { deliveryMetadata ->
-        deliveryMetadata?.deliveryInfo?.startDestination != null
+        deliveryMetadata?.deliveryInfo?.started == true
       }.collect { hasStarted ->
         if (!hasStarted) {
           showDeliveryDetailsModalSheet(onReloadDirections, false)
           return@collect
+        } else {
+          showArrivalModalSheet()
+          showDeliveryDetailsModalSheet(onReloadDirections, true)
         }
-
-        showArrivalModalSheet()
-        showDeliveryDetailsModalSheet(onReloadDirections, true)
       }
     }
   }

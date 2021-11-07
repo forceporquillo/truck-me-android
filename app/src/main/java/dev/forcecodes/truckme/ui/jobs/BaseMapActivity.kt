@@ -238,7 +238,7 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
   private fun supportMapFragment() =
     supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
 
-  protected fun updateCarLocation(latLng: LatLng) {
+  protected fun updateCarLocation(latLng: LatLng, moveCamera: Boolean = false) {
     Timber.d("updateCarLocation $latLng")
 
     if (movingCabMarker == null) {
@@ -273,7 +273,10 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
             movingCabMarker?.rotation = rotation.toFloat()
           }
           movingCabMarker?.setAnchor(0.5f, 0.5f)
-          // animateCamera(nextLocation)
+
+          if (moveCamera) {
+            animateCamera(nextLocation)
+          }
         }
       }
       valueAnimator.start()

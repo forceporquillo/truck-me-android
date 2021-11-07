@@ -1,6 +1,6 @@
 package dev.forcecodes.truckme.core.domain.directions
 
-import dev.forcecodes.truckme.core.data.directions.DirectionsResponse
+import dev.forcecodes.truckme.core.api.DirectionsResponse
 import dev.forcecodes.truckme.core.data.fleets.FleetDataSource
 import dev.forcecodes.truckme.core.data.fleets.FleetType.DRIVER
 import dev.forcecodes.truckme.core.di.IoDispatcher
@@ -36,14 +36,3 @@ class GetDirectionsUseCase @Inject constructor(
   }
 }
 
-@Singleton
-class UpdateMyFleetStateUseCase @Inject constructor(
-  private val fleetDataSource: FleetDataSource,
-  @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : UseCase<Pair<String, Boolean>, Unit>(dispatcher) {
-
-  override suspend fun execute(parameters: Pair<String, Boolean>) {
-    val (id, state) = parameters
-    fleetDataSource.onUpdateFleetState(id, state, DRIVER)
-  }
-}

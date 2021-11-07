@@ -1,4 +1,4 @@
-package dev.forcecodes.truckme.core.data.directions
+package dev.forcecodes.truckme.core.api
 
 import com.google.gson.annotations.SerializedName
 import dev.forcecodes.truckme.core.util.ApiResponseStatus

@@ -4,16 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.core.api.DirectionsResponse
+import dev.forcecodes.truckme.core.api.LegsItem
+import dev.forcecodes.truckme.core.api.Location
 import dev.forcecodes.truckme.core.data.AssignedDataSource
 import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
 import dev.forcecodes.truckme.core.data.UpdateDeliveryDataSource
 import dev.forcecodes.truckme.core.data.admin.AdminDataSource
-import dev.forcecodes.truckme.core.data.directions.DirectionsResponse
-import dev.forcecodes.truckme.core.data.directions.LegsItem
-import dev.forcecodes.truckme.core.data.directions.Location
 import dev.forcecodes.truckme.core.domain.directions.DirectionPath
 import dev.forcecodes.truckme.core.domain.directions.GetDirectionsUseCase
-import dev.forcecodes.truckme.core.domain.directions.UpdateMyFleetStateUseCase
+import dev.forcecodes.truckme.core.domain.fleets.UpdateMyFleetStateUseCase
 import dev.forcecodes.truckme.core.domain.push.PushNotificationManager
 import dev.forcecodes.truckme.core.fcm.MessageData
 import dev.forcecodes.truckme.core.model.LatLngData
@@ -21,6 +21,7 @@ import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.data
 import dev.forcecodes.truckme.core.util.successOr
+import dev.forcecodes.truckme.util.DirectionUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -63,6 +64,15 @@ class ActiveJobsViewModel @Inject constructor(
   private var shouldShow: Boolean = false
 
   var estimatedArrivalTime: String? = null
+
+  var durationLess: String? = null
+    set(value) {
+      value?.let { approx ->
+        val documentId = jobData.value?.documentId
+        updateDeliveryDataSource.duration(approx, documentId ?: return)
+      }
+      field = value
+    }
 
   var distanceRemainingApprox: String? = null
     set(value) {
@@ -208,7 +218,7 @@ class ActiveJobsViewModel @Inject constructor(
   }
 
   private fun updateRemainingDistance(documentId: String) {
-    if (!distanceRemaining.isNullOrEmpty() || !documentId.isNullOrEmpty()) {
+    if (!distanceRemaining.isNullOrEmpty() || !documentId.isEmpty()) {
       updateDeliveryDataSource.distanceRemaining(distanceRemaining!!, documentId)
     }
   }

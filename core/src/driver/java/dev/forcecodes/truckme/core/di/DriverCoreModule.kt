@@ -25,11 +25,6 @@ abstract class DriverCoreModule {
   ): AssignedDataSource
 
   @Binds
-  internal abstract fun providesDirectionsRepository(
-    directionsRepositoryImpl: DirectionsRepositoryImpl
-  ): DirectionsRepository
-
-  @Binds
   internal abstract fun providesAdminDataSource(
     adminDataSourceImpl: AdminDataSourceImpl
   ): AdminDataSource

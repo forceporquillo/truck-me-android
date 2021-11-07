@@ -1,16 +1,14 @@
 package dev.forcecodes.truckme.ui.jobs
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle.State.STARTED
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.string
@@ -18,11 +16,15 @@ import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.LatLngData
 import dev.forcecodes.truckme.databinding.BottomSheetDeliveryStatusBinding
 import dev.forcecodes.truckme.extensions.bindImageWith
+import dev.forcecodes.truckme.extensions.onLifecycleStarted
+import dev.forcecodes.truckme.extensions.postKt
+import dev.forcecodes.truckme.extensions.px
 import dev.forcecodes.truckme.extensions.updateIconTextDrawable
+import dev.forcecodes.truckme.util.DirectionUiModel
+import dev.forcecodes.truckme.util.MapUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import timber.log.Timber.Forest
 
 @AndroidEntryPoint
 class ActiveJobsActivity : BaseMapActivity() {
@@ -37,6 +39,8 @@ class ActiveJobsActivity : BaseMapActivity() {
 
     viewModel.getJob(intent.extras?.getString("job_item_id")!!)
 
+    initBottomSheet()
+
     _deliveryStatusBinding = binding.bottomSheetParent
     deliveryStatusBinding.startDeliveryButton.isGone = true
 
@@ -44,43 +48,87 @@ class ActiveJobsActivity : BaseMapActivity() {
       R.drawable.ic_notify,
       string.active_jobs_notify
     ).setOnClickListener {
-        notifyDelivery()
+      notifyDelivery()
+    }
+    hideLoadingState()
+  }
+
+  private fun initBottomSheet() {
+    binding.coordinator.postKt {
+      val bottomSheetParent = deliveryStatusBinding
+      bottomSheetParent.run {
+        val behavior = BottomSheetBehavior.from(root)
+        behavior.peekHeight = 24.px
+
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        behavior.isHideable = false
+      }
     }
   }
 
   override fun onMapIsReady(googleMap: GoogleMap) {
-    lifecycleScope.launch {
-      lifecycle.repeatOnLifecycle(STARTED) {
-        viewModel.deliveryInfo.collect { value: DeliveryInfo? ->
-          value ?: return@collect
-          val latLngData = value.coordinates?.finalDestination
-          moveCamera(googleMap, latLngData)
+    onLifecycleStarted {
+      viewModel.deliveryInfo.collect { value: DeliveryInfo? ->
+        value ?: return@collect
 
-          val deliveryState = if (value.inbound == true) {
-            getString(string.inbound_delivery_message)
-          } else {
-            getString(string.outbound_delivery_message)
-          }
+        if (value.completed) {
+          exitWhenCompleted()
+        }
 
-          onAttachIntentDialPadListener(value.contactNumber)
-          onAttachIntentMessageListener(value.contactNumber)
+        val deliveryState = if (value.inbound == true) {
+          getString(string.inbound_delivery_message)
+        } else {
+          getString(string.outbound_delivery_message)
+        }
 
-          binding.inboundDelivery.text = deliveryState
+        onAttachIntentDialPadListener(value.contactNumber)
+        onAttachIntentMessageListener(value.contactNumber)
 
-          deliveryStatusBinding.deliverTitle.text = value.title
-          binding.deliverTitle.text = value.title
-          binding.destination.text = value.destination?.address
+        binding.inboundDelivery.text = deliveryState
 
-          bindImageWith(binding.driverImage, value.driverData?.profileUrl)
+        deliveryStatusBinding.deliverTitle.text = value.title
+        deliveryStatusBinding.etaTime.text = value.eta
+        binding.distance.text = value.distanceRemApprox
+        binding.deliverTitle.text = value.title
+        binding.destination.text = value.destination?.address
+        deliveryStatusBinding.duration.text = value.duration
+
+        bindImageWith(binding.driverImage, value.driverData?.profileUrl)
+
+        try {
+          val (lat, lng) = value.currentCoordinates ?: LatLngData(0.0, 0.0)
+          val latLng = LatLng(lat!!, lng!!)
+          updateCarLocation(latLng, true)
+        } catch (e: NullPointerException) {
+          Timber.e(e)
+        }
+      }
+    }
+
+    onLifecycleStarted {
+      viewModel.directions.collect { value: DirectionUiModel? ->
+        if (value == null) {
+          return@collect
+        }
+
+        value.polyline?.let { line ->
+          val pathOptions = MapUtils.createTealPath(this@ActiveJobsActivity)
+          showPolylinePath(pathOptions, line)
+        }
+
+        value.endLocation?.let { latLng ->
+          dropOffDestinationMarker(latLng)
         }
       }
     }
   }
 
-  private fun moveCamera(googleMap: GoogleMap, latLngData: LatLngData?) {
-    val latLng = LatLng(latLngData?.lat!!, latLngData.lng!!)
-    val cameraUpdateFactory = CameraUpdateFactory.newLatLng(latLng)
-    googleMap.animateCamera(cameraUpdateFactory)
+  private fun exitWhenCompleted() {
+    onLifecycleStarted {
+      delay(1000L)
+      Toast.makeText(applicationContext, "Item delivery complete.", Toast.LENGTH_SHORT).show()
+      finish()
+    }
   }
 
   private fun notifyDelivery() {

@@ -1,7 +1,7 @@
 package dev.forcecodes.truckme.core.domain.directions
 
-import dev.forcecodes.truckme.core.data.directions.DirectionsApiService
-import dev.forcecodes.truckme.core.data.directions.DirectionsResponse
+import dev.forcecodes.truckme.core.api.DirectionsApiService
+import dev.forcecodes.truckme.core.api.DirectionsResponse
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.core.util.ApiResponse

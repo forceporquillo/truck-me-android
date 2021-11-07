@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 interface UpdateDeliveryDataSource {
-
+  fun duration(duration: String, jobId: String)
   fun distanceRemainingApprox(distance: String, jobId: String)
   fun arrivalTime(arrival: String, jobId: String)
   fun startDestination(startDestination: LatLngData, jobId: String)
@@ -67,12 +67,21 @@ class UpdateDeliveryDataSourceImpl @Inject constructor(
     }
   }
 
+  override fun duration(duration: String, jobId: String) {
+    Timber.e(jobId)
+    externalScope.launch(ioDispatcher) {
+      firestore.collection("deliveries")
+        .document(jobId)
+        .update(mapOf("duration" to duration))
+    }
+  }
+
   override fun onStartDelivery(jobId: String) {
     Timber.e(jobId)
     externalScope.launch(ioDispatcher) {
       firestore.collection("deliveries")
         .document(jobId)
-        .update(mapOf("active" to true))
+        .update(mapOf("active" to true, "started" to true))
     }
   }
 
