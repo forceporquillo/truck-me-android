@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Calendar
 import javax.inject.Inject
 
 interface UpdateDeliveryDataSource {
@@ -61,7 +62,8 @@ class UpdateDeliveryDataSourceImpl @Inject constructor(
         .update(
           mapOf(
             "active" to true,
-            "completed" to true
+            "completed" to true,
+            "timestamp" to Calendar.getInstance().timeInMillis
           )
         )
     }

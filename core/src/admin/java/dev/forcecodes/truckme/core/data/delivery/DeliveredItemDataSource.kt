@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.toObject
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.mapper.DomainMapperSingle
+import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.ItemDelivered
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.tryOffer
@@ -14,30 +15,30 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface DeliveredItemDataSource {
-  fun getAllDeliveredItems(adminId: String): Flow<List<ItemDelivered>>
-  fun getDailyStats(adminId: String): Flow<List<ItemDelivered>>
+  fun getAllDeliveredItems(adminId: String): Flow<List<DeliveryInfo>>
+  fun getDailyStats(adminId: String): Flow<List<DeliveryInfo>>
 }
 
 class DeliveredItemDataSourceImpl @Inject constructor(
   private val firestore: FirebaseFirestore
 ) : DeliveredItemDataSource {
 
-  override fun getAllDeliveredItems(adminId: String): Flow<List<ItemDelivered>> {
+  override fun getAllDeliveredItems(adminId: String): Flow<List<DeliveryInfo>> {
     return callbackFlow {
-      val listenerRegistration = firestore.collection("delivered")
+      val listenerRegistration = firestore.collection("deliveries")
         .addSnapshotListener { value, _ ->
-          val list = mutableListOf<ItemDelivered>()
+          val list = mutableListOf<DeliveryInfo>()
           if (value?.isEmpty == false) {
             value.forEach {
-              val itemDelivered = it.toObject<ItemDelivered>()
-              if (itemDelivered.deliveryInfo?.assignedAdminId == adminId) {
-                list.add(itemDelivered)
+              val deliveryInfo = it.toObject<DeliveryInfo>()
+              if (deliveryInfo.assignedAdminId == adminId && deliveryInfo.completed) {
+                list.add(deliveryInfo)
               }
             }
             tryOffer(list)
@@ -49,7 +50,7 @@ class DeliveredItemDataSourceImpl @Inject constructor(
     }
   }
 
-  override fun getDailyStats(adminId: String): Flow<List<ItemDelivered>> {
+  override fun getDailyStats(adminId: String): Flow<List<DeliveryInfo>> {
     return getAllDeliveredItems(adminId)
   }
 }
@@ -78,31 +79,38 @@ data class DeliveredItem(
 )
 
 @Singleton
-class DeliveredItemMapper @Inject constructor() : DomainMapperSingle<ItemDelivered, DeliveredItem> {
+class DeliveredItemMapper @Inject constructor() : DomainMapperSingle<DeliveryInfo, DeliveredItem> {
 
-  override suspend fun invoke(from: ItemDelivered): DeliveredItem {
+  override suspend fun invoke(from: DeliveryInfo): DeliveredItem {
     return from.run {
       DeliveredItem(
-        id = deliveryInfo?.id,
-        title = deliveryInfo?.title,
-        address = deliveryInfo?.destination?.address ?: "",
-        items = deliveryInfo?.items,
-        date = convertToDate(timestamp.toLong()),
-        time = convertToTime(timestamp.toLong())
+        id = id,
+        title = title,
+        address = destination?.address ?: "",
+        items = items,
+        date = convertToDate(timeStampMillis = timestamp),
+        time = convertToTime(timestamp)
       )
     }
   }
+}
 
-  private fun convertToTime(timeStampMillis: Long): String? {
-    return convertDate("hh:mm a", timeStampMillis)
-  }
 
-  private fun convertToDate(timeStampMillis: Long): String? {
-    return convertDate("MMMM dd, yyyy", timeStampMillis)
-  }
+fun convertToTime(timeStampMillis: Long?): String? {
+  return convertDate("hh:mm a", timeStampMillis)
+}
 
-  private fun convertDate(format: String, timeInMillis: Long): String? {
-    val sdf = SimpleDateFormat(format, Locale.getDefault())
-    return sdf.format(Date(timeInMillis))
-  }
+fun formatToDate(timeStampMillis: Long? = Calendar.getInstance().timeInMillis): String {
+  return convertToDate("MM/dd/yyyy", timeStampMillis) ?: ""
+}
+
+fun convertToDate(format: String = "MMMM dd, yyyy", timeStampMillis: Long?): String? {
+  return convertDate(format, timeStampMillis)
+}
+
+fun convertDate(format: String, timeInMillis: Long?): String? {
+  val sdf = SimpleDateFormat(format, Locale.getDefault())
+  val calendar = Calendar.getInstance()
+  calendar.timeInMillis = timeInMillis ?: 0L
+  return sdf.format(calendar.time)
 }
