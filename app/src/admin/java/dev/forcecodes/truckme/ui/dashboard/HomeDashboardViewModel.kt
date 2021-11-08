@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.domain.dashboard.ActiveJobOder
+import dev.forcecodes.truckme.core.domain.dashboard.DeleteJobUseCase
 import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
 import dev.forcecodes.truckme.core.domain.dashboard.GetActiveJobsUseCase
 import dev.forcecodes.truckme.core.domain.dashboard.GetOrder
@@ -25,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeDashboardViewModel @Inject constructor(
+  private val deleteJobUseCase: DeleteJobUseCase,
   private val activeJobsUseCase: GetActiveJobsUseCase,
   private val signInViewModelDelegate: SignInViewModelDelegate
 ) : ViewModel() {
@@ -37,14 +39,21 @@ class HomeDashboardViewModel @Inject constructor(
   }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
   fun activeJobOrder(order: ActiveJobOder) {
-      viewModelScope.launch {
-        signInViewModelDelegate.userInfo.flatMapConcat { adminInfo ->
-          val uidOrException = adminInfo?.getUid() ?: throw RuntimeException("yes daddy")
-          val getOrder = GetOrder(uidOrException, order)
-          activeJobsUseCase.invoke(getOrder)
-        }.collect { result ->
-          _activeJobsList.value = result.successOr(emptyList())
-        }
+    viewModelScope.launch {
+      signInViewModelDelegate.userInfo.flatMapConcat { adminInfo ->
+        val uidOrException = adminInfo?.getUid() ?: throw RuntimeException("yes daddy")
+        val getOrder = GetOrder(uidOrException, order)
+        activeJobsUseCase.invoke(getOrder)
+      }.collect { result ->
+        _activeJobsList.value = result.successOr(emptyList())
+      }
+    }
+  }
+
+  fun deleteJobById(jobId: String) {
+    viewModelScope.launch {
+      Timber.e("Job ID $jobId")
+      deleteJobUseCase(jobId)
     }
   }
 }

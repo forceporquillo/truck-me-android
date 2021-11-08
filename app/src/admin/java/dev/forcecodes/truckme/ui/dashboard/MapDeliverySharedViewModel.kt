@@ -44,9 +44,12 @@ class MapDeliverySharedViewModel @Inject constructor(
   private val placeDetailsUseCase: PlaceDetailsUseCase,
   signInViewModelDelegate: SignInViewModelDelegate,
   application: Application
-) : AndroidViewModel(application), SignInViewModelDelegate by signInViewModelDelegate {
+) : AndroidViewModel(application),
+  SignInViewModelDelegate by signInViewModelDelegate {
 
-  val adminToken by lazy { getApplication<TruckMeApplication>().getAdminToken() }
+  private val adminToken by lazy {
+    getApplication<TruckMeApplication>().getAdminToken()
+  }
 
   // region state flows
   private val _destinationAddress = MutableStateFlow<Places?>(null)
