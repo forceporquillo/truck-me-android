@@ -36,7 +36,6 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
 
     if (driverUri != null) {
       viewModel.driverUri = driverUri
-      imageUrl = driverUri.profile
       bindProfileIcon(driverUri.profile) { profileInBytes ->
         viewModel.profileInBytes = profileInBytes
       }
