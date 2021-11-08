@@ -19,6 +19,8 @@ import dev.forcecodes.truckme.extensions.viewBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import timber.log.Timber.Forest
 
 @AndroidEntryPoint
 abstract class ActiveJobsFragment(
@@ -51,6 +53,10 @@ abstract class ActiveJobsFragment(
       } else {
         startRealtimeMap(jobId)
       }
+    }
+
+    deliveryAdapter.onDeleteJob = { jobId ->
+      viewModel.deleteJobById(jobId)
     }
 
     repeatOnLifecycleParallel {

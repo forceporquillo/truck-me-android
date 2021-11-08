@@ -1,10 +1,14 @@
 package dev.forcecodes.truckme.ui.dashboard
 
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
 import dev.forcecodes.truckme.databinding.DeliveryItemBinding
 import dev.forcecodes.truckme.extensions.bindProfileIcon
@@ -12,6 +16,7 @@ import dev.forcecodes.truckme.extensions.bindProfileIcon
 class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATOR) {
 
   var onActiveJobClick: (String) -> Unit = {}
+  var onDeleteJob: (String) -> Unit = {}
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -23,7 +28,8 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
         parent,
         false
       ),
-      onActiveJobClick
+      onActiveJobClick,
+      onDeleteJob
     )
   }
 
@@ -31,7 +37,8 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
     holder: DeliveryViewHolder,
     position: Int
   ) {
-    holder.bind(getItem(position))
+    val item = getItem(position)
+    holder.bind(item)
   }
 
   companion object {
@@ -52,15 +59,30 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
 
 class DeliveryViewHolder(
   private val binding: DeliveryItemBinding,
-  private val onActiveJobClick: (String) -> Unit = {}
+  onActiveJobClick: (String) -> Unit = {},
+  private val onDeleteJob: (String) -> Unit = {}
 ) : RecyclerView.ViewHolder(binding.root) {
 
-  private lateinit var itemId: String
+  private var itemId: String? = null
 
   init {
     binding.root.setOnClickListener {
-      onActiveJobClick(itemId)
+      itemId?.let(onActiveJobClick)
     }
+    binding.dragIcon.setOnClickListener(::popUpDelete)
+  }
+
+  private fun popUpDelete(view: View) {
+    PopupMenu(view.context, view).apply {
+      gravity = Gravity.END
+      menuInflater.inflate(R.menu.popup_job_delete_menu, menu)
+      setOnMenuItemClickListener {
+        if (it.itemId == R.id.delete_state) {
+          itemId?.let(onDeleteJob)
+        }
+        return@setOnMenuItemClickListener true
+      }
+    }.show()
   }
 
   fun bind(items: DeliveryItems) {
