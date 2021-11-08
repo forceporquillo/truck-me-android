@@ -9,7 +9,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GetActiveJobsUseCase @Inject constructor(
   private val deliveryDataSource: AdminDeliveryDataSource,
   private val activeJobDomainMapper: ActiveJobDomainMapper,
