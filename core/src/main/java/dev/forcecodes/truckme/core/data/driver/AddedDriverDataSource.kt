@@ -2,10 +2,12 @@ package dev.forcecodes.truckme.core.data.driver
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
 import dev.forcecodes.truckme.core.data.fleets.EmptyFleetsException
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
+import dev.forcecodes.truckme.core.domain.settings.PhoneNumber
 import dev.forcecodes.truckme.core.domain.signin.DriverAuthInfo
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.driverCollection
@@ -19,8 +21,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 data class UpdatedPassword(val documentId: String, val newPassword: String)
+data class UpdatePhoneNumber(val documentId: String, val phoneNumber: String)
 
 interface DriverDataSource {
+  suspend fun updatePhoneNumber(updatePhoneNumber: UpdatePhoneNumber)
   suspend fun updateDriverPassword(updatedPassword: UpdatedPassword)
   suspend fun getDriverCollection(authInfo: AuthBasicInfo): Flow<Result<DriverAuthInfo>>
   suspend fun getDriverCollectionOneShot(authInfo: AuthBasicInfo): Result<DriverAuthInfo>
@@ -30,6 +34,13 @@ interface DriverDataSource {
 class AddedDriverDataSourceImpl @Inject constructor(
   private val firestore: FirebaseFirestore
 ) : DriverDataSource {
+
+  override suspend fun updatePhoneNumber(updatePhoneNumber: UpdatePhoneNumber) {
+    val (documentId, number) = updatePhoneNumber
+    firestore.driverCollection()
+      .document(documentId)
+      .set(mapOf("contact" to number), SetOptions.merge())
+  }
 
   override suspend fun updateDriverPassword(updatedPassword: UpdatedPassword) {
     val (uid, newPassword) = updatedPassword
