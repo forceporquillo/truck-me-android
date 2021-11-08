@@ -170,6 +170,11 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
   }
 
   private fun setVehicleDropDown(vehicleUris: List<VehicleUri>) {
+    val availableVehicle = vehicleUris.filter {
+      !it.hasOngoingDeliveries
+    }.filter {
+      it.isActive
+    }.map { it.name }
     with(bottomSheet.vehicleEt) {
       setSelected(vehicleUris) { vehicleUri, name ->
         if (vehicleUri.name == name) {
@@ -178,7 +183,7 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
         } else false
       }
       this
-    }.setTextAdapter(vehicleUris.map { it.name })
+    }.setTextAdapter(availableVehicle)
   }
 
   private fun setDriverDropDown(driversUri: List<DriverUri>) {
