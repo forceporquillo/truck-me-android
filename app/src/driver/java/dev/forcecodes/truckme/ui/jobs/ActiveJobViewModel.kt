@@ -13,7 +13,8 @@ import dev.forcecodes.truckme.core.data.UpdateDeliveryDataSource
 import dev.forcecodes.truckme.core.data.admin.AdminDataSource
 import dev.forcecodes.truckme.core.domain.directions.DirectionPath
 import dev.forcecodes.truckme.core.domain.directions.GetDirectionsUseCase
-import dev.forcecodes.truckme.core.domain.fleets.UpdateMyFleetStateUseCase
+import dev.forcecodes.truckme.core.domain.fleets.UpdateDriverFleetStateUseCase
+import dev.forcecodes.truckme.core.domain.fleets.UpdateVehicleFleetStateUseCase
 import dev.forcecodes.truckme.core.domain.push.PushNotificationManager
 import dev.forcecodes.truckme.core.fcm.MessageData
 import dev.forcecodes.truckme.core.model.LatLngData
@@ -35,7 +36,8 @@ class ActiveJobsViewModel @Inject constructor(
   private val assignedDataSource: AssignedDataSource,
   private val adminDataSource: AdminDataSource,
   private val getDirectionsUseCase: GetDirectionsUseCase,
-  private val updateMyFleetStateUseCase: UpdateMyFleetStateUseCase,
+  private val updateDriverFleetStateUseCase: UpdateDriverFleetStateUseCase,
+  private val updateVehicleFleetStateUseCase: UpdateVehicleFleetStateUseCase,
   private val pushNotificationManager: PushNotificationManager,
   private val updateDeliveryDataSource: UpdateDeliveryDataSource
 ) : ViewModel() {
@@ -226,7 +228,10 @@ class ActiveJobsViewModel @Inject constructor(
   private suspend fun setDriverOnGoingDelivery(available: Boolean) {
     jobData.collect {
       it?.deliveryInfo?.driverData?.id?.let { driverId ->
-        updateMyFleetStateUseCase(Pair(driverId, available))
+        updateDriverFleetStateUseCase(Pair(driverId, available))
+      }
+      it?.deliveryInfo?.vehicleData?.id?.let { vehicleId ->
+        updateVehicleFleetStateUseCase(Pair(vehicleId, available))
       }
     }
   }
