@@ -25,6 +25,7 @@ import dev.forcecodes.truckme.ui.auth.signin.AdminAuthState
 import dev.forcecodes.truckme.ui.gallery.GalleryFragment
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
@@ -54,11 +55,9 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
         }
       }
     }
-
-    observeProfileChanges()
   }
 
-  private fun observeProfileChanges() {
+  override fun onResume() {
     repeatOnLifecycleParallel {
       launch {
         if (isDriver) {
@@ -69,7 +68,7 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
           }
         } else {
           settingsViewModel.userInfo.collect { value: AuthenticatedUserInfoBasic? ->
-            bindProfileIcon(value?.getPhotoUrl(), false) {
+            bindProfileIcon(value?.getPhotoUrl() ?: return@collect, false) {
               settingsViewModel.profileIconInBytes = it
             }
           }
@@ -95,6 +94,7 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
         }
       }
     }
+    super.onResume()
   }
 
   override fun requireGalleryViews(): GalleryViews {
@@ -103,7 +103,9 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
     }
   }
 
-  override fun onImageSelectedResult(imageUri: Uri) {}
+  override fun onImageSelectedResult(imageUri: Uri) {
+    //binding.avatar.bindProfileIcon(imageUri)
+  }
 
   override fun onStop() {
     binding.passwordEt.text?.clear()
@@ -132,6 +134,7 @@ class AccountSettingsFragment : GalleryFragment(R.layout.fragment_account) {
   }
 
   override fun onProfileChange(profileInBytes: ByteArray) {
+    Timber.e("onProfileChange")
     settingsViewModel.profileIconInBytes = profileInBytes
   }
 }

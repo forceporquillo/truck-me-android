@@ -44,6 +44,11 @@ class StatisticsViewModel @Inject constructor(
   val copyDeliveryInfo = _copyDeliveryInfo.asStateFlow()
 
   init {
+    loadStatistics()
+  }
+
+  fun loadStatistics() {
+    type = DAY
     viewModelScope.launch {
       launch source@{
         deliveredItemDataSource.getAllDeliveredItems(userIdValue ?: return@source).map { list ->
@@ -67,6 +72,8 @@ class StatisticsViewModel @Inject constructor(
   }
 
   fun reOrder() {
+    _itemDelivered.value = emptyList()
+
     if (type == DAY) {
       _itemDelivered.value =
         _deliveryInfo.value.map { convertToDate("MM/dd/yyyy", it.timestamp) ?: "" }.distinct()
@@ -84,6 +91,7 @@ class StatisticsViewModel @Inject constructor(
   }
 
   fun executeQuery(newItem: String) {
+
     if (type == DAY) {
       _copyDeliveryInfo.value = _deliveryInfo.value.filter { convertToDate("MM/dd/yyyy", it.timestamp) == newItem }
     }
@@ -91,11 +99,16 @@ class StatisticsViewModel @Inject constructor(
     if (type == DRIVER) {
       _copyDeliveryInfo.value = _deliveryInfo.value.filter { it.driverData?.driverName == newItem }
     }
-
+    Timber.e("items ${_copyDeliveryInfo.value}")
   }
 
   companion object {
     private const val DAY = "Day"
     private const val DRIVER = "Driver"
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    Timber.e("onCleared()")
   }
 }

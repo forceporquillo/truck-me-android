@@ -79,4 +79,7 @@
   <string name="delete">Delete</string>
   <string name="set_state">Set as %1$s</string>
   <string name="no_available_drivers">No Available Drivers</string>
+
+  <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+
 </resources>

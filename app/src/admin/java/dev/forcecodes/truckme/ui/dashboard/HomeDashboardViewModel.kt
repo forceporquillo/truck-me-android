@@ -3,16 +3,19 @@ package dev.forcecodes.truckme.ui.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.core.data.fleets.FleetType.DRIVER
+import dev.forcecodes.truckme.core.data.fleets.FleetType.VEHICLE
+import dev.forcecodes.truckme.core.data.fleets.FreeUpFleetState
 import dev.forcecodes.truckme.core.domain.dashboard.ActiveJobOder
 import dev.forcecodes.truckme.core.domain.dashboard.DeleteJobUseCase
 import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
 import dev.forcecodes.truckme.core.domain.dashboard.GetActiveJobsUseCase
 import dev.forcecodes.truckme.core.domain.dashboard.GetOrder
+import dev.forcecodes.truckme.core.domain.dashboard.UpdateFleetStateId
 import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.SharingStarted.Companion
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,13 +23,12 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import timber.log.Timber.Forest
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeDashboardViewModel @Inject constructor(
   private val deleteJobUseCase: DeleteJobUseCase,
+  private val freeUpFleetState: FreeUpFleetState,
   private val activeJobsUseCase: GetActiveJobsUseCase,
   private val signInViewModelDelegate: SignInViewModelDelegate
 ) : ViewModel() {
@@ -50,10 +52,17 @@ class HomeDashboardViewModel @Inject constructor(
     }
   }
 
-  fun deleteJobById(jobId: String) {
+  fun deleteJobById(stateId: UpdateFleetStateId) {
     viewModelScope.launch {
-      Timber.e("Job ID $jobId")
-      deleteJobUseCase(jobId)
+      launch {
+        deleteJobUseCase(stateId.documentId)
+      }
+      launch {
+        freeUpFleetState.onUpdateFleetState(stateId.driverId, false, DRIVER)
+      }
+      launch {
+        freeUpFleetState.onUpdateFleetState(stateId.vehicleId, false, VEHICLE)
+      }
     }
   }
 }

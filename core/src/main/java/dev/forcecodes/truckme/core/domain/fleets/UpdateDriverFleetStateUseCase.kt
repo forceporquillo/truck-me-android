@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UpdateMyFleetStateUseCase @Inject constructor(
+class UpdateDriverFleetStateUseCase @Inject constructor(
   private val fleetDataSource: FleetDataSource,
   @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : UseCase<Pair<String, Boolean>, Unit>(dispatcher) {

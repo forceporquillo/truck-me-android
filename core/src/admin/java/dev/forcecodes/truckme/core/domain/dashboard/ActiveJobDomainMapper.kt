@@ -20,6 +20,8 @@ class ActiveJobDomainMapper @Inject constructor() :
         id = id,
         timeStamp = System.currentTimeMillis().toString(),
         driverName = title,
+        driverId = driverData?.id ?: "",
+        vehicleId = vehicleData?.id ?: "",
         destination = destination?.address ?: destination?.title ?: "",
         eta = eta.isNullOrEmpty() then UNAVAILABLE ?: "ETA: $eta",
         profileIcon = driverData?.profileUrl
