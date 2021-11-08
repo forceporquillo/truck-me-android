@@ -40,6 +40,9 @@
             app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/to_driverChangePassword"
+            app:destination="@id/driverPasswordChangeFragment" />
     </fragment>
 
     <fragment
@@ -51,6 +54,18 @@
         <argument
             android:name="vehicleUri"
             app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$VehicleUri"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/driverPasswordChangeFragment"
+        android:name="dev.forcecodes.truckme.ui.fleet.DriverPasswordChangeFragment"
+        android:label="Update Password"
+        tools:layout="@layout/fragment_driver_password_change">
+        <argument
+            android:name="driverUri"
+            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
