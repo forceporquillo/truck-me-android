@@ -63,7 +63,14 @@ class HistoryUseCase @Inject constructor(
 
   override fun execute(parameters: String): Flow<Result<List<DeliveredItem>>> {
     return deliveredItemDataSource.getAllDeliveredItems(parameters).map { list ->
-      val mappedList = list.map { itemDelivered -> deliveredItemMapper(itemDelivered) }
+      val mappedList = list
+        .sortedBy {
+          it.timestamp
+        }
+        .map {
+            itemDelivered ->
+          deliveredItemMapper(itemDelivered)
+        }
       Result.Success(mappedList)
     }
   }
