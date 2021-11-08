@@ -2,7 +2,6 @@ package dev.forcecodes.truckme.core.domain.fleets
 
 import dev.forcecodes.truckme.core.data.fleets.FleetDataSource
 import dev.forcecodes.truckme.core.data.fleets.FleetType.DRIVER
-import dev.forcecodes.truckme.core.data.fleets.FleetType.VEHICLE
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher

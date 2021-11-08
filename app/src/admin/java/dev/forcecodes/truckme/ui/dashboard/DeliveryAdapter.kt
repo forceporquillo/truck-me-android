@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.forcecodes.truckme.R
+import dev.forcecodes.truckme.core.domain.dashboard.UpdateFleetStateId
 import dev.forcecodes.truckme.core.domain.dashboard.DeliveryItems
 import dev.forcecodes.truckme.databinding.DeliveryItemBinding
 import dev.forcecodes.truckme.extensions.bindProfileIcon
@@ -16,7 +17,7 @@ import dev.forcecodes.truckme.extensions.bindProfileIcon
 class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATOR) {
 
   var onActiveJobClick: (String) -> Unit = {}
-  var onDeleteJob: (String) -> Unit = {}
+  var onDeleteJob: (UpdateFleetStateId) -> Unit = {}
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -60,14 +61,14 @@ class DeliveryAdapter : ListAdapter<DeliveryItems, DeliveryViewHolder>(COMPARATO
 class DeliveryViewHolder(
   private val binding: DeliveryItemBinding,
   onActiveJobClick: (String) -> Unit = {},
-  private val onDeleteJob: (String) -> Unit = {}
+  private val onDeleteJob: (UpdateFleetStateId) -> Unit = {}
 ) : RecyclerView.ViewHolder(binding.root) {
 
-  private var itemId: String? = null
+  private var clearFleetState: UpdateFleetStateId? = null
 
   init {
     binding.root.setOnClickListener {
-      itemId?.let(onActiveJobClick)
+      clearFleetState?.documentId?.let(onActiveJobClick)
     }
     binding.dragIcon.setOnClickListener(::popUpDelete)
   }
@@ -78,7 +79,7 @@ class DeliveryViewHolder(
       menuInflater.inflate(R.menu.popup_job_delete_menu, menu)
       setOnMenuItemClickListener {
         if (it.itemId == R.id.delete_state) {
-          itemId?.let(onDeleteJob)
+          clearFleetState?.let(onDeleteJob)
         }
         return@setOnMenuItemClickListener true
       }
@@ -86,7 +87,7 @@ class DeliveryViewHolder(
   }
 
   fun bind(items: DeliveryItems) {
-    itemId = items.id
+    clearFleetState = UpdateFleetStateId(items.id, items.driverId, items.vehicleId)
     with(binding) {
       deliverTo.text = items.driverName
       destination.text = items.destination

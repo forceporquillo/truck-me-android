@@ -45,6 +45,8 @@ data class DeliveryItems(
   val id: String,
   val timeStamp: String,
   val driverName: String,
+  val driverId: String,
+  val vehicleId: String,
   val destination: String,
   val profileIcon: String? = "",
   val eta: String

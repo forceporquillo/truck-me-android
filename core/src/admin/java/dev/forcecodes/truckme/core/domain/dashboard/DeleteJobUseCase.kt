@@ -17,3 +17,9 @@ class DeleteJobUseCase @Inject constructor(
     deliveryDataSource.deleteJobById(parameters)
   }
 }
+
+data class UpdateFleetStateId(
+  val documentId: String,
+  val driverId: String,
+  val vehicleId: String
+)
