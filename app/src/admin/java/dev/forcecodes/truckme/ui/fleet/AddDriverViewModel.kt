@@ -6,6 +6,7 @@ import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.data.fleets.DriverByteArray
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.domain.fleets.AddDriverUseCase
+import dev.forcecodes.truckme.core.util.then
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.handlePhoneNumber
 import dev.forcecodes.truckme.ui.auth.isEmailValid
@@ -42,6 +43,10 @@ class AddDriverViewModel @Inject constructor(
 
   init {
     Timber.e(signInViewModelDelegate.userIdValue)
+    checkRequireFields()
+  }
+
+  private fun checkRequireFields() {
     viewModelScope.launch {
       combine(
         _fullName,
@@ -52,8 +57,8 @@ class AddDriverViewModel @Inject constructor(
       ) { fn, es, ps, cp, cf ->
         arrayOf(fn, es, ps, cp, cf)
       }.map { fields ->
-        handlePhoneNumber(fields.last())
         handlePasswordNotMatch(fields[2], fields[3])
+        handlePhoneNumber(fields.last())
         isSameInstance(fields) ?: fields.all {
           it.isNotEmpty() && (fields[2] == fields[3])
         }
@@ -69,7 +74,6 @@ class AddDriverViewModel @Inject constructor(
       !(fields[0] == fullName && fields[1] == email &&
         fields[2] == password && fields[3] == password
         && fields[4] == contact) || isProfileSetExplicitly
-        || isProfileSetExplicitly
     }
   }
 
@@ -122,6 +126,11 @@ class AddDriverViewModel @Inject constructor(
     _profileIcon.value = ""
     profileInBytes = byteArray
     Timber.e(profileInBytes.toString())
+
+    if (driverUri != null && byteArray != null) {
+      enableSubmitButton(true)
+    }
+
     isProfileSetExplicitly = true
   }
 
@@ -136,20 +145,22 @@ class AddDriverViewModel @Inject constructor(
   private fun handlePasswordNotMatch(
     password: String?,
     confirmPassword: String?
-  ) {
+  ): Boolean {
     if (password.isNullOrEmpty()) {
       _passwordNotMatch.value = ""
-      return
+      return false
     }
 
     if (confirmPassword.isNullOrEmpty()) {
       _passwordNotMatch.value = ""
-      return
+      return false
     }
 
     _passwordNotMatch.value = if (password != confirmPassword) {
       INVALID_PASSWORD
     } else ""
+
+    return password == confirmPassword
   }
 
   fun submit() {

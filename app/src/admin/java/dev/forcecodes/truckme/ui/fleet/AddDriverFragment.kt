@@ -4,11 +4,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentAddDriverBinding
+import dev.forcecodes.truckme.extensions.navigate
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.textChangeObserver
@@ -29,13 +32,21 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
     binding.lifecycleOwner = viewLifecycleOwner
     binding.viewModel = viewModel
 
-    val vehicleUri = navArgs.driverUri
+    val driverUri = navArgs.driverUri
 
-    if (vehicleUri != null) {
-      viewModel.driverUri = vehicleUri
-      imageUrl = vehicleUri.profile
-      bindProfileIcon(vehicleUri.profile) { profileInBytes ->
+    if (driverUri != null) {
+      viewModel.driverUri = driverUri
+      imageUrl = driverUri.profile
+      bindProfileIcon(driverUri.profile) { profileInBytes ->
         viewModel.profileInBytes = profileInBytes
+      }
+
+      binding.password.isGone = true
+      binding.confirmPassword.isGone = true
+      binding.changePasswordBtn.isVisible = true
+
+      binding.changePasswordBtn.setOnClickListener {
+        navigate(AddDriverFragmentDirections.toDriverChangePassword(driverUri))
       }
     }
 

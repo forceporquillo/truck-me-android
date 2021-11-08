@@ -173,6 +173,14 @@
                 android:text="@string/save_changes"
                 app:cornerRadius="5dp"
                 app:layout_constraintTop_toBottomOf="@id/phone_number" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/change_password_btn"
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_password"/>
         </LinearLayout>
 
     </ScrollView>
