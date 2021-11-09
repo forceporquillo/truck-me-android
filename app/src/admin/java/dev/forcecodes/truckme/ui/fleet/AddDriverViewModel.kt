@@ -174,7 +174,7 @@ class AddDriverViewModel @Inject constructor(
       email = _emailSf.value,
       password = _passwordSf.value,
       contact = _contactSf.value,
-      isActive = true,
+      isActive = driverUri?.isActive ?: true,
       profile = profileInBytes,
       assignedAdminId = signInViewModelDelegate.userIdValue!!
     )
