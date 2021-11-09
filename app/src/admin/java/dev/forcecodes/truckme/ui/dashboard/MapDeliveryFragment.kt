@@ -176,6 +176,12 @@ class MapDeliveryFragment : BaseMapFragment(R.layout.fragment_map_delivery),
       it.isActive
     }.map { it.name }
     with(bottomSheet.vehicleEt) {
+      if (availableVehicle.isEmpty()) {
+        bottomSheet.vehicleTextLayout.hint = context.getString(string.no_available_vehicles)
+      } else {
+        bottomSheet.vehicleTextLayout.hint = context.getString(string.vehicles)
+      }
+
       setSelected(vehicleUris) { vehicleUri, name ->
         if (vehicleUri.name == name) {
           sharedViewModel.selectedVehicle(VehicleData(vehicleUri.id, vehicleUri.name))

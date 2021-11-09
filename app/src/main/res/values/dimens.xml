@@ -27,6 +27,4 @@
 
     <!-- inter spacing between RecyclerView's Item-->
     <dimen name="gallery_list_spacing">4dp</dimen>
-
-    <dimen name="grid_expected_size">120dp</dimen>
 </resources>

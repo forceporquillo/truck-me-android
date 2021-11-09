@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.domain.settings.*
 import dev.forcecodes.truckme.core.util.Result
+import dev.forcecodes.truckme.core.util.isDriver
 import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
@@ -78,7 +79,7 @@ class AccountSettingsViewModel @Inject constructor(
       if (driverId.isNullOrEmpty()) {
         return@flow
       }
-      if (photoUri == null) {
+      if (isDriver) {
         getDriverProfileUseCase(driverId).collect { profileUrl ->
           Timber.e(profileUrl.toString())
           emit(Uri.parse(profileUrl.successOr("")))

@@ -17,6 +17,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
+import timber.log.Timber.Forest
 import javax.inject.Inject
 import javax.inject.Singleton
 

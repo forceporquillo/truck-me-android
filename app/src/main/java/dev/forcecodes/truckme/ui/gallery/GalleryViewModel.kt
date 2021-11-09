@@ -17,7 +17,7 @@ class GalleryViewModel : ViewModel() {
     _image.value = image
   }
 
-  fun setImageUri(uri: Uri) {
+  fun setImageUri(uri: Uri?) {
     _imageUri.value = uri
   }
 }
