@@ -5,69 +5,73 @@
     android:id="@+id/fleet"
     app:startDestination="@id/fleetFragment">
 
-    <fragment
-        android:id="@+id/fleetFragment"
-        android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
-        android:label="Manage Fleet"
-        tools:layout="@layout/fragment_fleet">
+  <fragment
+      android:id="@+id/fleetFragment"
+      android:name="dev.forcecodes.truckme.ui.fleet.FleetFragment"
+      android:label="Manage Fleet"
+      tools:layout="@layout/fragment_fleet">
 
-        <action
-            android:id="@+id/to_addDriverFragment"
-            app:destination="@id/addDriverFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_left"
-            app:launchSingleTop="false"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/to_addDriverFragment"
+        app:destination="@id/addDriverFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_right" />
 
-        <action
-            android:id="@+id/to_addVehicleFragment"
-            app:destination="@id/addVehicleFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_right"/>
+    <action
+        android:id="@+id/to_addVehicleFragment"
+        app:destination="@id/addVehicleFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_right" />
 
-    </fragment>
+  </fragment>
 
-    <fragment
-        android:id="@+id/addDriverFragment"
-        android:name="dev.forcecodes.truckme.ui.fleet.AddDriverFragment"
-        android:label="Add Driver"
-        tools:layout="@layout/fragment_add_driver" >
-        <argument
-            android:name="driverUri"
-            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <action
-            android:id="@+id/to_driverChangePassword"
-            app:destination="@id/driverPasswordChangeFragment" />
-    </fragment>
+  <fragment
+      android:id="@+id/addDriverFragment"
+      android:name="dev.forcecodes.truckme.ui.fleet.AddDriverFragment"
+      android:label="Add Driver"
+      tools:layout="@layout/fragment_add_driver">
+    <action
+        android:id="@+id/to_driverChangePassword"
+        app:destination="@id/driverPasswordChangeFragment"
+        app:popUpTo="@id/fleetFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_right"/>
+    <argument
+        android:name="driverUri"
+        android:defaultValue="@null"
+        app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
+        app:nullable="true" />
+  </fragment>
 
-    <fragment
-        android:id="@+id/addVehicleFragment"
-        android:name="dev.forcecodes.truckme.ui.fleet.AddVehicleFragment"
-        android:label="Add Vehicle"
-        tools:layout="@layout/fragment_add_vehicle" >
+  <fragment
+      android:id="@+id/addVehicleFragment"
+      android:name="dev.forcecodes.truckme.ui.fleet.AddVehicleFragment"
+      android:label="Add Vehicle"
+      tools:layout="@layout/fragment_add_vehicle">
 
-        <argument
-            android:name="vehicleUri"
-            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$VehicleUri"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
+    <argument
+        android:name="vehicleUri"
+        android:defaultValue="@null"
+        app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$VehicleUri"
+        app:nullable="true" />
+  </fragment>
 
-    <fragment
-        android:id="@+id/driverPasswordChangeFragment"
-        android:name="dev.forcecodes.truckme.ui.fleet.DriverPasswordChangeFragment"
-        android:label="Update Password"
-        tools:layout="@layout/fragment_driver_password_change">
-        <argument
-            android:name="driverUri"
-            app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
+  <fragment
+      android:id="@+id/driverPasswordChangeFragment"
+      android:name="dev.forcecodes.truckme.ui.fleet.DriverPasswordChangeFragment"
+      android:label="Update Password"
+      tools:layout="@layout/fragment_driver_password_change">
+    <argument
+        android:name="driverUri"
+        android:defaultValue="@null"
+        app:argType="dev.forcecodes.truckme.core.data.fleets.FleetUiModel$DriverUri"
+        app:nullable="true" />
+  </fragment>
 
 </navigation>

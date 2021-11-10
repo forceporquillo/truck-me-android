@@ -52,7 +52,9 @@ class StatisticsViewModel @Inject constructor(
     viewModelScope.launch {
       launch source@{
         deliveredItemDataSource.getAllDeliveredItems(userIdValue ?: return@source).map { list ->
-          _dateList.value = list.map { deliveredItem ->
+          _dateList.value = list.sortedByDescending {
+            it.timestamp
+          }.map { deliveredItem ->
             convertToDate(
               "MM/dd/yyyy",
               timeStampMillis = deliveredItem.timestamp
