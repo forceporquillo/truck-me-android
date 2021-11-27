@@ -90,15 +90,19 @@
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingEnd="@dimen/spacing_large">
 
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_large"
                     android:hint="@string/e_mail"
-                    app:errorEnabled="true"
+                    android:layout_marginBottom="@dimen/spacing_medium"
                     app:startIconDrawable="@drawable/ic_email">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -111,12 +115,17 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     showPasswordToggleObserver="@{settingsViewModel.passwordShowToggle}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/sign_in_password"
-                    app:errorEnabled="true"
+                    android:layout_marginBottom="@dimen/spacing_medium"
                     app:passwordToggleEnabled="true"
                     app:startIconDrawable="@drawable/ic_lock">
 
@@ -131,12 +140,17 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/confirm_password"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     errorMessageObserver="@{settingsViewModel.passwordNotMatch}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/confirm_password"
-                    app:errorEnabled="true"
+                    android:layout_marginBottom="@dimen/spacing_medium"
                     app:passwordToggleEnabled="false"
                     app:startIconDrawable="@drawable/ic_lock">
 
@@ -151,11 +165,17 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/phone_number"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     errorMessageObserver="@{settingsViewModel.invalidContactNumber}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_large"
+                    app:errorEnabled="true"
                     android:hint="@string/contact_number"
                     app:startIconDrawable="@drawable/ic_phone">
 
@@ -182,7 +202,7 @@
                     android:letterSpacing="0"
                     android:onClick="@{(v) ->settingsViewModel.saveChangesClick() }"
                     android:text="@string/save_changes"
-                    app:cornerRadius="5dp"
+                    app:cornerRadius="8dp"
                     app:layout_constraintTop_toBottomOf="@id/phone_number" />
 
                 <TextView

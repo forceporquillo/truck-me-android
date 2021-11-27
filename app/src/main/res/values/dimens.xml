@@ -20,7 +20,7 @@
     <dimen name="spacing_extra_large">32dp</dimen>
     <dimen name="spacing_extra_largest">48dp</dimen>
 
-    <dimen name="profile_size">112dp</dimen>
+    <dimen name="profile_size">125dp</dimen>
 
     <!--Integer Value that number of column in RecyclerView-->
     <integer name="gallery_columns">3</integer>
