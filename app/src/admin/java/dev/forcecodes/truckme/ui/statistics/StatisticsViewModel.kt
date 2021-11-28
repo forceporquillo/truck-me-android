@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSource
-import dev.forcecodes.truckme.core.data.delivery.convertToDate
+import dev.forcecodes.truckme.core.data.delivery.ItemDeliveredStats
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
-import dev.forcecodes.truckme.core.domain.fleets.DailyStatisticsUseCase
+import dev.forcecodes.truckme.core.domain.fleets.DeliveredItemStatsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
-import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.util.Result
+import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
-  private val deliveredItemDataSource: DeliveredItemDataSource,
   private val observeDriverFleetsUseCase: ObserveDriverFleetsUseCase,
-  private val dailyStatisticsUseCase: DailyStatisticsUseCase,
+  private val deliveredItemStatsUseCase: DeliveredItemStatsUseCase,
   signInViewModelDelegate: SignInViewModelDelegate,
 ) : ViewModel(), SignInViewModelDelegate by signInViewModelDelegate {
 
@@ -38,9 +37,9 @@ class StatisticsViewModel @Inject constructor(
   private val _itemDelivered = MutableStateFlow<List<String>>(emptyList())
   val itemDelivered = _itemDelivered.asStateFlow()
 
-  private val _deliveryInfo = MutableStateFlow<List<DeliveryInfo>>(emptyList())
+  private val _deliveryInfo = MutableStateFlow<List<ItemDeliveredStats>>(emptyList())
 
-  private val _copyDeliveryInfo = MutableStateFlow<List<DeliveryInfo>>(emptyList())
+  private val _copyDeliveryInfo = MutableStateFlow<List<ItemDeliveredStats>>(emptyList())
   val copyDeliveryInfo = _copyDeliveryInfo.asStateFlow()
 
   init {
@@ -51,18 +50,19 @@ class StatisticsViewModel @Inject constructor(
     type = DAY
     viewModelScope.launch {
       launch source@{
-        deliveredItemDataSource.getAllDeliveredItems(userIdValue ?: return@source).map { list ->
+        deliveredItemStatsUseCase(
+          userIdValue ?: return@source
+        ).map { value: Result<List<ItemDeliveredStats>> ->
+          val list = value.successOr(emptyList())
           _dateList.value = list.sortedByDescending {
-            it.timestamp
-          }.map { deliveredItem ->
-            convertToDate(
-              "MM/dd/yyyy",
-              timeStampMillis = deliveredItem.timestamp
-            ) ?: ""
+            it.metadata.date
+          }.map {
+            it.metadata.date ?: ""
           }
           list
         }.collect {
           _deliveryInfo.value = it
+          executeQuery(it[0].dateAccomplish ?: "")
         }
       }
       launch fleets@{
@@ -78,7 +78,7 @@ class StatisticsViewModel @Inject constructor(
 
     if (type == DAY) {
       _itemDelivered.value =
-        _deliveryInfo.value.map { convertToDate("MM/dd/yyyy", it.timestamp) ?: "" }.distinct()
+        _deliveryInfo.value.map { it.metadata.date ?: "" }.distinct()
     }
 
     if (type == DRIVER) {
@@ -93,13 +93,12 @@ class StatisticsViewModel @Inject constructor(
   }
 
   fun executeQuery(newItem: String) {
-
     if (type == DAY) {
-      _copyDeliveryInfo.value = _deliveryInfo.value.filter { convertToDate("MM/dd/yyyy", it.timestamp) == newItem }
+      _copyDeliveryInfo.value = _deliveryInfo.value.filter { it.dateAccomplish == newItem }
     }
 
     if (type == DRIVER) {
-      _copyDeliveryInfo.value = _deliveryInfo.value.filter { it.driverData?.driverName == newItem }
+      _copyDeliveryInfo.value = _deliveryInfo.value.filter { it.metadata.driverName == newItem }
     }
     Timber.e("items ${_copyDeliveryInfo.value}")
   }

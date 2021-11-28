@@ -30,7 +30,10 @@ data class DriverDomainMapper @Inject constructor(
           contact = contact,
           profile = param.toString(),
           isActive = isActive,
-          assignedAdmin = assignedAdminId
+          assignedAdmin = assignedAdminId,
+          licenseNumber = licenseNumber,
+          licenseExpiration = licenseExpiration,
+          restrictions = restrictions
         )
       }
     }

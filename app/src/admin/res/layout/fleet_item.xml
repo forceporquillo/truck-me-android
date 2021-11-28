@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    >
 
     <TextView
         android:id="@+id/fleet_type"
@@ -70,17 +72,37 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/plate_number"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_medium"
-                    android:textAllCaps="true"
-                    android:textSize="13sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/fleet_icon"
-                    app:layout_constraintTop_toBottomOf="@id/name" />
+                    android:orientation="horizontal" >
 
+                    <TextView
+                        tools:text="HHH 666"
+                        android:id="@+id/plate_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:textAllCaps="true"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:id="@+id/dash"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/dash"
+                        android:layout_marginEnd="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAllCaps="true"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:id="@+id/max_capacity"
+                        tools:text="2000Kg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"/>
+                </LinearLayout>
             </LinearLayout>
 
             <ImageView

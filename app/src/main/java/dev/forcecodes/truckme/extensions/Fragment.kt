@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -57,7 +58,7 @@ fun Fragment.observeOnLifecycleStarted(
 }
 
 fun Fragment.toast(message: String? = null) {
-  Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_SHORT).show()
+  (requireActivity() as AppCompatActivity).toast(message)
 }
 
 fun Fragment.repeatOnLifecycleParallel(

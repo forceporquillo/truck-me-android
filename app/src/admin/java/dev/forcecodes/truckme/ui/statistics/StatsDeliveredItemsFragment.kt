@@ -1,11 +1,10 @@
 package dev.forcecodes.truckme.ui.statistics
 
-import dev.forcecodes.truckme.core.model.DeliveryInfo
+import dev.forcecodes.truckme.core.data.delivery.ItemDeliveredStats
 
 class StatsDeliveredItemsFragment : StatsPagerFragment() {
 
-  override fun onChangeSearch(items: List<DeliveryInfo>) {
-    adapter.setItems(items.filter { it.inbound == false }
-      .map { it.items })
+  override fun onChangeSearch(items: List<ItemDeliveredStats>) {
+    adapter.setItems(items.filter { !it.metadata.bound })
   }
 }

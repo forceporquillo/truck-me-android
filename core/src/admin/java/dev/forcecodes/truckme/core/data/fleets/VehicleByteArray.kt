@@ -6,6 +6,8 @@ data class VehicleByteArray @JvmOverloads constructor(
   val name: String? = "",
   val plate: String? = "",
   val description: String? = "",
+  val registrationNumber: String? = "",
+  val loadCapacity: String? = "",
   override var profile: ByteArray? = null,
   override val id: String = UUID.randomUUID().toString(),
   override var isActive: Boolean = false,

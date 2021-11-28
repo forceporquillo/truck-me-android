@@ -2,8 +2,10 @@ package dev.forcecodes.truckme.extensions
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -43,4 +45,8 @@ fun AppCompatActivity.onLifecycleStarted(
       block()
     }
   }
+}
+
+fun AppCompatActivity.toast(message: String? = null) {
+  Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 }

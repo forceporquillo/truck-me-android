@@ -1,7 +1,7 @@
 package dev.forcecodes.truckme.ui.statistics
 
-import dev.forcecodes.truckme.core.model.DeliveryInfo
+import dev.forcecodes.truckme.core.data.delivery.ItemDeliveredStats
 
 interface StatisticsFragmentListener {
-  fun onChangeSearch(items: List<DeliveryInfo>)
+  fun onChangeSearch(items: List<ItemDeliveredStats>)
 }

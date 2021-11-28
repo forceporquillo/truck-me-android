@@ -20,10 +20,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="vertical">
 
             <FrameLayout
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large">
@@ -38,19 +38,20 @@
 
                 <dev.forcecodes.truckme.util.CircleImageView
                     android:id="@+id/avatar"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_person_add" />
+                    android:src="@drawable/ic_user" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/add_image_button"
                     style="@style/ClickableButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="77dp"
-                    android:layout_marginTop="77dp"
+                    android:layout_marginStart="88dp"
+                    android:layout_marginTop="88dp"
                     app:cardBackgroundColor="@color/teal_700"
                     app:cardCornerRadius="360dp"
                     app:cardElevation="4dp">
@@ -68,17 +69,37 @@
 
             </FrameLayout>
 
+            <TextView
+                android:layout_marginTop="@dimen/spacing_small"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_picture"/>
+
+            <TextView
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/personal_information"/>
+
             <com.google.android.material.textfield.TextInputLayout
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:id="@+id/full_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
                 android:hint="@string/full_name"
-                app:errorEnabled="true"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:endIconDrawable="@drawable/ic_account_circle"
                 app:startIconDrawable="@drawable/ic_account_circle">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:id="@+id/full_name_et"
                     android:text="@{viewModel.driverUri.fullName}"
                     android:layout_width="match_parent"
@@ -88,14 +109,20 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/e_mail"
-                app:errorEnabled="true"
+                android:layout_marginBottom="@dimen/spacing_medium"
                 app:startIconDrawable="@drawable/ic_email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:id="@+id/email_et"
                     android:text="@{viewModel.driverUri.email}"
                     android:layout_width="match_parent"
@@ -104,15 +131,47 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phone_number"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/contact_number"
+                android:maxLength="11"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:startIconDrawable="@drawable/ic_phone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
+                    android:id="@+id/phone_number_et"
+                    android:text="@{viewModel.driverUri.contact}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="11" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sign_in_password"
-                app:errorEnabled="true"
+                android:layout_marginBottom="@dimen/spacing_medium"
                 app:startIconDrawable="@drawable/ic_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:id="@+id/password_et"
                     android:enabled="@{viewModel.enablePassword}"
                     android:layout_width="match_parent"
@@ -123,15 +182,23 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginBottom="@dimen/spacing_medium"
                 android:id="@+id/confirm_password"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/confirm_password"
                 app:errorEnabled="true"
+                app:passwordToggleEnabled="true"
                 app:startIconDrawable="@drawable/ic_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:enabled="@{viewModel.enablePassword}"
                     android:id="@+id/confirm_password_et"
                     android:layout_width="match_parent"
@@ -140,24 +207,104 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver_credentials"/>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phone_number"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:maxLines="1"
+                android:layout_marginBottom="@dimen/spacing_small"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:id="@+id/license_number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/contact_number"
-                android:maxLength="11"
-                android:layout_marginBottom="@dimen/spacing_small"
-                app:errorEnabled="true"
-                app:startIconDrawable="@drawable/ic_phone">
+                android:hint="@string/license_number"
+                android:maxLength="20"
+                app:startIconDrawable="@drawable/ic_cor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phone_number_et"
-                    android:text="@{viewModel.driverUri.contact}"
+                    android:text="@{viewModel.driverUri.licenseNumber}"
+                    android:id="@+id/license_number_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:maxLength="11" />
+                    android:maxLength="20" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent=".7"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    android:id="@+id/month_layout"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/expiration_date"
+                    android:maxLength="20"
+                    app:startIconDrawable="@drawable/ic_date"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:text="@{viewModel.driverUri.licenseExpiration}"
+                        android:id="@+id/license_expiration_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:maxLines="1"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/others"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginBottom="@dimen/spacing_large"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:id="@+id/restriction_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/restrictions"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/ic_info">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@{viewModel.driverUri.restrictions}"
+                    android:maxLines="3"
+                    android:id="@+id/restriction_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,10 +318,12 @@
                 android:insetBottom="0dp"
                 android:letterSpacing="0"
                 android:text="@string/save_changes"
-                app:cornerRadius="5dp"
+                app:cornerRadius="8dp"
                 app:layout_constraintTop_toBottomOf="@id/phone_number" />
 
             <TextView
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_gravity="center"
                 android:visibility="gone"
                 android:id="@+id/change_password_btn"
                 style="@style/TextAppearance.AppCompat.Small"

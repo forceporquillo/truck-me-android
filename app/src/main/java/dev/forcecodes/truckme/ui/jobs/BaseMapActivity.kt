@@ -6,7 +6,6 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Point
 import android.net.Uri
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -59,7 +58,9 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
   private var previousLatLng: LatLng? = null
   private var currentLatLng: LatLng? = null
 
-  protected var polyline: Polyline? = null
+  var polyline: Polyline? = null
+
+  private val markerHandler = Handler(Looper.getMainLooper())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -71,7 +72,42 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     supportMapFragment().getMapAsync(this)
   }
 
-  protected fun addCarMarker(latLng: LatLng): Marker? {
+  fun animateMarker(
+    marker: Marker,
+    toPosition: LatLng,
+    hideMarker: Boolean
+  ) {
+
+    if (movingCabMarker == null) {
+      movingCabMarker = addCarMarker(toPosition)
+    }
+
+    val start = SystemClock.uptimeMillis()
+
+    val proj = googleMap.projection
+    val startPoint = proj.toScreenLocation(marker.position)
+    val startLatLng = proj.fromScreenLocation(startPoint)
+
+    markerHandler.post(object : Runnable {
+      override fun run() {
+        val elapsed = SystemClock.uptimeMillis() - start
+        val timeInsertion = LinearInterpolator().getInterpolation(elapsed.toFloat() / DURATION)
+
+        marker.position = LatLng(
+          timeInsertion * toPosition.latitude + (1 - timeInsertion) * startLatLng.latitude,
+          timeInsertion * toPosition.longitude + (1 - timeInsertion) * startLatLng.longitude
+        )
+
+        if (timeInsertion < 1.0) {
+          markerHandler.postDelayed(this, UI_ANIM_DURATION)
+        } else {
+          marker.isVisible = !hideMarker
+        }
+      }
+    })
+  }
+
+  private fun addCarMarker(latLng: LatLng): Marker? {
     val carBitmapDescriptor = MapUtils.getCarBitmap(this)
 
     val markerOptions = markerOptions {
@@ -84,10 +120,12 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
   }
 
   fun hideLoadingState() {
-    binding.root.postDelayed({
-      binding.progressBar.isGone = true
-      binding.loadingState.isGone = true
-    }, 1000L)
+    try {
+      binding.root.postDelayed({
+        binding.progressBar.isGone = true
+        binding.loadingState.isGone = true
+      }, 1000L)
+    } catch (e: IllegalStateException) {}
   }
 
   protected fun dropOffDestinationMarker(latLng: LatLng?): Marker? {
@@ -283,46 +321,6 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
   }
 
-  fun animateMarker(
-    marker: Marker,
-    toPosition: LatLng,
-    hideMarker: Boolean
-  ) {
-
-    if (movingCabMarker == null) {
-      movingCabMarker = addCarMarker(toPosition)
-    }
-
-    val handler = Handler(Looper.myLooper()!!)
-
-    val start = SystemClock.uptimeMillis()
-
-    val proj: Projection = googleMap.projection
-    val startPoint: Point = proj.toScreenLocation(marker.position)
-    val startLatLng: LatLng = proj.fromScreenLocation(startPoint)
-    val duration: Long = 2000
-
-    val interpolator: Interpolator = LinearInterpolator()
-
-    handler.post(object : Runnable {
-      override fun run() {
-        val elapsed = SystemClock.uptimeMillis() - start
-        val t: Float = interpolator.getInterpolation(elapsed.toFloat() / duration)
-
-        val lng = t * toPosition.longitude + (1 - t) * startLatLng.longitude
-        val lat = t * toPosition.latitude + (1 - t) * startLatLng.latitude
-
-        marker.position = LatLng(lat, lng)
-        if (t < 1.0) {
-          // Post again 16ms later.
-          handler.postDelayed(this, 16)
-        } else {
-          marker.isVisible = !hideMarker
-        }
-      }
-    })
-  }
-
   fun changePositionSmoothly(
     marker: MarkerOptions?,
     newLatLng: LatLng
@@ -361,5 +359,10 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     val sourceLatLng = LatLng(lat1, lng1)
     val destinationLatLng = LatLng(lat2, lng2)
     return SphericalUtil.computeHeading(sourceLatLng, destinationLatLng).toFloat()
+  }
+
+  companion object {
+    private const val UI_ANIM_DURATION = 16L
+    private const val DURATION = 2000L
   }
 }

@@ -22,10 +22,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
   private val binding by viewBinding(FragmentStatisticsBinding::bind)
   private val viewModel by viewModels<StatisticsViewModel>()
 
-  private fun isInheritStatsFragment(fragment: Fragment): Boolean {
-    return fragment is StatsReceivedItemsFragment
-      || fragment is StatsDeliveredItemsFragment
-  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -50,10 +46,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     observeOnLifecycleStarted {
       viewModel.copyDeliveryInfo.collect { list ->
         childFragmentManager.fragments.forEach { fragment ->
-          if (fragment is StatsReceivedItemsFragment) {
-            fragment.onChangeSearch(list)
-          }
-          if (fragment is StatsDeliveredItemsFragment) {
+          if (fragment is StatsPagerFragment) {
             fragment.onChangeSearch(list)
           }
         }

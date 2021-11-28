@@ -108,7 +108,7 @@ class MapDeliverySharedViewModel @Inject constructor(
         userInfo.collect { authenticatedInfo ->
           loadAddedFleets(
             authenticatedInfo?.getUid()
-              ?: throw RuntimeException("yes daddy")
+              ?: throw RuntimeException("u sure?")
           )
         }
       }
@@ -155,7 +155,7 @@ class MapDeliverySharedViewModel @Inject constructor(
 
     viewModelScope.launch {
       addDeliveryUseCase(deliveryInfo).collect { result ->
-        _submitDeliveryUiEvent.value= when(result) {
+        _submitDeliveryUiEvent.value = when(result) {
           is Result.Loading -> SubmitUiEvent(true)
           is Result.Success -> SubmitUiEvent(false, result.data.isSuccess)
           is Result.Error -> SubmitUiEvent(exception = result.exception)
@@ -199,7 +199,7 @@ class MapDeliverySharedViewModel @Inject constructor(
   }
 
   private fun executeReverseGeocodeSearch() {
-    // cancel any active inflight search queries
+    // cancel any active in-flight search queries
     searchJob?.cancelIfActive()
 
     if (_latLng.value == null) {

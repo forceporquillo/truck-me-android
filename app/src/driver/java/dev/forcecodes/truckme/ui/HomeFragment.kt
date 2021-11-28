@@ -10,6 +10,7 @@ import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentHomeBinding
 import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
 import dev.forcecodes.truckme.extensions.startRealtimeMap
+import dev.forcecodes.truckme.extensions.toast
 import dev.forcecodes.truckme.extensions.viewBinding
 import kotlinx.coroutines.flow.collect
 

@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -87,6 +88,8 @@ class ActiveJobsViewModel @Inject constructor(
 
   private var jobId: String? = null
 
+  private var durationInSeconds: Int? = null // eta
+
   var startDestination: LatLngData? = null
 
   init {
@@ -111,7 +114,6 @@ class ActiveJobsViewModel @Inject constructor(
     this.jobId = jobId
 
     viewModelScope.launch {
-      Timber.e("Called $jobId")
       assignedDataSource.getJobById(jobId).collect { result ->
         val deliveryInfo = result.data?.deliveryInfo
         getAdminMetaData(deliveryInfo?.assignedAdminId)
@@ -126,7 +128,6 @@ class ActiveJobsViewModel @Inject constructor(
   private fun getAdminMetaData(adminId: String?) {
     viewModelScope.launch {
       adminDataSource.getAdminContactNumber(adminId).collect { result ->
-        Timber.e(result.toString())
         if (result is Result.Success) {
           _adminPhone.value = result.data
         }
@@ -173,6 +174,8 @@ class ActiveJobsViewModel @Inject constructor(
     val legs: LegsItem? = data.routes?.get(0)?.legs?.get(0)
     _endDirection.value = toLatLng(legs?.endLocation)
 
+    durationInSeconds = legs?.duration?.value ?: 0
+
     return DirectionUiModel(
       distance = legs?.distance?.text ?: "Unavailable",
       duration = legs?.duration?.text ?: "Unavailable",
@@ -199,7 +202,17 @@ class ActiveJobsViewModel @Inject constructor(
       launch { updateRemainingDistance(documentId) }
       launch { updateStartDestination(documentId) }
       launch { updateArrival(documentId) }
+      launch { updateArrivalTime(documentId) }
     }
+  }
+
+  private fun updateArrivalTime(documentId: String) {
+    val eta = durationInSeconds ?: return
+
+    val now = Calendar.getInstance()
+    now.add(Calendar.SECOND, eta)
+
+    updateDeliveryDataSource.estimatedArrivalTime(now.timeInMillis, documentId)
   }
 
   private fun updateStartDestination(documentId: String) {

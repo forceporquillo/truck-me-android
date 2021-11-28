@@ -8,6 +8,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentAddDriverBinding
@@ -15,6 +16,7 @@ import dev.forcecodes.truckme.extensions.navigate
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.textChangeObserver
+import dev.forcecodes.truckme.extensions.toast
 import dev.forcecodes.truckme.extensions.viewBinding
 import dev.forcecodes.truckme.ui.gallery.GalleryFragment
 import kotlinx.coroutines.flow.collect
@@ -43,6 +45,7 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
       binding.password.isGone = true
       binding.confirmPassword.isGone = true
       binding.changePasswordBtn.isVisible = true
+      binding.phoneNumber.isErrorEnabled = true
 
       binding.changePasswordBtn.setOnClickListener {
         navigate(AddDriverFragmentDirections.toDriverChangePassword(driverUri))
@@ -55,6 +58,11 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
       passwordEt.textChangeObserver(viewModel!!::password)
       confirmPasswordEt.textChangeObserver(viewModel!!::confirmPassword)
       phoneNumberEt.textChangeObserver(viewModel!!::contactNumber)
+      licenseNumberEt.textChangeObserver(viewModel!!::licenseNumber)
+      restrictionEt.textChangeObserver(viewModel!!::restrictions)
+      licenseExpirationEt.textChangeObserver(viewModel!!::licenseExpiration)
+      licenseExpirationEt.setOnClickListener { showDatePicker() }
+      licenseExpirationEt.setOnItemClickListener { _, _, _, _ -> showDatePicker() }
     }
 
     repeatOnLifecycleParallel {
@@ -66,11 +74,13 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
       launch {
         viewModel.invalidContactNumber.collect {
           binding.phoneNumber.error = it
+          binding.phoneNumber.isErrorEnabled = it.isNotEmpty()
         }
       }
       launch {
         viewModel.invalidEmail.collect {
           binding.email.error = it
+          binding.email.isErrorEnabled = it?.isEmpty() == false
         }
       }
       launch {
@@ -105,4 +115,16 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
   }
 
   override fun onImageSelectedResult(imageUri: Uri) {}
+
+  private fun showDatePicker() {
+    val datePicker =
+      MaterialDatePicker.Builder.datePicker()
+        .setTitleText("Select date")
+        .build()
+
+    datePicker.show(childFragmentManager, "date_picker")
+    datePicker.addOnPositiveButtonClickListener {
+      binding.licenseExpirationEt.setText(datePicker.headerText)
+    }
+  }
 }

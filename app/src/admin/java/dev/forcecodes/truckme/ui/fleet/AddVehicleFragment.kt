@@ -58,6 +58,12 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
       description.textChangeObserver {
         viewModel!!.description = it
       }
+      crNo.textChangeObserver {
+        viewModel!!.corNumber = it
+      }
+      loadCapacity.textChangeObserver {
+        viewModel!!.maxLoadCapacity = it
+      }
     }
 
     repeatOnLifecycleParallel {

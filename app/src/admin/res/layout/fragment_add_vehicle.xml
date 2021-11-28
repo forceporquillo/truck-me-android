@@ -12,16 +12,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:scrollbars="none"
     android:paddingStart="@dimen/spacing_large"
     android:paddingEnd="@dimen/spacing_large">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical">
 
         <FrameLayout
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large">
@@ -48,8 +49,8 @@
                 style="@style/ClickableButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="77dp"
-                android:layout_marginTop="77dp"
+                android:layout_marginStart="88dp"
+                android:layout_marginTop="88dp"
                 app:cardBackgroundColor="@color/teal_700"
                 app:cardCornerRadius="360dp"
                 app:cardElevation="4dp">
@@ -67,17 +68,38 @@
 
         </FrameLayout>
 
+        <TextView
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_picture"/>
+
+        <TextView
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vehicle_information"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/full_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:layout_marginBottom="@dimen/spacing_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
             android:hint="@string/vehicle_name"
-            app:errorEnabled="true"
             app:startIconDrawable="@drawable/nav_ic_fleet">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:singleLine="true"
+                android:maxLines="1"
+                android:inputType="text"
                 android:id="@+id/vehicle_name"
                 android:text="@{viewModel.vehicleUri.name}"
                 android:layout_width="match_parent"
@@ -87,14 +109,22 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:layout_marginBottom="@dimen/spacing_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/plate_number"
-            app:errorEnabled="true"
-            app:startIconDrawable="@drawable/ic_confirmation_number">
+            app:startIconDrawable="@drawable/ic_pin">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:singleLine="true"
+                android:maxLines="1"
+                android:inputType="text"
                 android:id="@+id/plate_number"
                 android:text="@{viewModel.vehicleUri.plate}"
                 android:layout_width="match_parent"
@@ -104,21 +134,127 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_large"
+            app:errorEnabled="true"
             android:hint="@string/description"
             app:startIconDrawable="@drawable/ic_note">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/description"
                 android:maxLines="5"
+                android:inputType="text"
                 android:text="@{viewModel.vehicleUri.description}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/driver_credentials"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cr_no_text"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:hint="@string/cr_no"
+            app:startIconDrawable="@drawable/ic_cor">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:text="@{viewModel.vehicleUri.registrationNumber}"
+                android:id="@+id/cr_no"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/capacity"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/load_capacity_text"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:errorEnabled="true"
+                app:expandedHintEnabled="false"
+                android:hint="@string/max_load"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent=".4"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/ic_resource_package">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@{viewModel.vehicleUri.loadCapacity}"
+                    android:id="@+id/load_capacity"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@id/load_capacity_text"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:errorEnabled="true"
+                android:hint="@string/unit"
+                app:layout_constraintWidth_percent=".28"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:text="@string/kg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton
             android:enabled="@{viewModel.enableSubmitButton}"
@@ -131,7 +267,7 @@
             android:insetBottom="0dp"
             android:letterSpacing="0"
             android:text="@string/save_changes"
-            app:cornerRadius="5dp"
+            app:cornerRadius="8dp"
             app:layout_constraintTop_toBottomOf="@id/phone_number" />
     </LinearLayout>
 

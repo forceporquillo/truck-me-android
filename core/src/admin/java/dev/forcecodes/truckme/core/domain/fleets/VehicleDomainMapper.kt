@@ -28,7 +28,9 @@ class VehicleDomainMapper @Inject constructor(
           description = description ?: "",
           profile = param.toString(),
           isActive = isActive,
-          assignedAdmin = from.assignedAdminId
+          assignedAdmin = from.assignedAdminId,
+          registrationNumber = registrationNumber ?: "",
+          loadCapacity = loadCapacity ?: ""
         )
       }
     }

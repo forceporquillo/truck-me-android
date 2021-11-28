@@ -17,6 +17,7 @@ interface UpdateDeliveryDataSource {
   fun duration(duration: String, jobId: String)
   fun distanceRemainingApprox(distance: String, jobId: String)
   fun arrivalTime(arrival: String, jobId: String)
+  fun estimatedArrivalTime(durationInSeconds: Long, jobId: String)
   fun startDestination(startDestination: LatLngData, jobId: String)
   fun distanceRemaining(distance: String, jobId: String)
   fun onStartDelivery(jobId: String)
@@ -35,7 +36,12 @@ class UpdateDeliveryDataSourceImpl @Inject constructor(
     externalScope.launch(ioDispatcher) {
       firestore.collection("deliveries")
         .document(jobId)
-        .update(mapOf("startDestination" to startDestination))
+        .update(
+          mapOf(
+            "startDestination" to startDestination,
+            "startTimestamp" to Calendar.getInstance().timeInMillis
+          )
+        )
     }
   }
 
@@ -54,6 +60,14 @@ class UpdateDeliveryDataSourceImpl @Inject constructor(
     }
   }
 
+  override fun estimatedArrivalTime(durationInSeconds: Long, jobId: String) {
+    externalScope.launch(ioDispatcher) {
+      firestore.collection("deliveries")
+        .document(jobId)
+        .update(mapOf("estimatedTimeDuration" to durationInSeconds))
+    }
+  }
+
   override fun onFinishDelivery(jobId: String) {
     Timber.e(jobId)
     externalScope.launch(ioDispatcher) {
@@ -63,7 +77,7 @@ class UpdateDeliveryDataSourceImpl @Inject constructor(
           mapOf(
             "active" to true,
             "completed" to true,
-            "timestamp" to Calendar.getInstance().timeInMillis
+            "completedTimestamp" to Calendar.getInstance().timeInMillis
           )
         )
     }

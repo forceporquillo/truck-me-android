@@ -31,6 +31,12 @@ class AddVehicleViewModel @Inject constructor(
   private val _description = MutableStateFlow("")
   val descriptionSf = _description.asStateFlow()
 
+  private val _registraionNumberSf = MutableStateFlow("")
+  val registraionNumberSf = _registraionNumberSf.asStateFlow()
+
+  private val _maxLoadCapacity = MutableStateFlow("")
+  val maxLoadCapacitySf = _maxLoadCapacity.asStateFlow()
+
   private val _enableSubmitButton = MutableStateFlow(false)
   val enableSubmitButton = _enableSubmitButton.asStateFlow()
 
@@ -43,9 +49,16 @@ class AddVehicleViewModel @Inject constructor(
   private var isProfileSetExplicitly = false
 
   init {
+
     viewModelScope.launch {
-      combine(vehicleNameSf, plateNumberSf, descriptionSf) { v, p, d ->
-        arrayOf(v, p, d)
+      combine(
+        vehicleNameSf,
+        plateNumberSf,
+        descriptionSf,
+        registraionNumberSf,
+        maxLoadCapacitySf
+      ) { vehicle, plate, desc, registration, maxCapacity ->
+        arrayOf(vehicle, plate, desc, registration, maxCapacity)
       }.map { fields ->
         isSameInstance(fields) ?: fields.all { it.isNotEmpty() }
       }.collect { enable ->
@@ -59,8 +72,11 @@ class AddVehicleViewModel @Inject constructor(
       return null
     }
     return vehicleUri?.run {
-      !(fields[0] == name && fields[1] == plate && fields[2] == description)
-        || isProfileSetExplicitly
+      !(fields[0] == name && fields[1] == plate
+        && fields[2] == description &&
+        fields[3] === registrationNumber
+        && fields[4] == maxLoadCapacity
+        ) || isProfileSetExplicitly
     }
   }
 
@@ -96,6 +112,22 @@ class AddVehicleViewModel @Inject constructor(
       field = value
     }
 
+  var corNumber: String? = ""
+    set(value) {
+      value?.let {
+        _registraionNumberSf.value = it
+      }
+      field = value
+    }
+
+  var maxLoadCapacity: String? = ""
+    set(value) {
+      value?.let {
+        _maxLoadCapacity.value = it
+      }
+      field = value
+    }
+
   var vehicleUri: VehicleUri? = null
 
   fun submit() {
@@ -110,7 +142,9 @@ class AddVehicleViewModel @Inject constructor(
       description = description,
       profile = profileIconInBytes,
       isActive = true,
-      assignedAdminId = signInViewModelDelegate.userIdValue ?: ""
+      assignedAdminId = signInViewModelDelegate.userIdValue ?: "",
+      registrationNumber = corNumber,
+      loadCapacity = maxLoadCapacity
     )
 
     executeAppend(vehicles)
