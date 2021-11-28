@@ -80,4 +80,21 @@
   <string name="set_state">Set as %1$s</string>
   <string name="no_available_drivers">No Available Drivers</string>
   <string name="no_available_vehicles">No Available Vehicles</string>
+  <string name="cr_no">COR No.</string>
+  <string name="license_number">License Number</string>
+  <string name="driver_credentials">License Credentials</string>
+  <string name="personal_information">Personal Information</string>
+  <string name="others">Others</string>
+  <string name="month">Month</string>
+  <string name="expiration_date">Expiration Date</string>
+  <string name="capacity">Load Capacity</string>
+  <string name="vehicle_information">Vehicle Information</string>
+  <string name="restrictions">Restrictions</string>
+  <string name="profile_picture">Profile Picture</string>
+  <string name="max_load">Max Load</string>
+  <string name="unit">Unit</string>
+  <string name="kg">kg</string>
+  <string name="dash">-</string>
+  <string name="time_started">Time Started</string>
+  <string name="location_state_message">Cannot retrieved current coordinates. Please check your location or GPS if it\'s enabled.</string>
 </resources>
