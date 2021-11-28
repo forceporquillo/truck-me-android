@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.string
 import dev.forcecodes.truckme.core.data.DeliveryInfoMetaData
+import dev.forcecodes.truckme.core.model.DeliveryInfo
 import dev.forcecodes.truckme.core.model.LatLngData
 import dev.forcecodes.truckme.core.model.LatLngTruckMeImpl
 import dev.forcecodes.truckme.databinding.BottomSheetDeliveryStatusBinding
@@ -29,6 +30,7 @@ import dev.forcecodes.truckme.extensions.postKt
 import dev.forcecodes.truckme.extensions.px
 import dev.forcecodes.truckme.extensions.slideDownHide
 import dev.forcecodes.truckme.extensions.slideTop
+import dev.forcecodes.truckme.extensions.toast
 import dev.forcecodes.truckme.extensions.updateIconTextDrawable
 import dev.forcecodes.truckme.util.DirectionUiModel
 import dev.forcecodes.truckme.util.MapUtils
@@ -275,18 +277,7 @@ class ActiveJobsActivity : BaseMapActivity() {
 
         fusedLocationProvider.lastLocation
           .addOnSuccessListener { location ->
-            viewModel.startDestination = LatLngData(
-              location.latitude,
-              location.longitude
-            )
-            viewModel.getDirections(
-              LatLngTruckMeImpl(
-                location.latitude ?: 0.0,
-                location.longitude ?: 0.0
-              ), deliveryInfo?.destination!!.placeId
-            )
-            val latLng = LatLng(location.latitude, location.longitude)
-            startDestination(latLng)
+            getDirections(location, deliveryInfo)
           }
           .addOnFailureListener {
             Toast.makeText(
@@ -296,6 +287,32 @@ class ActiveJobsActivity : BaseMapActivity() {
             ).show()
           }
       }
+    }
+  }
+
+  private fun getDirections(location: Location?, deliveryInfo: DeliveryInfo?) {
+    if (location == null) {
+      toast(getString(string.location_state_message))
+      return
+    }
+
+    try {
+      viewModel.getDirections(
+        LatLngTruckMeImpl(
+          location.latitude,
+          location.longitude
+        ), deliveryInfo?.destination!!.placeId
+      )
+      val latLng = LatLng(location.latitude, location.longitude)
+      startDestination(latLng)
+
+      viewModel.startDestination = LatLngData(
+        location.latitude,
+        location.longitude
+      )
+
+    } catch (e: NullPointerException) {
+      toast(getString(string.location_state_message))
     }
   }
 
