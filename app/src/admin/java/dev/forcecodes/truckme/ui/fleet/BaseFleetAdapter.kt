@@ -121,11 +121,16 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
       if (data is FleetUiModel.VehicleUri) {
         name.text = data.name
         plateNumber.text = data.plate
+
+        val capacity = "${data.loadCapacity} kg"
+        maxCapacity.text = capacity
       }
 
       if (data is FleetUiModel.DriverUri) {
         name.text = data.fullName
         plateNumber.isVisible = false
+        maxCapacity.isVisible = false
+        dash.isVisible = false
       }
 
       if (data.profile != "null") {

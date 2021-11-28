@@ -6,11 +6,11 @@ import dev.forcecodes.truckme.base.UiActionEvent
 import dev.forcecodes.truckme.core.data.fleets.DriverByteArray
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.domain.fleets.AddDriverUseCase
-import dev.forcecodes.truckme.core.util.then
 import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.handlePhoneNumber
 import dev.forcecodes.truckme.ui.auth.isEmailValid
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,6 +20,28 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
+
+internal data class FleetTuple<T1, T2, T3, T4>(val t1: T1, val t2: T2, val t3: T3, val t4: T4)
+
+internal fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combine(
+  flow1: Flow<T1>,
+  flow2: Flow<T2>,
+  flow3: Flow<T3>,
+  flow4: Flow<T4>,
+  flow5: Flow<T5>,
+  flow6: Flow<T6>,
+  flow7: Flow<T7>,
+  flow8: Flow<T8>,
+  transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8) -> R
+): Flow<R> = combine(
+  combine(flow1, flow2, flow3, flow4, ::FleetTuple),
+  combine(flow5, flow6, flow7, flow8, ::FleetTuple)
+) { tuple1, tuple2 ->
+  transform(
+    tuple1.t1, tuple1.t2, tuple1.t3, tuple1.t4,
+    tuple2.t1, tuple2.t2, tuple2.t3, tuple2.t4,
+  )
+}
 
 @HiltViewModel
 class AddDriverViewModel @Inject constructor(
@@ -34,6 +56,9 @@ class AddDriverViewModel @Inject constructor(
   private val _passwordSf = MutableStateFlow("")
   private val _confirmPassSf = MutableStateFlow("")
   private val _contactSf = MutableStateFlow("")
+  private val _licenseNumber = MutableStateFlow("")
+  private val _licenseExpiration = MutableStateFlow("")
+  private val _restrictions = MutableStateFlow("")
 
   private val _uploadState = MutableStateFlow<FleetUploadState>(FleetUploadState.Loading)
   val uploadState = _uploadState.asStateFlow()
@@ -54,15 +79,21 @@ class AddDriverViewModel @Inject constructor(
         _passwordSf,
         _confirmPassSf,
         _contactSf,
-      ) { fn, es, ps, cp, cf ->
-        arrayOf(fn, es, ps, cp, cf)
+        _licenseNumber,
+        _licenseExpiration,
+        _restrictions
+      ) { fn, es, ps, cp, cf, ln, le, r ->
+        arrayOf(fn, es, ps, cp, cf, ln, le, r)
       }.map { fields ->
         handlePasswordNotMatch(fields[2], fields[3])
-        handlePhoneNumber(fields.last())
-        isSameInstance(fields) ?: fields.all {
-          it.isNotEmpty() && (fields[2] == fields[3])
+        handlePhoneNumber(fields[4])
+        isSameInstance(fields) ?: fields.all { string ->
+          string.isNotEmpty() && (fields[2] == fields[3])
         }
-      }.collect(::enableSubmitButton)
+      }.collect {
+        Timber.e("Collect $it")
+        enableSubmitButton(it)
+      }
     }
   }
 
@@ -70,10 +101,17 @@ class AddDriverViewModel @Inject constructor(
     if (fields.all { it.isEmpty() }) {
       return null
     }
-    return driverUri?.run {
-      !(fields[0] == fullName && fields[1] == email &&
-        fields[2] == password && fields[3] == password
-        && fields[4] == contact) || isProfileSetExplicitly
+    return try {
+      driverUri?.run {
+        !(fields[0] == fullName && fields[1] == email &&
+          fields[2] == password && fields[3] == password
+          && fields[4] == contact && fields[5] == licenseNumber
+          && fields[6] == licenseExpiration
+          && fields[7] == restrictions
+          ) || isProfileSetExplicitly
+      }
+    } catch (e: IndexOutOfBoundsException) {
+      false
     }
   }
 
@@ -105,6 +143,18 @@ class AddDriverViewModel @Inject constructor(
         setInvalidEmail(it)
       }
     }
+  }
+
+  fun licenseNumber(value: String?) {
+    _licenseNumber.value = value ?: ""
+  }
+
+  fun licenseExpiration(value: String?) {
+    _licenseExpiration.value = value ?: ""
+  }
+
+  fun restrictions(value: String?) {
+    _restrictions.value = value ?: ""
   }
 
   fun password(value: String?) {
@@ -176,7 +226,10 @@ class AddDriverViewModel @Inject constructor(
       contact = _contactSf.value,
       isActive = driverUri?.isActive ?: true,
       profile = profileInBytes,
-      assignedAdminId = signInViewModelDelegate.userIdValue!!
+      assignedAdminId = signInViewModelDelegate.userIdValue!!,
+      licenseNumber = _licenseNumber.value,
+      licenseExpiration = _licenseExpiration.value,
+      restrictions = _restrictions.value
     )
 
     handleFleetAddition(addDriverUseCase(driver)) { uploadState, isLoading ->
