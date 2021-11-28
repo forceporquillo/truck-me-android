@@ -119,59 +119,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eta" />
 
-    <!--    <LinearLayout-->
-    <!--        android:orientation="vertical"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/line_separator"-->
-    <!--        app:layout_constraintStart_toStartOf="@id/guideline_70"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content">-->
-
-    <!--        <TextView-->
-    <!--            android:gravity="center"-->
-    <!--            android:id="@+id/distance_left"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_gravity="end"-->
-    <!--            android:text="@string/distance"-->
-    <!--            />-->
-
-    <!--        <TextView-->
-    <!--            android:gravity="center"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_gravity="end"-->
-    <!--            android:text="1.5 km"-->
-    <!--            android:textColor="@color/black"-->
-    <!--            android:textStyle="bold"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="@id/guideline_70"-->
-    <!--            app:layout_constraintTop_toBottomOf="@id/distance_left" />-->
-    <!--    </LinearLayout>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/distance_left"-->
-<!--        style="@style/TextAppearance.AppCompat.Caption"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="@dimen/spacing_medium"-->
-<!--        android:text="@string/distance_left"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@id/guideline_50"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/line_separator" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/distance_left_timer"-->
-<!--        style="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="5 m"-->
-<!--        android:textColor="@color/teal_700"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@id/guideline_50"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/distance_left" />-->
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start_delivery_button"
             android:layout_width="wrap_content"
