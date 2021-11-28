@@ -81,7 +81,7 @@ class ItemDeliveredMapper @Inject constructor() :
 
       ItemDeliveredStats(
         documentId = documentId,
-        itemTitle = deliveryInfo.title,
+        itemTitle = deliveryInfo.items,
         timeStarted = deliveryInfo.startTimestamp.convertToTime(),
         timeCompleted = deliveryInfo.completedTimestamp.convertToTime(),
         estimatedTimeArrival = deliveryInfo.estimatedTimeDuration.convertToTime(),
