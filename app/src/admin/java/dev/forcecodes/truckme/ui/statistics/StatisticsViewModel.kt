@@ -3,7 +3,6 @@ package dev.forcecodes.truckme.ui.statistics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.forcecodes.truckme.core.data.delivery.DeliveredItemDataSource
 import dev.forcecodes.truckme.core.data.delivery.ItemDeliveredStats
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
 import dev.forcecodes.truckme.core.domain.fleets.DeliveredItemStatsUseCase
@@ -57,12 +56,16 @@ class StatisticsViewModel @Inject constructor(
           _dateList.value = list.sortedByDescending {
             it.metadata.date
           }.map {
-            it.metadata.date ?: ""
+            it.metadata.date.orEmpty()
           }
           list
         }.collect {
           _deliveryInfo.value = it
-          executeQuery(it[0].dateAccomplish ?: "")
+          if (it.isNotEmpty()) {
+            executeQuery(it[0].dateAccomplish ?: "")
+          } else {
+            _copyDeliveryInfo.value = emptyList()
+          }
         }
       }
       launch fleets@{
