@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.databinding.FragmentAddVehicleBinding
+import dev.forcecodes.truckme.extensions.ANIMATION_FAST_MILLIS_V2
 import dev.forcecodes.truckme.extensions.attachProgressToMain
 import dev.forcecodes.truckme.extensions.bindImageWith
 import dev.forcecodes.truckme.extensions.navigateUp
@@ -73,7 +74,7 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
       launch {
         viewModel.uploadState.collect {
           if (it is FleetUploadState.Success) {
-            navigateUp()
+            navigateUp(ANIMATION_FAST_MILLIS_V2)
           } else if (it is FleetUploadState.Error) {
             Toast.makeText(requireContext(), "${it.exception}", Toast.LENGTH_SHORT)
               .show()

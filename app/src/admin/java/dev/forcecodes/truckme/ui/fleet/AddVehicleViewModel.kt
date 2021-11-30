@@ -49,7 +49,6 @@ class AddVehicleViewModel @Inject constructor(
   private var isProfileSetExplicitly = false
 
   init {
-
     viewModelScope.launch {
       combine(
         vehicleNameSf,
@@ -131,6 +130,7 @@ class AddVehicleViewModel @Inject constructor(
   var vehicleUri: VehicleUri? = null
 
   fun submit() {
+    _enableSubmitButton.value = false
 
     val vehicleId = if (!vehicleUri?.id.isNullOrEmpty())
       vehicleUri?.id else UUID.randomUUID().toString()
@@ -153,15 +153,21 @@ class AddVehicleViewModel @Inject constructor(
   private fun executeAppend(vehicles: VehicleByteArray) {
     val useCase = addVehicleUseCase(vehicles)
     handleFleetAddition(useCase) { uploadState, isLoading ->
-      submitAndSetLoading(isLoading)
+      submitAndSetLoading(isLoading, uploadState)
       _uploadState.value = uploadState
     }
   }
 
-  private fun submitAndSetLoading(show: Boolean = true, enable: Boolean = show) {
+  private fun submitAndSetLoading(
+    show: Boolean = true,
+    uploadState: FleetUploadState
+  ) {
     _showLoading.value = show
 
-    // invert to disable the submit button
-    _enableSubmitButton.value = enable
+    _enableSubmitButton.value = when (uploadState) {
+      is FleetUploadState.Success,
+      is FleetUploadState.Loading -> false
+      is FleetUploadState.Error -> true
+    }
   }
 }

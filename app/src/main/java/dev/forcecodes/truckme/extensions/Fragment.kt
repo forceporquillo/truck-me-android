@@ -95,6 +95,7 @@ inline fun Fragment.dispatchWhenBackPress(
 }
 
 const val ANIMATION_FAST_MILLIS = 250L
+const val ANIMATION_FAST_MILLIS_V2 = 50L
 
 fun Fragment.postRunnable(block: () -> Unit) {
   view?.postKt(block)
