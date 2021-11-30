@@ -21,28 +21,6 @@ import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
-internal data class FleetTuple<T1, T2, T3, T4>(val t1: T1, val t2: T2, val t3: T3, val t4: T4)
-
-internal fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combine(
-  flow1: Flow<T1>,
-  flow2: Flow<T2>,
-  flow3: Flow<T3>,
-  flow4: Flow<T4>,
-  flow5: Flow<T5>,
-  flow6: Flow<T6>,
-  flow7: Flow<T7>,
-  flow8: Flow<T8>,
-  transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8) -> R
-): Flow<R> = combine(
-  combine(flow1, flow2, flow3, flow4, ::FleetTuple),
-  combine(flow5, flow6, flow7, flow8, ::FleetTuple)
-) { tuple1, tuple2 ->
-  transform(
-    tuple1.t1, tuple1.t2, tuple1.t3, tuple1.t4,
-    tuple2.t1, tuple2.t2, tuple2.t3, tuple2.t4,
-  )
-}
-
 @HiltViewModel
 class AddDriverViewModel @Inject constructor(
   private val addDriverUseCase: AddDriverUseCase,
@@ -73,7 +51,7 @@ class AddDriverViewModel @Inject constructor(
 
   private fun checkRequireFields() {
     viewModelScope.launch {
-      combine(
+      combineFleetInfo(
         _fullName,
         _emailSf,
         _passwordSf,
@@ -214,7 +192,7 @@ class AddDriverViewModel @Inject constructor(
   }
 
   fun submit() {
-    submitAndSetLoading(true)
+
     val driverId =
       if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else UUID.randomUUID().toString()
 
@@ -234,6 +212,14 @@ class AddDriverViewModel @Inject constructor(
 
     handleFleetAddition(addDriverUseCase(driver)) { uploadState, isLoading ->
       submitAndSetLoading(isLoading)
+
+      val enableButtonState = when (uploadState) {
+        is FleetUploadState.Success,
+        is FleetUploadState.Loading -> false
+        is FleetUploadState.Error -> true
+      }
+      
+      submitAndSetLoading(isLoading, enableButtonState)
       _uploadState.value = uploadState
     }
   }

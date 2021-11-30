@@ -12,6 +12,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.databinding.FragmentAddDriverBinding
+import dev.forcecodes.truckme.extensions.ANIMATION_FAST_MILLIS_V2
+import dev.forcecodes.truckme.extensions.attachProgressToMain
 import dev.forcecodes.truckme.extensions.navigate
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
@@ -91,11 +93,14 @@ class AddDriverFragment : GalleryFragment(R.layout.fragment_add_driver) {
       launch {
         viewModel.uploadState.collect {
           if (it is FleetUploadState.Success) {
-            navigateUp()
+            navigateUp(ANIMATION_FAST_MILLIS_V2)
           } else if (it is FleetUploadState.Error) {
             Toast.makeText(requireContext(), "${it.exception}", Toast.LENGTH_SHORT).show()
           }
         }
+      }
+      launch {
+        viewModel.showLoading.collect(::attachProgressToMain)
       }
     }
 

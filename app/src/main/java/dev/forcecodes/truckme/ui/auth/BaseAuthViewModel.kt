@@ -146,7 +146,7 @@ abstract class BaseAuthViewModel<E : UiActionEvent>(
     }
   }
 
-  fun submitAndSetLoading(
+  open fun submitAndSetLoading(
     show: Boolean = true,
     enable: Boolean = show
   ) {
