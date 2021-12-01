@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:902271608154:android:9a63b571d4bf1a7d78ff63",
+        "mobilesdk_app_id": "1:902271608154:android:779c699bb380745e78ff63",
         "android_client_info": {
           "package_name": "dev.forcecodes.truckme.driver"
         }
