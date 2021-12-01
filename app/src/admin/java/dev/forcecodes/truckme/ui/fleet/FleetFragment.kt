@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ConcatAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
-import dev.forcecodes.truckme.core.data.fleets.FleetType
-import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
-import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
-import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
+import dev.forcecodes.truckme.R.drawable
+import dev.forcecodes.truckme.R.string
 import dev.forcecodes.truckme.databinding.FragmentFleetBinding
 import dev.forcecodes.truckme.extensions.dispatchWhenBackPress
+import dev.forcecodes.truckme.extensions.getDrawable
 import dev.forcecodes.truckme.extensions.navigate
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
@@ -21,13 +20,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FleetFragment : Fragment(R.layout.fragment_fleet), FleetItemListener {
+class FleetFragment : Fragment(R.layout.fragment_fleet) {
 
   private val viewModel by viewModels<FleetViewModel>()
   private val binding by viewBinding(FragmentFleetBinding::bind)
-
-  private lateinit var vehicleAdapter: VehicleFleetAdapter
-  private lateinit var driverAdapter: DriverFleetAdapter
 
   override fun onViewCreated(
     view: View,
@@ -37,38 +33,29 @@ class FleetFragment : Fragment(R.layout.fragment_fleet), FleetItemListener {
     binding.lifecycleOwner = viewLifecycleOwner
     binding.viewModel = viewModel
 
-    vehicleAdapter = VehicleFleetAdapter(this)
-    driverAdapter = DriverFleetAdapter(this)
-
     observeChanges()
     dispatchBackPress()
-    initAdapter()
+    initViewPager()
   }
 
-  override fun onDriverSelected(data: DriverUri) {
-    navigate(FleetFragmentDirections.toAddDriverFragment(data))
-  }
+  private fun initViewPager() = binding.apply {
+    viewPager.adapter = FleetsPagerAdapter(this@FleetFragment)
 
-  override fun onVehicleSelected(data: VehicleUri) {
-    navigate(FleetFragmentDirections.toAddVehicleFragment(data))
-  }
-
-  override fun onDeleteFleet(id: String, type: FleetType) {
-    viewModel.onDeleteFleet(id, type)
-  }
-
-  override fun onFleetStateChanged(metadata: FleetStateUpdateMetadata) {
-    viewModel.updateFleetState(metadata)
-  }
-
-  private fun initAdapter() {
-    val concatAdapter = ConcatAdapter(driverAdapter, vehicleAdapter)
-    binding.fleetList.adapter = concatAdapter
+    TabLayoutMediator(fleetTabLayout, viewPager) { tab, position ->
+      when (position) {
+        0 -> {
+          tab.text = getString(string.driver)
+          tab.icon = getDrawable(drawable.ic_person)
+        }
+        1 -> {
+          tab.text = getString(string.vehicles)
+          tab.icon = getDrawable(drawable.nav_ic_fleet)
+        }
+      }
+    }.attach()
   }
 
   private fun observeChanges() = repeatOnLifecycleParallel {
-    launch { viewModel.vehicleList.collect(vehicleAdapter::submitList) }
-    launch { viewModel.driverList.collect(driverAdapter::submitList) }
     launch { viewModel.fleetNavActionEvent.collect(::collectNavUiEvent) }
   }
 
