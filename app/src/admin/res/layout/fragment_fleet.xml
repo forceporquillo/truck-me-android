@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View"/>
@@ -11,45 +11,21 @@
             type="dev.forcecodes.truckme.ui.fleet.FleetViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <com.google.android.material.tabs.TabLayout
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/fleet_tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:elevation="4dp"
-                app:tabGravity="fill"
-                app:tabInlineLabel="true"
-                style="@style/Widget.App.TabLayout">
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/ic_ongoing"
-                    android:text="@string/in_progress"
-                    />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/ic_in_progress"
-                    android:text="@string/pending"
-                    />
-
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.viewpager2.widget.ViewPager2
-                app:layout_constraintTop_toBottomOf="@id/fleet_tab_layout"
-                android:id="@+id/view_pager"
-                android:layout_below="@id/fleet_tab_layout"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fleet_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="@dimen/spacing_normal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/fleet_item" />
 
         <com.nambimobile.widgets.efab.ExpandableFabLayout
             android:id="@+id/expandable_layout"
@@ -107,6 +83,6 @@
                 android:layout_height="wrap_content"/>
 
         </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
 </layout>

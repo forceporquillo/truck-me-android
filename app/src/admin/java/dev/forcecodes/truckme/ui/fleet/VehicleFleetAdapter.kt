@@ -5,8 +5,6 @@ import dev.forcecodes.truckme.core.data.fleets.FleetType.DRIVER
 import dev.forcecodes.truckme.core.data.fleets.FleetType.VEHICLE
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
-import timber.log.Timber
-import timber.log.Timber.Forest
 
 class VehicleFleetAdapter(
   private val fleetItemListener: FleetItemListener,
