@@ -10,11 +10,9 @@ import dev.forcecodes.truckme.ui.auth.CommonCredentialsViewModel
 import dev.forcecodes.truckme.ui.auth.handlePhoneNumber
 import dev.forcecodes.truckme.ui.auth.isEmailValid
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -69,7 +67,6 @@ class AddDriverViewModel @Inject constructor(
           string.isNotEmpty() && (fields[2] == fields[3])
         }
       }.collect {
-        Timber.e("Collect $it")
         enableSubmitButton(it)
       }
     }
@@ -79,17 +76,12 @@ class AddDriverViewModel @Inject constructor(
     if (fields.all { it.isEmpty() }) {
       return null
     }
-    return try {
-      driverUri?.run {
-        !(fields[0] == fullName && fields[1] == email &&
-          fields[2] == password && fields[3] == password
-          && fields[4] == contact && fields[5] == licenseNumber
-          && fields[6] == licenseExpiration
-          && fields[7] == restrictions
-          ) || isProfileSetExplicitly
-      }
-    } catch (e: IndexOutOfBoundsException) {
-      false
+    return driverUri?.run {
+      !(fields[0] == fullName && fields[1] == email
+        && fields[2] == password && fields[3] == password
+        && fields[4] == contact && fields[5] == licenseNumber
+        && fields[6] == licenseExpiration && fields[7] == restrictions
+        ) || isProfileSetExplicitly
     }
   }
 
@@ -193,8 +185,10 @@ class AddDriverViewModel @Inject constructor(
 
   fun submit() {
 
-    val driverId =
-      if (!driverUri?.id.isNullOrEmpty()) driverUri?.id else UUID.randomUUID().toString()
+    val driverId = when {
+      !driverUri?.id.isNullOrEmpty() -> driverUri?.id
+      else -> UUID.randomUUID().toString()
+    }
 
     val driver = DriverByteArray(
       id = driverId!!,
@@ -211,14 +205,12 @@ class AddDriverViewModel @Inject constructor(
     )
 
     handleFleetAddition(addDriverUseCase(driver)) { uploadState, isLoading ->
-      submitAndSetLoading(isLoading)
-
       val enableButtonState = when (uploadState) {
-        is FleetUploadState.Success,
+        is FleetUploadState.Success -> false
         is FleetUploadState.Loading -> false
         is FleetUploadState.Error -> true
       }
-      
+
       submitAndSetLoading(isLoading, enableButtonState)
       _uploadState.value = uploadState
     }

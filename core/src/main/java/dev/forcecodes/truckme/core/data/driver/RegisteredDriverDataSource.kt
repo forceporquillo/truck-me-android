@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import timber.log.Timber.Forest
 import javax.inject.Inject
 
 interface RegisteredDriverDataSource {
+  suspend fun isDriverRegisteredOnShot(userId: String): Result<Boolean?>
   fun isDriverRegistered(userId: String): Flow<Result<Boolean?>>
   fun register(userId: String, isRegistered: Boolean = false)
   fun updateUid(userId: String, authId: String?)
@@ -34,10 +34,27 @@ class RegisteredDriverDataSourceImpl @Inject constructor(
     private const val AUTH_ID = "auth_id"
   }
 
+  override suspend fun isDriverRegisteredOnShot(userId: String): Result<Boolean?> {
+    var result: Result<Boolean?> = Result.Loading
+    firestore.fleetRegDocument(userId)
+      .get()
+      .addOnCompleteListener { task ->
+        result = if (task.isSuccessful) {
+          val document = task.result
+          val isRegistered: Boolean? = document?.get(REGISTERED_KEY) as? Boolean
+          Success(isRegistered)
+        } else {
+          Error(task.exception ?: Exception(task.exception?.message))
+        }
+      }.await()
+    return result
+  }
+
   override fun isDriverRegistered(userId: String): Flow<Result<Boolean?>> {
     return callbackFlow {
       val registeredChangedListener =
-        { snapshot: DocumentSnapshot?, _: FirebaseFirestoreException? ->
+        { snapshot: DocumentSnapshot?, e: FirebaseFirestoreException? ->
+          Timber.e(e)
           if (snapshot == null || !snapshot.exists()) {
             tryOffer(Error(DriverNotRegisteredException()))
           } else {
@@ -71,7 +88,7 @@ class RegisteredDriverDataSourceImpl @Inject constructor(
 
   override fun getUUIDbyAuthId(authId: String?): Flow<Result<String>> {
     return callbackFlow {
-      val authIdListener = firestore.fleetDrivers().addSnapshotListener { value, error ->
+      val authIdListener = firestore.fleetDrivers().addSnapshotListener { value, _ ->
         if (value?.isEmpty == false) {
           value.forEach { querySnapshot ->
             val id = querySnapshot.get(AUTH_ID) as String

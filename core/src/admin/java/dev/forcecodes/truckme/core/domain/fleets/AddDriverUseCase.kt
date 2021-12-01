@@ -1,19 +1,14 @@
 package dev.forcecodes.truckme.core.domain.fleets
 
-import dev.forcecodes.truckme.core.data.auth.FirebaseAuthStateDataSource
 import dev.forcecodes.truckme.core.data.driver.RegisteredDriverDataSource
 import dev.forcecodes.truckme.core.data.fleets.*
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
-import dev.forcecodes.truckme.core.di.ApplicationScope
 import dev.forcecodes.truckme.core.di.IoDispatcher
 import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.util.*
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,11 +17,9 @@ import javax.inject.Singleton
 class AddDriverUseCase @Inject constructor(
   private val fleetDataSource: FleetDataSource,
   private val fleetCloudStorage: FleetStorageDataSource,
-  private val authStateDataSource: FirebaseAuthStateDataSource,
   private val registeredUserDataSource: RegisteredDriverDataSource,
   private val driverDomainMapper: DriverDomainMapper,
   @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-  @ApplicationScope private val externalScope: CoroutineScope
 ) : FlowUseCase<DriverByteArray, DriverResult>(ioDispatcher) {
 
   override fun execute(parameters: DriverByteArray): Flow<Result<DriverResult>> {
@@ -67,15 +60,15 @@ class AddDriverUseCase @Inject constructor(
     }
   }
 
-  private fun register(userId: String) {
+  private suspend fun register(userId: String) {
     Timber.e("User ID $userId")
-    externalScope.launch(ioDispatcher) {
-      registeredUserDataSource.isDriverRegistered(userId).collect { result ->
-        if (result.successOr(false) == false) {
-          registeredUserDataSource.register(userId)
-        }
-      }
+    val result = registeredUserDataSource.isDriverRegisteredOnShot(userId)
+
+    if (result.successOr(false) == true) {
+      // ignore
+     return
     }
+
+    registeredUserDataSource.register(userId)
   }
 }
-
