@@ -33,6 +33,9 @@ data class DriverByteArray(
     if (id != other.id) return false
     if (isActive != other.isActive) return false
     if (assignedAdminId != other.assignedAdminId) return false
+    if (licenseExpiration != other.licenseNumber) return false
+    if (restrictions != other.restrictions) return false
+    if (licenseNumber != other.licenseNumber) return false
     return true
   }
 
@@ -45,6 +48,10 @@ data class DriverByteArray(
     result = 31 * result + id.hashCode()
     result = 31 * result + isActive.hashCode()
     result = 31 * result + assignedAdminId.hashCode()
+    result = 31 * result + licenseExpiration.hashCode()
+    result = 31 * result + restrictions.hashCode()
+    result = 31 * result + licenseNumber.hashCode()
+
     return result
   }
 }

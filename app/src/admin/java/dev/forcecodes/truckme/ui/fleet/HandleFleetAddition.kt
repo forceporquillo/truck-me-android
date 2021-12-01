@@ -21,7 +21,7 @@ internal fun <T: TaskData<*>> ViewModel.handleFleetAddition(
           if (result.data.isSuccess) {
             state(FleetUploadState.Success, false)
           } else {
-            state(FleetUploadState.Error(result.error), false)
+            state(FleetUploadState.Error(result.error), true)
           }
         }
         is Result.Error -> state(FleetUploadState.Error(result.error), false)

@@ -20,6 +20,8 @@ import dev.forcecodes.truckme.extensions.viewBinding
 import dev.forcecodes.truckme.ui.gallery.GalleryFragment
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import timber.log.Timber.Forest
 
 @AndroidEntryPoint
 class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
@@ -41,6 +43,8 @@ class AddVehicleFragment : GalleryFragment(R.layout.fragment_add_vehicle) {
     }
 
     val vehicleUri = navArgs.vehicleUri
+
+    Timber.e(vehicleUri.toString())
 
     if (vehicleUri != null) {
      viewModel.vehicleUri = vehicleUri

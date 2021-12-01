@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import timber.log.Timber.Forest
 import java.util.UUID
 import javax.inject.Inject
 
@@ -72,8 +74,7 @@ class AddVehicleViewModel @Inject constructor(
     }
     return vehicleUri?.run {
       !(fields[0] == name && fields[1] == plate
-        && fields[2] == description &&
-        fields[3] === registrationNumber
+        && fields[2] == description && fields[3] == registrationNumber
         && fields[4] == maxLoadCapacity
         ) || isProfileSetExplicitly
     }

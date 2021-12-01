@@ -36,11 +36,11 @@ abstract class BaseFleetFragment<F : FleetUiModel, T : BaseFleetAdapter<out F>>(
   }
 
   override fun onDriverSelected(data: DriverUri) {
-    navigate(FleetFragmentDirections.toAddDriverFragment(data))
+    viewModel.onDriverSelected(data)
   }
 
   override fun onVehicleSelected(data: VehicleUri) {
-    navigate(FleetFragmentDirections.toAddVehicleFragment(data))
+    viewModel.onVehicleSelected(data)
   }
 
   override fun onDeleteFleet(id: String, type: FleetType) {

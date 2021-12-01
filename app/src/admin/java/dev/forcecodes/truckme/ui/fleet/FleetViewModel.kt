@@ -5,13 +5,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.base.BaseViewModel
 import dev.forcecodes.truckme.core.data.fleets.FleetType
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
+import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.VehicleUri
 import dev.forcecodes.truckme.core.domain.fleets.DeleteFleetUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveDriverFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.ObserveVehicleFleetsUseCase
 import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
 import dev.forcecodes.truckme.core.domain.fleets.UpdateFleetStateUseCase
 import dev.forcecodes.truckme.core.util.successOr
+import dev.forcecodes.truckme.core.util.tryOffer
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
+import dev.forcecodes.truckme.ui.fleet.FleetUpdateNavAction.UpdateDriver
+import dev.forcecodes.truckme.ui.fleet.FleetUpdateNavAction.UpdateVehicle
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -38,6 +44,9 @@ class FleetViewModel @Inject constructor(
 
   private val _fleetLoadStatueIsLoading = MutableStateFlow(true)
   val fleetLoadStatueIsLoading = _fleetLoadStatueIsLoading.asStateFlow()
+
+  private val _onUpdateActionEvent = Channel<FleetUpdateNavAction>(capacity = Channel.CONFLATED)
+  val onUpdateActionEvent = _onUpdateActionEvent.receiveAsFlow()
 
   init {
     val adminId = signInViewModelDelegate.userIdValue!!
@@ -80,6 +89,14 @@ class FleetViewModel @Inject constructor(
 
   fun addVehicleClick() {
     sendUiEvent(FleetNavActionEvent.AddVehicle)
+  }
+
+  fun onDriverSelected(data: DriverUri) {
+    _onUpdateActionEvent.tryOffer(UpdateDriver(data))
+  }
+
+  fun onVehicleSelected(data: VehicleUri) {
+    _onUpdateActionEvent.tryOffer(UpdateVehicle(data))
   }
 
   companion object {

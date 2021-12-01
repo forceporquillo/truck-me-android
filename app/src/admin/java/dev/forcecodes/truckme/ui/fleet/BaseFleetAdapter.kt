@@ -72,7 +72,7 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
 
     with(holder.binding) {
       fleetContainer.setOnClickListener { onViewHolderCreated(item) }
-      moreButton.setOnClickListener { popUpDelete(it, position, item) }
+      moreButton.setOnClickListener { popUpDelete(it, holder.bindingAdapterPosition, item) }
     }
   }
 

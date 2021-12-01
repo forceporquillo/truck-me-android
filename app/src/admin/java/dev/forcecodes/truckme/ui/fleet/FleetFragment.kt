@@ -16,8 +16,12 @@ import dev.forcecodes.truckme.extensions.navigate
 import dev.forcecodes.truckme.extensions.navigateUp
 import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.viewBinding
+import dev.forcecodes.truckme.ui.fleet.FleetUpdateNavAction.UpdateDriver
+import dev.forcecodes.truckme.ui.fleet.FleetUpdateNavAction.UpdateVehicle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import timber.log.Timber.Forest
 
 @AndroidEntryPoint
 class FleetFragment : Fragment(R.layout.fragment_fleet) {
@@ -57,6 +61,16 @@ class FleetFragment : Fragment(R.layout.fragment_fleet) {
 
   private fun observeChanges() = repeatOnLifecycleParallel {
     launch { viewModel.fleetNavActionEvent.collect(::collectNavUiEvent) }
+    launch {
+      viewModel.onUpdateActionEvent.collect { actionEvent ->
+        Timber.e(actionEvent.toString())
+        val navDirection = when (actionEvent) {
+          is UpdateDriver -> FleetFragmentDirections.toAddDriverFragment(actionEvent.data)
+          is UpdateVehicle -> FleetFragmentDirections.toAddVehicleFragment(actionEvent.data)
+        }
+        navigate(navDirection)
+      }
+    }
   }
 
   private fun collectNavUiEvent(uiEvent: FleetNavActionEvent) {

@@ -7,11 +7,13 @@ import com.google.firebase.firestore.ktx.toObject
 import dev.forcecodes.truckme.core.data.auth.AuthBasicInfo
 import dev.forcecodes.truckme.core.data.fleets.EmptyFleetsException
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel.DriverUri
+import dev.forcecodes.truckme.core.di.ApplicationScope
 import dev.forcecodes.truckme.core.domain.settings.PhoneNumber
 import dev.forcecodes.truckme.core.domain.signin.DriverAuthInfo
 import dev.forcecodes.truckme.core.util.Result
 import dev.forcecodes.truckme.core.util.driverCollection
 import dev.forcecodes.truckme.core.util.tryOffer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -32,7 +34,8 @@ interface DriverDataSource {
 
 @Singleton
 class AddedDriverDataSourceImpl @Inject constructor(
-  private val firestore: FirebaseFirestore
+  private val firestore: FirebaseFirestore,
+  @ApplicationScope private val externalScope: CoroutineScope
 ) : DriverDataSource {
 
   override suspend fun updatePhoneNumber(updatePhoneNumber: UpdatePhoneNumber) {
