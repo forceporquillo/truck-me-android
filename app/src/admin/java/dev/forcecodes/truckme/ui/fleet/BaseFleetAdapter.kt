@@ -15,14 +15,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.core.data.fleets.FleetUiModel
-import dev.forcecodes.truckme.core.domain.fleets.FleetStateUpdateMetadata
 import dev.forcecodes.truckme.core.util.then
 import dev.forcecodes.truckme.databinding.FleetItemBinding
 import dev.forcecodes.truckme.extensions.bindImageWith
 import dev.forcecodes.truckme.extensions.setActiveStateIndicatorColor
 import dev.forcecodes.truckme.extensions.setNotAvailable
-import timber.log.Timber
-import timber.log.Timber.Forest
 
 abstract class BaseFleetAdapter<T : FleetUiModel>(
   private val emptyState: (Boolean) -> Unit,
@@ -57,9 +54,7 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
     val binding = FleetItemBinding.inflate(
       LayoutInflater.from(parent.context),
       parent, false
-    ).apply {
-      fleetType.text = parent.context.getString(adapterTitle)
-    }
+    )
     return FleetViewHolder(binding)
   }
 
@@ -78,9 +73,7 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
     with(holder.binding) {
       fleetContainer.setOnClickListener { onViewHolderCreated(item) }
       moreButton.setOnClickListener { popUpDelete(it, position, item) }
-      fleetType.isVisible = position == 0 && itemCount > 0
     }
-
   }
 
   private fun popUpDelete(view: View, position: Int, item: T) {
@@ -93,8 +86,8 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
           onDeleteFleet(getItem(position).id)
         }
         if (it.itemId == R.id.delivery_state) {
-            val invertedState = !item.isActive
-            onChangeActiveState(item.id, invertedState)
+          val invertedState = !item.isActive
+          onChangeActiveState(item.id, invertedState)
         }
         return@setOnMenuItemClickListener true
       }
