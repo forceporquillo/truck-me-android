@@ -9,5 +9,5 @@ interface FleetItemListener {
   fun onDriverSelected(data: DriverUri)
   fun onVehicleSelected(data: VehicleUri)
   fun onDeleteFleet(id: String, type: FleetType)
-  fun onFleetStateChanged(metadata: FleetStateUpdateMetadata)
+  fun onFleetStateChanged(fleetMetadata: FleetStateUpdateMetadata)
 }
