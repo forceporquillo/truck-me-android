@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.collect
 class InProgressJobFragment : ActiveJobsFragment(IN_PROGRESS) {
 
   override fun onDeliveryAdapterCreated(adapter: DeliveryAdapter) {
+
     observeOnLifecycleStarted {
       viewModel.activeJobsList.collect {
         adapter.submitList(it)
