@@ -20,8 +20,6 @@ import dev.forcecodes.truckme.databinding.FleetItemBinding
 import dev.forcecodes.truckme.extensions.bindImageWith
 import dev.forcecodes.truckme.extensions.setActiveStateIndicatorColor
 import dev.forcecodes.truckme.extensions.setNotAvailable
-import timber.log.Timber
-import timber.log.Timber.Forest
 
 abstract class BaseFleetAdapter<T : FleetUiModel>(
   private val emptyState: (Boolean) -> Unit,
@@ -74,7 +72,7 @@ abstract class BaseFleetAdapter<T : FleetUiModel>(
 
     with(holder.binding) {
       fleetContainer.setOnClickListener { onViewHolderCreated(item) }
-      moreButton.setOnClickListener { popUpDelete(it, position, item) }
+      moreButton.setOnClickListener { popUpDelete(it, holder.bindingAdapterPosition, item) }
     }
   }
 
