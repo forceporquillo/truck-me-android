@@ -97,4 +97,5 @@
   <string name="dash">-</string>
   <string name="time_started">Time Started</string>
   <string name="location_state_message">Cannot retrieved current coordinates. Please check your location or GPS if it\'s enabled.</string>
+  <string name="error_load_try_again">Cannot load data at the moment. Please try again later.</string>
 </resources>
