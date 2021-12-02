@@ -16,6 +16,8 @@ import dev.forcecodes.truckme.core.data.fleets.FreeUpFleetState
 import dev.forcecodes.truckme.core.data.fleets.FreeUpFleetStateImpl
 import dev.forcecodes.truckme.core.domain.places.PlacesRepository
 import dev.forcecodes.truckme.core.domain.places.PlacesRepositoryImpl
+import dev.forcecodes.truckme.core.domain.statistics.StatisticsRepository
+import dev.forcecodes.truckme.core.domain.statistics.StatisticsRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,4 +52,9 @@ abstract class AdminDataSourceModule {
   internal abstract fun providesFreeUpFleetState(
     freeUpFleetStateImpl: FreeUpFleetStateImpl
   ): FreeUpFleetState
+
+  @Binds
+  internal abstract fun providesStatisticsRepositry(
+    statisticsRepositoryImpl: StatisticsRepositoryImpl
+  ): StatisticsRepository
 }

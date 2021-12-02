@@ -1,23 +1,20 @@
 package dev.forcecodes.truckme.core.data.delivery
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import dev.forcecodes.truckme.core.di.IoDispatcher
-import dev.forcecodes.truckme.core.domain.FlowUseCase
 import dev.forcecodes.truckme.core.mapper.DomainMapperSingle
 import dev.forcecodes.truckme.core.model.DeliveryInfo
-import dev.forcecodes.truckme.core.model.ItemDelivered
-import dev.forcecodes.truckme.core.util.Result
+import dev.forcecodes.truckme.core.util.TimeUtils.convertToDate
+import dev.forcecodes.truckme.core.util.TimeUtils.convertToTime
 import dev.forcecodes.truckme.core.util.tryOffer
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import timber.log.Timber
+import timber.log.Timber.Forest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,7 +41,6 @@ class DeliveredItemDataSourceImpl @Inject constructor(
             for (snapshot in value) {
               val deliveryInfo = snapshot.toObject<DeliveryInfo>()
               val documentId = snapshot.id
-
               if (deliveryInfo.isAssignedToAdmin(adminId)) {
                 val deliveredMetadata = DeliveredItemMetadata(documentId, deliveryInfo)
                 deliveredItems.add(deliveredMetadata)
@@ -66,26 +62,6 @@ class DeliveredItemDataSourceImpl @Inject constructor(
 
   override fun getDailyStats(adminId: String): Flow<List<DeliveredItemMetadata>> {
     return getAllDeliveredItems(adminId)
-  }
-}
-
-class HistoryUseCase @Inject constructor(
-  private val deliveredItemDataSource: DeliveredItemDataSource,
-  private val deliveredItemMapper: DeliveredItemMapper,
-  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : FlowUseCase<String, List<DeliveredItem>>(ioDispatcher) {
-
-  override fun execute(parameters: String): Flow<Result<List<DeliveredItem>>> {
-    return deliveredItemDataSource.getAllDeliveredItems(parameters).map { list ->
-      val mappedList = list
-        .sortedByDescending { deliveryInfo ->
-          deliveryInfo.deliveryInfo.completedTimestamp
-        }
-        .map { itemDelivered ->
-          deliveredItemMapper(itemDelivered.deliveryInfo)
-        }
-      Result.Success(mappedList)
-    }
   }
 }
 
@@ -126,28 +102,9 @@ class DeliveredItemMapper @Inject constructor() : DomainMapperSingle<DeliveryInf
         title = title,
         address = destination?.address ?: "",
         items = items,
-        date = convertToDate(timeStampMillis = completedTimestamp),
+        date = convertToDate(timestampMillis = completedTimestamp),
         time = convertToTime(completedTimestamp)
       )
     }
   }
-}
-
-fun convertToTime(timeStampMillis: Long?): String? {
-  return convertDate("hh:mm a", timeStampMillis)
-}
-
-fun formatToDate(timeStampMillis: Long? = Calendar.getInstance().timeInMillis): String {
-  return convertToDate("MM/dd/yyyy", timeStampMillis) ?: ""
-}
-
-fun convertToDate(format: String = "MMMM dd, yyyy", timeStampMillis: Long?): String? {
-  return convertDate(format, timeStampMillis)
-}
-
-fun convertDate(format: String, timeInMillis: Long?): String? {
-  val sdf = SimpleDateFormat(format, Locale.getDefault())
-  val calendar = Calendar.getInstance()
-  calendar.timeInMillis = timeInMillis ?: 0L
-  return sdf.format(calendar.time)
 }
