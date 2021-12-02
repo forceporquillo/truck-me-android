@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forcecodes.truckme.core.data.delivery.DeliveredItem
-import dev.forcecodes.truckme.core.data.delivery.HistoryUseCase
+import dev.forcecodes.truckme.core.domain.history.HistoryUseCase
 import dev.forcecodes.truckme.core.util.successOr
 import dev.forcecodes.truckme.ui.auth.signin.SignInViewModelDelegate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
   private val historyUseCase: HistoryUseCase,
   signInViewModelDelegate: SignInViewModelDelegate
-): ViewModel(), SignInViewModelDelegate by signInViewModelDelegate {
+) : ViewModel(), SignInViewModelDelegate by signInViewModelDelegate {
 
   private val _historyList = MutableStateFlow<List<DeliveredItem>>(emptyList())
   val historyList = _historyList.asStateFlow()
