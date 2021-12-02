@@ -3,17 +3,18 @@ package dev.forcecodes.truckme.ui.statistics
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentOnAttachListener
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.string
+import dev.forcecodes.truckme.core.domain.statistics.DAILY
+import dev.forcecodes.truckme.core.domain.statistics.DRIVER
 import dev.forcecodes.truckme.databinding.FragmentStatisticsBinding
-import dev.forcecodes.truckme.extensions.observeOnLifecycleStarted
+import dev.forcecodes.truckme.extensions.repeatOnLifecycleParallel
 import dev.forcecodes.truckme.extensions.viewBinding
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -21,7 +22,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
   private val binding by viewBinding(FragmentStatisticsBinding::bind)
   private val viewModel by viewModels<StatisticsViewModel>()
-
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -31,23 +31,11 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     binding.viewPager.adapter = StatisticsStatePagerAdapter(this)
 
-    viewModel.loadStatistics()
-
-    observeOnLifecycleStarted {
-      viewModel.dateList.collect {
-        if (it.isNotEmpty()) {
-          binding.datePicker.hint = it.first()
-          viewModel.executeQuery(it.first())
-          setUiState(it.distinct())
-        }
-      }
-    }
-
-    observeOnLifecycleStarted {
-      viewModel.copyDeliveryInfo.collect { list ->
-        childFragmentManager.fragments.forEach { fragment ->
-          if (fragment is StatsPagerFragment) {
-            fragment.onChangeSearch(list)
+    repeatOnLifecycleParallel {
+      launch {
+        viewModel.filterType.collect {
+          if (it.isNotEmpty()) {
+            setUiState(it)
           }
         }
       }
@@ -60,20 +48,24 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
       }
     }.attach()
 
-    binding.datePicker.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
-      viewModel.executeQuery(newItem)
+    binding.datePicker.setOnSpinnerItemSelectedListener<String> { _, _, _, itemSelected ->
+      viewModel.filterStatsBy(itemSelected)
     }
 
-    binding.daySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, newItem ->
-      viewModel.type = newItem
-      viewModel.reOrder()
+    binding.daySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, itemSelected ->
+      val filter = when (itemSelected) {
+        getString(string.driver) -> DRIVER
+        else -> DAILY
+      }
 
-      val hintType = if (newItem == getString(string.driver)) {
+      viewModel.filterTypeBy(filter)
+
+      val hintType = if (itemSelected == getString(string.driver)) {
         getString(string.select_driver_type)
       } else {
         getString(string.select_date_type)
       }
-      setUiState(viewModel.itemDelivered.value)
+
       binding.searchType.text = hintType
     }
   }
@@ -82,11 +74,11 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     binding.datePicker.apply {
       clearSelectedItem()
       if (items.isNotEmpty()) {
+        viewModel.filterStatsBy(items[0])
         hint = items[0]
       }
     }
-    Timber.e("items $items")
+
     binding.datePicker.setItems(items)
-    binding.datePicker.spinnerPopupHeight
   }
 }
