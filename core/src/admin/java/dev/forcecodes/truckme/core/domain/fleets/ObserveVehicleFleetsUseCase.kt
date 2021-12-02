@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ObserveVehicleFleetsUseCase @Inject constructor(
   private val fleetDataSource: FleetDataSource,
   @IoDispatcher private val ioDispatcher: CoroutineDispatcher
