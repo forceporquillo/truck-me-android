@@ -19,11 +19,15 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
           check-latest: true
-      - name: Access MAPS API KEY
+      - name: Access Google Maps SDK API KEY
         env:
-          MAPS_APKI_KEY: ${{ secrets.MAPS_APKI_KEY }}
-        run: echo MAPS_APKI_KEY=\"$MAPS_APKI_KEY\" > ./local.properties
-      - name: Access FCM SERVER API KEY
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+        run: echo MAPS_API_KEY=$MAPS_API_KEY > ./local.properties
+      - name: Access Google Cloud Platform API KEY
+        env:
+          GCP_API_KEY: ${{ secrets.GCP_API_KEY }}
+        run: echo GCP_API_KEY=\"$GCP_API_KEY\" > ./local.properties
+      - name: Access Firebase Cloud Messaging API KEY
         env:
           FCM_SERVER_API: ${{ secrets.FCM_SERVER_API }}
         run: echo FCM_SERVER_API=\"$FCM_SERVER_API\" > ./local.properties
