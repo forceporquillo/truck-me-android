@@ -19,10 +19,14 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
           check-latest: true
-      - name: Access MAPS_APKI_KEY
+      - name: Access MAPS API KEY
         env:
           MAPS_APKI_KEY: ${{ secrets.MAPS_APKI_KEY }}
         run: echo MAPS_APKI_KEY=\"$MAPS_APKI_KEY\" > ./local.properties
+      - name: Access FCM SERVER API KEY
+        env:
+          FCM_SERVER_API: ${{ secrets.FCM_SERVER_API }}
+        run: echo FCM_SERVER_API=\"$FCM_SERVER_API\" > ./local.properties
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
       - name: Assemble All Build Variant
