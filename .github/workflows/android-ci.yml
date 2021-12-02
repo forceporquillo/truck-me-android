@@ -34,6 +34,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
       - name: Assemble All Build Variant
-        run: ./gradlew :app:assembleAdmin :app:assembleDriver
+        run: ./gradlew :app:assembleAdminDebug :app:assembleDriverDebug
       - name: Build with Gradle
         run: ./gradlew build
