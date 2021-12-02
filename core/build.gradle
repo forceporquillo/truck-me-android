@@ -19,9 +19,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String", "MAPS_API_KEY", MAPS_API_KEY)
+        buildConfigField("String", "GCP_API_KEY", getApiKey("GCP_API_KEY"))
         buildConfigField "String", "BASE_URL", "\"https://maps.googleapis.com\""
-        buildConfigField("String", "FCM_SERVER_API", FCM_SERVER_API)
+        buildConfigField("String", "FCM_SERVER_API", getApiKey("FCM_SERVER_API"))
         buildConfigField "String", "BASE_URL_FCM", "\"https://fcm.googleapis.com\""
     }
 
@@ -92,4 +92,11 @@ dependencies {
     kapt "androidx.room:room-compiler:2.3.0"
 
     implementation "io.karn:notify:1.4.0"
+}
+
+String getApiKey(String tagKey) {
+    def propFile = rootProject.file("./local.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propFile))
+    return properties[tagKey]
 }

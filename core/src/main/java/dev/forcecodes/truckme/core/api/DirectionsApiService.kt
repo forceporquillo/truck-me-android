@@ -13,6 +13,6 @@ interface DirectionsApiService {
     @Query("mode") mode: String = "transit",
     @Query("origin") latLngTruckMeImplData: LatLngTruckMeImpl,
     @Query("destination") placeId: String,
-    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY,
+    @Query("key") apiKey: String = BuildConfig.GCP_API_KEY,
   ): Response<DirectionsResponse>
 }

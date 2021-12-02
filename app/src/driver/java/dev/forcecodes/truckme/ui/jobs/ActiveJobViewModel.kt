@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.forcecodes.truckme.ContactUiState
 import dev.forcecodes.truckme.core.api.DirectionsResponse
 import dev.forcecodes.truckme.core.api.LegsItem
 import dev.forcecodes.truckme.core.api.Location
@@ -58,7 +59,7 @@ class ActiveJobsViewModel @Inject constructor(
   private val _endDirection = MutableStateFlow<LatLng?>(null)
   val endDirection = _endDirection.asStateFlow()
 
-  private val _adminPhone = MutableStateFlow<String?>(null)
+  private val _adminPhone = MutableStateFlow<ContactUiState>(ContactUiState.Loading)
   val adminPhone = _adminPhone.asStateFlow()
 
   var deliveryTitle: String? = null
@@ -129,7 +130,10 @@ class ActiveJobsViewModel @Inject constructor(
     viewModelScope.launch {
       adminDataSource.getAdminContactNumber(adminId).collect { result ->
         if (result is Result.Success) {
-          _adminPhone.value = result.data
+          _adminPhone.value = ContactUiState.Success(result.data)
+        }
+        if (result is Result.Error) {
+          _adminPhone.value = ContactUiState.Error(result.exception.message)
         }
       }
     }

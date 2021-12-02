@@ -7,15 +7,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -24,7 +20,6 @@ import androidx.core.view.updatePadding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.Projection
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -35,10 +30,15 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.card.MaterialCardView
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.SphericalUtil
 import com.google.maps.android.ktx.model.circleOptions
 import com.google.maps.android.ktx.model.markerOptions
+import dev.forcecodes.truckme.ContactUiState
+import dev.forcecodes.truckme.ContactUiState.Error
+import dev.forcecodes.truckme.ContactUiState.Loading
+import dev.forcecodes.truckme.ContactUiState.Success
 import dev.forcecodes.truckme.R
 import dev.forcecodes.truckme.R.raw
 import dev.forcecodes.truckme.binding.viewBinding
@@ -46,6 +46,7 @@ import dev.forcecodes.truckme.databinding.ActivityActiveJobsBinding
 import dev.forcecodes.truckme.extensions.applyTranslucentStatusBar
 import dev.forcecodes.truckme.extensions.doOnApplyWindowInsets
 import dev.forcecodes.truckme.extensions.fillDecor
+import dev.forcecodes.truckme.extensions.toast
 import dev.forcecodes.truckme.util.MapUtils
 import timber.log.Timber
 
@@ -125,7 +126,8 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.progressBar.isGone = true
         binding.loadingState.isGone = true
       }, 1000L)
-    } catch (e: IllegalStateException) {}
+    } catch (e: IllegalStateException) {
+    }
   }
 
   protected fun dropOffDestinationMarker(latLng: LatLng?): Marker? {
@@ -217,6 +219,35 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
     binding.chatButton.setOnClickListener { onStartMessage(phoneNumber) }
   }
 
+  open fun onAttachIntentDialPadListener(contactUiState: ContactUiState) {
+    binding.emergencyButton.onInvokedIntentListener(contactUiState, ::onStartDialPad)
+  }
+
+  open fun onAttachIntentMessageListener(contactUiState: ContactUiState) {
+    binding.chatButton.onInvokedIntentListener(contactUiState, ::onStartMessage)
+  }
+
+  private inline fun MaterialCardView.onInvokedIntentListener(
+    contactUiState: ContactUiState,
+    crossinline block: (contact: String) -> Unit
+  ) {
+    setOnClickListener {
+      when (contactUiState) {
+        is Success -> {
+          val contactNumber = contactUiState.contact
+          block(contactNumber ?: return@setOnClickListener)
+        }
+        is Error -> {
+          toast(contactUiState.error)
+          return@setOnClickListener
+        }
+        Loading -> {
+          // do nothing
+        }
+      }
+    }
+  }
+
   private fun onStartMessage(dialNumber: String) {
     val smsIntent = Intent(Intent.ACTION_VIEW)
     smsIntent.data = Uri.parse("sms:$dialNumber")
@@ -281,7 +312,7 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     if (movingCabMarker == null) {
       Timber.d("Car Start Location $latLng")
-  //    Toast.makeText(applicationContext, "Car Start Location $latLng", Toast.LENGTH_SHORT).show()
+      //    Toast.makeText(applicationContext, "Car Start Location $latLng", Toast.LENGTH_SHORT).show()
       movingCabMarker = addCarMarker(latLng)
     }
     if (previousLatLng == null) {
@@ -302,7 +333,7 @@ abstract class BaseMapActivity : AppCompatActivity(), OnMapReadyCallback {
             multiplier * currentLatLng!!.longitude + (1 - multiplier) * previousLatLng!!.longitude
           )
           Timber.d("Car Next Location $nextLocation")
-     //     Toast.makeText(applicationContext, "Car Next Location $nextLocation", Toast.LENGTH_SHORT).show()
+          //     Toast.makeText(applicationContext, "Car Next Location $nextLocation", Toast.LENGTH_SHORT).show()
           movingCabMarker?.position = nextLocation
 
           val rotation = SphericalUtil.computeHeading(previousLatLng!!, currentLatLng)
