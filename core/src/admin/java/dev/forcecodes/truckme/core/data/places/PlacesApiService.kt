@@ -14,19 +14,19 @@ interface PlacesApiService {
     @Query("input") input: String?,
     @Query("components") component: String = "country:ph",
     @Query("radius") radius: String = "5000",
-    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
+    @Query("key") apiKey: String = BuildConfig.GCP_API_KEY
   ): Response<PlaceAutoCompleteResponse>
 
   @GET("/maps/api/place/details/json")
   suspend fun getPlaceById(
     @Query("place_id") id: String?,
-    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
+    @Query("key") apiKey: String = BuildConfig.GCP_API_KEY
   ): Response<PlaceDetailsResponse>
 
   @GET("/maps/api/geocode/json")
   suspend fun getReverseGeoCode(
     @Query("latlng") latLng: LatLngTruckMeImpl?,
-    @Query("key") apiKey: String = BuildConfig.MAPS_API_KEY
+    @Query("key") apiKey: String = BuildConfig.GCP_API_KEY
   ): Response<GeoCodeResponse>
 }
 

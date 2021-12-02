@@ -1,6 +1,7 @@
 package dev.forcecodes.truckme.core.data.admin
 
 import com.google.firebase.firestore.FirebaseFirestore
+import dev.forcecodes.truckme.core.NoContactNumberAssociated
 import dev.forcecodes.truckme.core.util.Result
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
@@ -36,8 +37,17 @@ class AdminDataSourceImpl @Inject constructor(
         firestore.collection("admin")
           .document(assignedAdmin)
           .get()
-          .addOnSuccessListener {
-            state = Result.Success(it["phoneNumber"] as String)
+          .addOnCompleteListener { task ->
+            state = if (task.isSuccessful) {
+              val phoneNumber = task.result?.get("phoneNumber") as? String
+              if (!phoneNumber.isNullOrEmpty()) {
+                Result.Success(phoneNumber)
+              } else {
+                Result.Error(NoContactNumberAssociated())
+              }
+            } else {
+              Result.Error(Exception(task.exception))
+            }
           }.await()
         emit(state)
       }

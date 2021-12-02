@@ -155,9 +155,9 @@ class ActiveJobsActivity : BaseMapActivity() {
     }
 
     onLifecycleStarted {
-      viewModel.adminPhone.collect { contactNumber ->
-        onAttachIntentDialPadListener(contactNumber)
-        onAttachIntentMessageListener(contactNumber)
+      viewModel.adminPhone.collect { contactUiState ->
+        super.onAttachIntentDialPadListener(contactUiState)
+        super.onAttachIntentMessageListener(contactUiState)
       }
     }
   }
@@ -235,20 +235,6 @@ class ActiveJobsActivity : BaseMapActivity() {
           }
         }
       }, 500L)
-    }
-  }
-
-  override fun onAttachIntentDialPadListener(dialNumber: String?) {
-    viewModel.adminPhone.value?.let { phoneNumber ->
-      Timber.e(phoneNumber)
-      super.onAttachIntentDialPadListener(phoneNumber)
-    }
-  }
-
-  override fun onAttachIntentMessageListener(phoneNumber: String?) {
-    viewModel.adminPhone.value?.let { _phoneNumber ->
-      Timber.e(phoneNumber)
-      super.onAttachIntentMessageListener(_phoneNumber)
     }
   }
 
