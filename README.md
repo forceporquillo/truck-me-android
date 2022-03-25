@@ -55,6 +55,9 @@ The `:core` module is an [com.android.library](https://developer.android.com/stu
 
 The `:libs` module is an [com.android.library](https://developer.android.com/studio/projects/dynamic-delivery) only contains inset animations, drag and UI layout manipulation.
 
+## TODO
+- Add Unit tests
+- Add Integration tests
 
 # License
 ```
